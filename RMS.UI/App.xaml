@@ -1,0 +1,35 @@
+﻿<Application x:Class="RMS.UI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:RMS.UI"             
+             xmlns:v="clr-namespace:RMS.UI.Views"
+             xmlns:vm="clr-namespace:RMS.UI.ViewModels">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+                <v:HomeView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:GroupViewModel}">
+                <v:GroupView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:CompanyViewModel}">
+                <v:CompanyView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ImportViewModel}">
+                <v:ImportView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ExportViewModel}">
+                <v:ExportView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+                <v:SettingsView />
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

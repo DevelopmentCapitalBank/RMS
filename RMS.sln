@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS", "RMS\RMS.csproj", "{A83BFA7F-F7CF-4DF4-93B8-87674BC86A0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RMS", "RMS\RMS.csproj", "{A83BFA7F-F7CF-4DF4-93B8-87674BC86A0E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F65BA4A-12B7-4AEA-8398-14694558743B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RMS.UI", "RMS.UI\RMS.UI.csproj", "{9CD11727-01CA-4298-A0C5-DF24291BB046}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B54F1BD-E2FF-4E01-9394-E4398B3F34F4}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
@@ -20,6 +22,10 @@ Global
 		{A83BFA7F-F7CF-4DF4-93B8-87674BC86A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A83BFA7F-F7CF-4DF4-93B8-87674BC86A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A83BFA7F-F7CF-4DF4-93B8-87674BC86A0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD11727-01CA-4298-A0C5-DF24291BB046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD11727-01CA-4298-A0C5-DF24291BB046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD11727-01CA-4298-A0C5-DF24291BB046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD11727-01CA-4298-A0C5-DF24291BB046}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
