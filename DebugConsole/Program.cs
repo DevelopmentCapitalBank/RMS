@@ -20,12 +20,6 @@ namespace DebugConsole
             try
             {
                 await context.Setup();
-
-                DateOp newDate = new();
-                newDate.DateOperation = DateTime.Now;
-
-                DateOp d = await context.DateOps.CreateAsync(newDate);
-                Console.WriteLine($"Date id = {d.DateId}, date - {d.DateOperation}");
             }
             catch (Exception ex)
             {

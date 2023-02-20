@@ -28,6 +28,12 @@ namespace RMS.DATA.Services
             await repo.DeleteAsync(entity, connection);
         }
 
+        //public async Task<IEnumerable<DateOp>> ReadBetweenAsync(DateTime v1, DateTime v2)
+        //{
+        //    using var connection = new SqliteConnection(dbConfig.Name);
+        //    return await repo.ReadBetweenAsync(v1, v2, connection).ConfigureAwait(false);
+        //}
+
         public async Task<DateOp> ReadByIdAsync(int id)
         {
             using var connection = new SqliteConnection(dbConfig.Name);
