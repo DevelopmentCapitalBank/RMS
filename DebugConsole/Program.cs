@@ -29,7 +29,7 @@ namespace DebugConsole
                 g.Name = "не пусто";
                 g.Comment = "заполнил";
 
-                await context.Groups.UpdateAsync(g);
+                //await context.Groups.UpdateAsync(g);
 
                 List<Group> groups = (List<Group>)await context.Groups.ReadAllAsync().ConfigureAwait(false);
                 foreach(var gr in groups)
@@ -37,7 +37,7 @@ namespace DebugConsole
                     Console.WriteLine($"Name - {gr.Name}, id - {gr.GroupId}, comment - {gr.Comment}");
                 }
 
-                await context.Groups.DeleteAsync(g);
+                //await context.Groups.DeleteAsync(g);
             }
             catch (Exception ex)
             {

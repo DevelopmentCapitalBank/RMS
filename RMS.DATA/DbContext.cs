@@ -23,17 +23,18 @@ namespace RMS.DATA
         {
             try
             {
-                //var table = await connection.QueryFirstOrDefaultAsync<string>("SELECT name FROM sqlite_master WHERE type='table' AND name = 'Group';").ConfigureAwait(false);
-                //if (!string.IsNullOrEmpty(table) && table == "Group")
-                //{
-                //    return;
-                //}
                 StringBuilder sql = new();
                 sql.Append(" CREATE TABLE IF NOT EXISTS [Group] (                                                   ");
                 sql.Append("    GroupId     INTEGER       NOT NULL,                                                 ");
                 sql.Append("    Name        VARCHAR(100)  NOT NULL,                                                 ");
                 sql.Append("    Comment     TEXT,                                                                   ");
                 sql.Append("    PRIMARY KEY(GroupId AUTOINCREMENT)                                                  ");
+                sql.Append(" );                                                                                     ");
+                
+                sql.Append(" INSERT OR REPLACE INTO [Group](GroupId, Name, Comment)                                 ");
+                sql.Append("    VALUES(1,                                                                           ");
+                sql.Append("            'ПУСТО',                                                                    ");
+                sql.Append("            (SELECT Comment FROM [Group] WHERE GroupId = 1)                             ");
                 sql.Append(" );                                                                                     ");
 
                 sql.Append(" CREATE TABLE IF NOT EXISTS [Office] (                                                  ");
@@ -42,11 +43,17 @@ namespace RMS.DATA
                 sql.Append("    PRIMARY KEY(OfficeId AUTOINCREMENT)                                                 ");
                 sql.Append(" );                                                                                     ");
 
+                sql.Append(" INSERT OR REPLACE INTO [Office](OfficeId, Name)                                        ");
+                sql.Append("    VALUES(1,'ПУСТО');                                                                  ");
+
                 sql.Append(" CREATE TABLE IF NOT EXISTS [Manager] (                                                 ");
                 sql.Append("    ManagerId   INTEGER       NOT NULL,                                                 ");
                 sql.Append("    Name        VARCHAR(100)  NOT NULL,                                                 ");
                 sql.Append("    PRIMARY KEY(ManagerId AUTOINCREMENT)                                                ");
                 sql.Append(" );                                                                                     ");
+
+                sql.Append(" INSERT OR REPLACE INTO [Manager](ManagerId, Name)                                      ");
+                sql.Append("    VALUES(1,'ПУСТО');                                                                  ");
 
                 sql.Append(" CREATE TABLE IF NOT EXISTS [Company](                                                  ");
                 sql.Append("    CompanyId    INTEGER        PRIMARY KEY                                             ");
