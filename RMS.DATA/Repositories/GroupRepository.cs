@@ -8,15 +8,16 @@ namespace RMS.DATA.Repositories
     internal sealed class GroupRepository : IRepositoryAvg<Group, int>
     {
         #region SQL
-        private static readonly string Select = "SELECT GroupId, Name, Comment FROM Group WHERE GroupId=@GroupId;";
-        private static readonly string Update = "UPDATE Group SET Name=@Name, Comment=@Comment WHERE GroupId=@GroupId;";
-        private static readonly string Insert = "INSERT INTO Group (Name, Comment) VALUES (@Name, @Comment);";
-        private static readonly string Delete = "DELETE FROM Group WHERE GroupId=@GroupId;";
-        private static readonly string SelectAll = "SELECT GroupId, Name, Comment FROM Group;";
+        private static readonly string Select = "SELECT GroupId, Name, Comment FROM [Group] WHERE GroupId=@GroupId;";
+        private static readonly string Update = "UPDATE [Group] SET Name=@Name, Comment=@Comment WHERE GroupId=@GroupId;";
+        private static readonly string Insert = "INSERT INTO [Group] (Name, Comment) VALUES (@Name, @Comment);";
+        private static readonly string Delete = "DELETE FROM [Group] WHERE GroupId=@GroupId;";
+        private static readonly string SelectAll = "SELECT GroupId, Name, Comment FROM [Group];";
         private static readonly string SqlIdentity = "SELECT last_insert_rowid()";
         #endregion
         public async Task<Group> CreateAsync(Group entity, IDbConnection connection)
         {
+            connection.Open();
             var parameters = new DynamicParameters();
             parameters.Add("Name", entity.Name);
             parameters.Add("Comment", entity.Comment);
@@ -24,6 +25,7 @@ namespace RMS.DATA.Repositories
 
             int? GroupId = await connection.QueryFirstOrDefaultAsync<int>(SqlIdentity).ConfigureAwait(false);
             entity.GroupId = GroupId.Value;
+            connection.Close();
             return entity;
         }
 

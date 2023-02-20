@@ -5,7 +5,7 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Services
 {
-    internal class GroupService : IServiceMin<Group, int>
+    internal class GroupService : IServiceAvg<Group, int>
     {
         private readonly IRepositoryAvg<Group, int> repo;
         private readonly DbConfig dbConfig;
@@ -19,13 +19,19 @@ namespace RMS.DATA.Services
         public async Task<Group> CreateAsync(Group entity)
         {
             using var connection = new SqliteConnection(dbConfig.Name);
-            return await repo.CreateAsync(entity, connection);
+            return await repo.CreateAsync(entity, connection).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(Group entity)
         {
             using var connection = new SqliteConnection(dbConfig.Name);
             await repo.DeleteAsync(entity, connection);
+        }
+
+        public async Task<IEnumerable<Group>> ReadAllAsync()
+        {
+            using var connection = new SqliteConnection(dbConfig.Name);
+            return await repo.ReadAllAsync(connection).ConfigureAwait(false);
         }
 
         public async Task<Group> ReadByIdAsync(int id)
