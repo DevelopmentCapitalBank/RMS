@@ -15,9 +15,11 @@ namespace RMS.DATA
         {
             this.dbConfig = dbConfig;
             Groups = new GroupService(dbConfig, new GroupRepository());
+            DateOps = new DateOpSercive(dbConfig, new DateOpRepository());
         }
 
         public IServiceAvg<Group, int> Groups { get; private set; }
+        public IServiceMin<DateOp, int> DateOps { get; private set; }
 
         public async Task Setup()
         {

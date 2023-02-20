@@ -21,23 +21,11 @@ namespace DebugConsole
             {
                 await context.Setup();
 
-                Group newg = await context.Groups.CreateAsync(new Group { Name = "ПУСТО", Comment = "Пустая группа, по умолчанию" });
+                DateOp newDate = new();
+                newDate.DateOperation = DateTime.Now;
 
-                Group g = await context.Groups.ReadByIdAsync(1);
-                Console.WriteLine($"Name - {g.Name}, id - {g.GroupId}, comment - {g.Comment}");
-
-                g.Name = "не пусто";
-                g.Comment = "заполнил";
-
-                //await context.Groups.UpdateAsync(g);
-
-                List<Group> groups = (List<Group>)await context.Groups.ReadAllAsync().ConfigureAwait(false);
-                foreach(var gr in groups)
-                {
-                    Console.WriteLine($"Name - {gr.Name}, id - {gr.GroupId}, comment - {gr.Comment}");
-                }
-
-                //await context.Groups.DeleteAsync(g);
+                DateOp d = await context.DateOps.CreateAsync(newDate);
+                Console.WriteLine($"Date id = {d.DateId}, date - {d.DateOperation}");
             }
             catch (Exception ex)
             {
