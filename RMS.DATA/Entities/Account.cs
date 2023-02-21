@@ -6,7 +6,6 @@
         public int CompanyId { get; set; } = 0;
         public Company Company { get; set; } = new Company();
         public int OfficeId { get; set; } = 0;
-        public Office Office { get; set; } = new Office();
         public Acquiring? Acquiring { get; set; }
         public DateTime DateOpen { get; set; } = new DateTime();
         public DateTime? DateClose { get; set; }

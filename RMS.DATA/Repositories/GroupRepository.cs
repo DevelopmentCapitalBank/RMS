@@ -5,16 +5,16 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Repositories
 {
-    internal sealed class GroupRepository : IRepositoryAvg<Group, int>
+    internal sealed class GroupRepository : IRepositoryStandart<Group>
     {
         #region SQL
-        private static readonly string Select = "SELECT GroupId, Name, Comment FROM [Group] WHERE GroupId=@GroupId;";
         private static readonly string Update = "UPDATE [Group] SET Name=@Name, Comment=@Comment WHERE GroupId=@GroupId;";
         private static readonly string Insert = "INSERT INTO [Group] (Name, Comment) VALUES (@Name, @Comment);";
         private static readonly string Delete = "DELETE FROM [Group] WHERE GroupId=@GroupId;";
-        private static readonly string SelectAll = "SELECT GroupId, Name, Comment FROM [Group];";
+        private static readonly string Select = "SELECT GroupId, Name, Comment FROM [Group];";
         private static readonly string SqlIdentity = "SELECT last_insert_rowid()";
         #endregion
+
         public async Task<Group> CreateAsync(Group entity, IDbConnection connection)
         {
             connection.Open();
@@ -38,14 +38,7 @@ namespace RMS.DATA.Repositories
 
         public async Task<IEnumerable<Group>> ReadAllAsync(IDbConnection connection)
         {
-            return await connection.QueryAsync<Group>(SelectAll).ConfigureAwait(false);
-        }
-
-        public async Task<Group> ReadByIdAsync(int id, IDbConnection connection)
-        {
-            var parameters = new DynamicParameters();
-            parameters.Add("GroupId", id);
-            return await connection.QueryFirstOrDefaultAsync<Group>(Select, parameters).ConfigureAwait(false);
+            return await connection.QueryAsync<Group>(Select).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(Group entity, IDbConnection connection)

@@ -5,16 +5,17 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Repositories
 {
-    internal sealed class DateOpRepository : IRepositoryMin<DateOp, int>
+    internal sealed class DateOpRepository : IRepositoryStandart<DateOp>
     {
         #region SQL
-        private static readonly string Select = "SELECT DateId, DateOperation FROM [DateOp] WHERE DateId=@DateId;";
+        private static readonly string Select = "SELECT DateId, DateOperation FROM [DateOp];";
         private static readonly string Update = "UPDATE [DateOp] SET DateOperation=@DateOperation WHERE DateId=@DateId;";
         private static readonly string Insert = "INSERT INTO [DateOp] (DateOperation) VALUES (@DateOperation);";
         private static readonly string Delete = "DELETE FROM [DateOp] WHERE DateId=@DateId;";
         //private static readonly string Between = "SELECT * FROM [DateOp] WHERE DateOperation BETWEEN @v1 AND @v2 ORDER BY DateOperation DESC;";
         private static readonly string SqlIdentity = "SELECT last_insert_rowid()";
         #endregion
+
         public async Task<DateOp> CreateAsync(DateOp entity, IDbConnection connection)
         {
             connection.Open();
@@ -35,17 +36,15 @@ namespace RMS.DATA.Repositories
             await connection.ExecuteAsync(Delete, parameters).ConfigureAwait(false);
         }
 
+        public async Task<IEnumerable<DateOp>> ReadAllAsync(IDbConnection connection)
+        {
+            return await connection.QueryAsync<DateOp>(Select).ConfigureAwait(false);
+        }
+
         //public async Task<IEnumerable<DateOp>> ReadBetweenAsync(DateTime v1, DateTime v2, IDbConnection connection)
         //{
         //    return await connection.QueryAsync<DateOp>(Between, new { v1, v2 }).ConfigureAwait(false);
         //}
-
-        public async Task<DateOp> ReadByIdAsync(int id, IDbConnection connection)
-        {
-            var parameters = new DynamicParameters();
-            parameters.Add("DateId", id);
-            return await connection.QueryFirstOrDefaultAsync<DateOp>(Select, parameters).ConfigureAwait(false);
-        }
 
         public async Task UpdateAsync(DateOp entity, IDbConnection connection)
         {
