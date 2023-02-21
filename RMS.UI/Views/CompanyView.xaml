@@ -1,11 +1,313 @@
-﻿<UserControl x:Class="RMS.UI.Views.CompanyView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RMS.UI.Views"
-             mc:Ignorable="d">
+﻿<UserControl 
+    x:Class="RMS.UI.Views.CompanyView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:local="clr-namespace:RMS.UI.Views"
+    mc:Ignorable="d">
     <Grid>
-        <TextBlock FontSize="43" Text="companies"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock
+            Text="Компании" 
+            Grid.Row="0"
+            Margin="10 10 0 0" 
+            FontWeight="Bold"
+            Style="{StaticResource MaterialDesignHeadline4TextBlock}" 
+            VerticalAlignment="Center"/>
+        <Grid
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.RowSpan="2"
+            Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid
+                Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBox
+                    Margin="0 0 10 0"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    materialDesign:HintAssist.Hint="По id"  
+                    Text="{Binding Search.CompanyId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <TextBox
+                    Margin="0 0 10 0"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    materialDesign:HintAssist.Hint="По ИНН"  
+                    Text="{Binding Search.Inn, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    materialDesign:HintAssist.Hint="По наименованию"  
+                    Text="{Binding Search.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <Button 
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.RowSpan="2"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                    Command="{Binding SearchCompany}" 
+                    CommandParameter="{Binding  Search}" 
+                    ToolTip="Поиск компаний по параметрам"
+                    Margin="10">
+                    <materialDesign:PackIcon Kind="Search"  Height="22" Width="22" />
+                </Button>
+            </Grid>
+            <DataGrid
+                Grid.Row="1"                
+                materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+                materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="False"
+                CanUserSortColumns="True"
+                ItemsSource="{Binding Companies}"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                SelectedItem="{Binding SelectedCompany}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Группа"
+                        IsReadOnly="True"/>
+                    <DataGridTextColumn
+                        Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Номер клиента"
+                        IsReadOnly="True"/>
+                    <DataGridTextColumn
+                        Binding="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                        Header="ИНН"
+                        IsReadOnly="True"/>
+                    <DataGridTextColumn
+                        Binding="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Наименование"
+                        IsReadOnly="True"/>
+                    <DataGridTextColumn
+                        Binding="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Менеджер"
+                        IsReadOnly="True"/>
+                    <DataGridTextColumn
+                        Binding="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Офис"
+                        IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Border                
+                Grid.Row="2"
+                HorizontalAlignment="Stretch"
+                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                BorderThickness="0,1,0,0"
+                ClipToBounds="True"
+                CornerRadius="0 0 3 3">
+                <materialDesign:ColorZone Padding="10" Mode="PrimaryDark">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            Grid.Column="0"
+                            Margin="10"
+                            Command="{Binding CreateCompany}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                            ToolTip="Создать нового клиента">
+                            <materialDesign:PackIcon
+                                Width="22"
+                                Height="22"
+                                Kind="Plus" />
+                        </Button>
+                        <Button
+                            Grid.Column="1"
+                            Margin="10"
+                            Command="{Binding RemoveCompany}"
+                            CommandParameter="{Binding SelectedCompany}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                            ToolTip="Удалить клиента">
+                            <materialDesign:PackIcon
+                                Width="22"
+                                Height="22"
+                                Kind="Delete" />
+                        </Button>
+                    </Grid>
+                </materialDesign:ColorZone>
+            </Border>
+        </Grid>
+        <Grid 
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="{Binding SelectedCompany.CompanyId}"
+                FontWeight="Bold"
+                Style="{StaticResource MaterialDesignHelperTextBlock}" 
+                VerticalAlignment="Center"/>
+            <TextBox
+                Margin="5"
+                Grid.Row="0"
+                Grid.Column="1"
+                Width="140"
+                Height="30"
+                materialDesign:HintAssist.Hint="ИНН"
+                HorizontalAlignment="Left"
+                Text="{Binding SelectedCompany.Inn, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            <ComboBox
+                Margin="5"
+                Grid.Row="1"
+                Grid.Column="0"
+                MinWidth="150"
+                HorizontalAlignment="Left"
+                DisplayMemberPath="StatusName"
+                Style="{StaticResource MaterialDesignFilledComboBox}"
+                materialDesign:HintAssist.Hint="Группа"
+                ItemsSource="{Binding Path=DataContext.List.IndicativeStatuses, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=3}}"
+                SelectedValue="{Binding Bid.IndicativeStatusID}"
+                SelectedValuePath="IndicativeStatusID">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <ComboBox
+                Margin="5"
+                Grid.Row="1"
+                Grid.Column="1"
+                MinWidth="150"
+                HorizontalAlignment="Left"
+                DisplayMemberPath="StatusName"
+                Style="{StaticResource MaterialDesignFilledComboBox}"
+                materialDesign:HintAssist.Hint="Менеджер"
+                ItemsSource="{Binding Path=DataContext.List.IndicativeStatuses, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=3}}"
+                SelectedValue="{Binding Bid.IndicativeStatusID}"
+                SelectedValuePath="IndicativeStatusID">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <TextBox
+                Margin="5"
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                MinWidth="265"
+                MaxWidth="485"
+                Height="30"
+                materialDesign:HintAssist.Hint="Наименование"  
+                Text="{Binding SelectedCompany.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            <CheckBox
+                Grid.Row="3"
+                Grid.Column="0"
+                Margin="5"
+                Content="Действующий"
+                IsChecked="{Binding SelectedCompany.IsActive, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Действующая компания" />
+            <CheckBox
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="5"
+                Content="Привлечение"
+                IsChecked="{Binding SelectedCompany.IsAttraction, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Внешнее привлечение компании" />
+            <TextBox
+                Margin="5"
+                Grid.Row="4"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                MinWidth="265"
+                MaxWidth="485"
+                Height="30"
+                materialDesign:HintAssist.Hint="Описание"
+                Text="{Binding SelectedCompany.Comment, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            <Button 
+                Grid.Row="5"
+                Grid.Column="0"
+                IsEnabled="{Binding Path=DataContext.IsEnabled, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2}}"
+                Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                Command="{Binding RemoveClient}" 
+                CommandParameter="{Binding  SelectedCompany}" 
+                ToolTip="Сохранить изменения компании"
+                Margin="10">
+                <materialDesign:PackIcon Kind="ContentSave"  Height="22" Width="22" />
+            </Button>
+            <Button 
+                Grid.Row="5"
+                Grid.Column="1"
+                IsEnabled="{Binding Path=DataContext.IsEnabled, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2}}"
+                Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                Command="{Binding RemoveClient}" 
+                CommandParameter="{Binding  SelectedClient}" 
+                ToolTip="Загруить счета компании"
+                Margin="10">
+                <materialDesign:PackIcon Kind="PersonCardDetails"  Height="22" Width="22" />
+            </Button>
+        </Grid>
+        <DataGrid
+            Grid.Row="2"
+            Grid.Column="1"               
+            materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+            materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserReorderColumns="True"
+            CanUserResizeColumns="False"
+            CanUserSortColumns="True"
+            ItemsSource="{Binding Accounts}"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                        Binding="{Binding Path=AccountNumber, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Номер счета"
+                        IsReadOnly="True"/>
+                <DataGridTextColumn
+                        Binding="{Binding Path=DateOpen, UpdateSourceTrigger=PropertyChanged}"
+                        Header="Дата открытия"
+                        IsReadOnly="True"/>
+                <DataGridTextColumn
+                        Binding="{Binding Path=DateTimeLastOperation , UpdateSourceTrigger=PropertyChanged}"
+                        Header="Дата\Время пос. операции"
+                        IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>
