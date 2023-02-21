@@ -13,7 +13,10 @@ namespace RMS.DATA.Repositories
         private static readonly string SelectByCompanyId = "SELECT AccountId, CompanyId, OfficeId, DateOpen, " +
             "DateClose, DateTimeLastOperation, AccountNumber FROM [Account] WHERE CompanyId=@CompanyId;";
         private static readonly string SelectByAccountNumber = "SELECT AccountId, CompanyId, OfficeId, DateOpen, " +
-            "DateClose, DateTimeLastOperation, AccountNumber FROM [Account] WHERE AccountNumber LIKE @f;";
+            "DateClose, DateTimeLastOperation, AccountNumber " +
+            "FROM [Account] " +
+            "WHERE AccountNumber LIKE @f " +
+            "LIMIT 50;";
         private static readonly string Update = "UPDATE [Account] " +
             "SET CompanyId=@CompanyId, OfficeId=@OfficeId, DateOpen=@DateOpen, DateClose=@DateClose, DateTimeLastOperation=@DateTimeLastOperation, AccountNumber=@AccountNumber " +
             "WHERE AccountId=@AccountId;";

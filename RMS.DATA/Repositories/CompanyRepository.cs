@@ -13,7 +13,10 @@ namespace RMS.DATA.Repositories
         private static readonly string SelectByGroupId = "SELECT CompanyId, ManagerId, GroupId, Name, " +
             "IsActive ,IsAttraction, Inn, Comment FROM [Company] WHERE GroupId=@GroupId;";        
         private static readonly string SelectByName = "SELECT CompanyId, ManagerId, GroupId, Name, " +
-            "IsActive ,IsAttraction, Inn, Comment FROM [Company] WHERE Name LIKE @f;";        
+            "IsActive ,IsAttraction, Inn, Comment " +
+            "FROM [Company] " +
+            "WHERE Name LIKE @f " +
+            "LIMIT 50;";        
         private static readonly string Update = "UPDATE [Company] " +
             "SET ManagerId=@ManagerId, GroupId=@GroupId, Name=@Name, IsActive=@IsActive, IsAttraction=@IsAttraction, Inn=@Inn, Comment=@Comment " +
             "WHERE CompanyId=@CompanyId;";        
