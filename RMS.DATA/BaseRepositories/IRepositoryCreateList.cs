@@ -1,7 +1,9 @@
-﻿namespace RMS.DATA.BaseRepositories
+﻿using System.Data;
+
+namespace RMS.DATA.BaseRepositories
 {
     internal interface IRepositoryCreateList<T> where T : class
     {
-        Task CreateListOfEntitiesAsync(IEnumerable<T> list);
+        Task CreateListOfEntitiesAsync(IEnumerable<T> list, IDbConnection connection);
     }
 }

@@ -5,14 +5,14 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Repositories
 {
-    internal class RemainsRepository : IRepositoryUnload<Remains, DateTime, DateTime>
+    internal class RemainsDepositRepository : IRepositoryUnload<Remains, DateTime, DateTime>
     {
         #region SQL
-        private static readonly string Insert = "INSERT INTO [Remains] " +
+        private static readonly string Insert = "INSERT INTO [RemainsDeposit] " +
             "(DateOfUnloading, Account, Debit, Credit, AverageBalance) " +
             "VALUES(@DateOfUnloading, @Account, @Debit, @Credit, @AverageBalance);";
-        private static readonly string Delete = "DELETE FROM [Remains] WHERE DateOfUnloading=@d;";
-        private static readonly string Read = "SELECT * FROM [Remains] WHERE DateOfUnloading BETWEEN @v1 AND @v2 ORDER BY DateOfUnloading DESC;";
+        private static readonly string Delete = "DELETE FROM [RemainsDeposit] WHERE DateOfUnloading=@d;";
+        private static readonly string Read = "SELECT * FROM [RemainsDeposit] WHERE DateOfUnloading BETWEEN @v1 AND @v2 ORDER BY DateOfUnloading DESC;";
         #endregion
         public async Task CreateListOfEntitiesAsync(IEnumerable<Remains> list, IDbConnection connection)
         {

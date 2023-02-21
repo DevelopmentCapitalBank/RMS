@@ -162,6 +162,14 @@ namespace RMS.DATA
                 sql.Append("    AverageBalance   NUMERIC(15,2)  NOT NULL                                            ");
                 sql.Append(" );                                                                                     ");
 
+                sql.Append(" CREATE TABLE IF NOT EXISTS [RemainsDeposit] (                                          ");
+                sql.Append("    DateOfUnloading  DATE           NOT NULL,                                           ");
+                sql.Append("    Account          CHARACTER(20)  NOT NULL,                                           ");
+                sql.Append("    Debit            NUMIRIC(15,2)  NOT NULL,                                           ");
+                sql.Append("    Credit           NUMIRIC(15,2)  NOT NULL,                                           ");
+                sql.Append("    AverageBalance   NUMERIC(15,2)  NOT NULL                                            ");
+                sql.Append(" );                                                                                     ");
+
                 using var connection = new SqliteConnection(dbConfig.Name);
                 await connection.ExecuteAsync(sql.ToString()).ConfigureAwait(false);
             }

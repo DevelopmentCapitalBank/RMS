@@ -12,7 +12,6 @@ namespace RMS.DATA.Repositories
         private static readonly string Update = "UPDATE [DateOp] SET DateOperation=@DateOperation WHERE DateId=@DateId;";
         private static readonly string Insert = "INSERT INTO [DateOp] (DateOperation) VALUES (@DateOperation);";
         private static readonly string Delete = "DELETE FROM [DateOp] WHERE DateId=@DateId;";
-        //private static readonly string Between = "SELECT * FROM [DateOp] WHERE DateOperation BETWEEN @v1 AND @v2 ORDER BY DateOperation DESC;";
         private static readonly string SqlIdentity = "SELECT last_insert_rowid()";
         #endregion
 
@@ -40,11 +39,6 @@ namespace RMS.DATA.Repositories
         {
             return await connection.QueryAsync<DateOp>(Select).ConfigureAwait(false);
         }
-
-        //public async Task<IEnumerable<DateOp>> ReadBetweenAsync(DateTime v1, DateTime v2, IDbConnection connection)
-        //{
-        //    return await connection.QueryAsync<DateOp>(Between, new { v1, v2 }).ConfigureAwait(false);
-        //}
 
         public async Task UpdateAsync(DateOp entity, IDbConnection connection)
         {

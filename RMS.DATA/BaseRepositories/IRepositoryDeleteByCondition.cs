@@ -1,7 +1,9 @@
-﻿namespace RMS.DATA.BaseRepositories
+﻿using System.Data;
+
+namespace RMS.DATA.BaseRepositories
 {
     internal interface IRepositoryDeleteByCondition<C>
     {
-        Task DeleteByConditionAsync(C condition);
+        Task DeleteByConditionAsync(C condition, IDbConnection connection);
     }
 }
