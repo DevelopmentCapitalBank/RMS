@@ -5,12 +5,12 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Services
 {
-    internal class DateOpSercive : IServiceMin<DateOp, int>
+    internal class DateOpSercive : IServiceStandart<DateOp>
     {
-        private readonly IRepositoryMin<DateOp, int> repo;
+        private readonly IRepositoryStandart<DateOp> repo;
         private readonly DbConfig dbConfig;
         public DateOpSercive(DbConfig dbConfig,
-            IRepositoryMin<DateOp, int> repo)
+            IRepositoryStandart<DateOp> repo)
         {
             this.dbConfig = dbConfig;
             this.repo = repo;
@@ -28,17 +28,10 @@ namespace RMS.DATA.Services
             await repo.DeleteAsync(entity, connection);
         }
 
-        //public async Task<IEnumerable<DateOp>> ReadBetweenAsync(DateTime v1, DateTime v2)
-        //{
-        //    using var connection = new SqliteConnection(dbConfig.Name);
-        //    return await repo.ReadBetweenAsync(v1, v2, connection).ConfigureAwait(false);
-        //}
-
-        public async Task<DateOp> ReadByIdAsync(int id)
+        public async Task<IEnumerable<DateOp>> ReadAllAsync()
         {
             using var connection = new SqliteConnection(dbConfig.Name);
-
-            return await repo.ReadByIdAsync(id, connection);
+            return await repo.ReadAllAsync(connection).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(DateOp entity)

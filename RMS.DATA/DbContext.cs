@@ -18,8 +18,8 @@ namespace RMS.DATA
             DateOps = new DateOpSercive(dbConfig, new DateOpRepository());
         }
 
-        public IServiceAvg<Group, int> Groups { get; private set; }
-        public IServiceMin<DateOp, int> DateOps { get; private set; }
+        public IServiceStandart<Group> Groups { get; private set; }
+        public IServiceStandart<DateOp> DateOps { get; private set; }
 
         public async Task Setup()
         {
