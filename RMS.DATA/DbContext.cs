@@ -120,7 +120,7 @@ namespace RMS.DATA
                 sql.Append("    PRIMARY KEY(DateId AUTOINCREMENT)                                                   ");
                 sql.Append(" );                                                                                     ");
 
-                sql.Append(" CREATE TABLE IF NOT EXISTS ExchangeRate(                                               ");
+                sql.Append(" CREATE TABLE IF NOT EXISTS [ExchangeRate] (                                            ");
                 sql.Append("    Iso              CHARACTER(3)   NOT NULL                                            ");
                 sql.Append("                                    REFERENCES [Currency](Iso)  ON DELETE CASCADE       ");
                 sql.Append("                                                                ON UPDATE CASCADE,      ");
@@ -168,6 +168,21 @@ namespace RMS.DATA
                 sql.Append("    Debit            NUMIRIC(15,2)  NOT NULL,                                           ");
                 sql.Append("    Credit           NUMIRIC(15,2)  NOT NULL,                                           ");
                 sql.Append("    AverageBalance   NUMERIC(15,2)  NOT NULL                                            ");
+                sql.Append(" );                                                                                     ");
+
+                sql.Append(" CREATE TABLE IF NOT EXISTS [MaskType] (                                                ");
+                sql.Append("    MaskTypeId  INTEGER       NOT NULL,                                                 ");
+                sql.Append("    Name        VARCHAR(100)  NOT NULL,                                                 ");
+                sql.Append("    PRIMARY KEY(MaskId AUTOINCREMENT)                                                   ");
+                sql.Append(" );                                                                                     ");
+
+                sql.Append(" CREATE TABLE IF NOT EXISTS [Mask] (                                                    ");
+                sql.Append("    MaskId           INTEGER        NOT NULL,                                           ");
+                sql.Append("    MaskTypeId       INTEGER        NOT NULL                                            ");
+                sql.Append("                                    REFERENCES [MaskType](MaskTypeId) ON DELETE CASCADE ");
+                sql.Append("                                                                      ON UPDATE CASCADE,");
+                sql.Append("    Content          VARCHAR(100)   NOT NULL,                                           ");
+                sql.Append("    PRIMARY KEY(MaskId AUTOINCREMENT)                                                   ");
                 sql.Append(" );                                                                                     ");
 
                 using var connection = new SqliteConnection(dbConfig.Name);
