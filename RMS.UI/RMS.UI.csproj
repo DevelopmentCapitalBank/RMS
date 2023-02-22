@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RMS.DATA\RMS.DATA.csproj" />
+  </ItemGroup>
+
 </Project>

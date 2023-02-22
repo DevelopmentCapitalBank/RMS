@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RMS.DATA;
 using RMS.UI.Services;
 using RMS.UI.ViewModels;
 using RMS.UI.Views;
@@ -16,6 +17,8 @@ namespace RMS.UI
             {
                 services.AddSingleton<MainWindow>();
                 services.AddTransient<IDataModel, DataModel>();
+                services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
+                services.AddSingleton<DbContext>();
             }).Build();
         }
 
@@ -23,7 +26,11 @@ namespace RMS.UI
         {
             await AppHost!.StartAsync();
             var startupForm = AppHost.Services.GetRequiredService<MainWindow>();
-            startupForm!.DataContext = new MainWindowViewModel(new DataModel { Data = "" });
+
+            var context = new DbContext(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
+            await context.Setup();
+
+            startupForm!.DataContext = new MainWindowViewModel(context);
             startupForm!.Show();
             base.OnStartup(e);
         }

@@ -16,10 +16,12 @@ namespace RMS.DATA
             this.dbConfig = dbConfig;
             Groups = new GroupService(dbConfig, new GroupRepository());
             DateOps = new DateOpSercive(dbConfig, new DateOpRepository());
+            Companies = new CompanyService(dbConfig, new CompanyRepository());
         }
 
         public IServiceStandart<Group> Groups { get; private set; }
         public IServiceStandart<DateOp> DateOps { get; private set; }
+        public IServiceExtended<Company, int, string> Companies { get; private set;}
 
         public async Task Setup()
         {
@@ -173,7 +175,7 @@ namespace RMS.DATA
                 sql.Append(" CREATE TABLE IF NOT EXISTS [MaskType] (                                                ");
                 sql.Append("    MaskTypeId  INTEGER       NOT NULL,                                                 ");
                 sql.Append("    Name        VARCHAR(100)  NOT NULL,                                                 ");
-                sql.Append("    PRIMARY KEY(MaskId AUTOINCREMENT)                                                   ");
+                sql.Append("    PRIMARY KEY(MaskTypeId AUTOINCREMENT)                                               ");
                 sql.Append(" );                                                                                     ");
 
                 sql.Append(" CREATE TABLE IF NOT EXISTS [Mask] (                                                    ");

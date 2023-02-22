@@ -1,4 +1,4 @@
-﻿using RMS.UI.Services;
+﻿using RMS.DATA;
 using System.Collections.Generic;
 
 namespace RMS.UI.ViewModels
@@ -36,14 +36,14 @@ namespace RMS.UI.ViewModels
         }
         #endregion
 
-        public MainWindowViewModel(IDataModel pageViews)
+        public MainWindowViewModel(DbContext context)
         {
             _pageViewModels[0] = new HomeViewModel(0);
             _pageViewModels[0].ViewChanged += (o, s) =>
             {
                 CurrentPageViewModel = _pageViewModels[s.Value];
             };
-            _pageViewModels[1] = new GroupViewModel(1);
+            _pageViewModels[1] = new GroupViewModel(context, 1);
             _pageViewModels[1].ViewChanged += ( o, s ) => 
             {
                 CurrentPageViewModel = _pageViewModels[s.Value];

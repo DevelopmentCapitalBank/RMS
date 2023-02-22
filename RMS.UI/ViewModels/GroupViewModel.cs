@@ -1,19 +1,193 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using RMS.DATA;
+using RMS.DATA.Entities;
 using RMS.UI.Commands;
 
 namespace RMS.UI.ViewModels
 {
-    public class GroupViewModel : IPageViewModel
+    public class GroupViewModel : BaseViewModel, IPageViewModel
     {
-        public int PageId { get; set; }
-        public string Title { get; set; }
-
-        public event EventHandler<EventArgs<int>>? ViewChanged;
-
-        public GroupViewModel( int pageIndex = 0 )
+        public GroupViewModel(DbContext context, int pageIndex = 0)
         {
             PageId = pageIndex;
             Title = "Groups";
+            this.context = context;
+            OnLoad();
         }
+
+        public event EventHandler<EventArgs<int>>? ViewChanged;
+
+        #region Fields
+        private readonly DbContext context;
+        private ObservableCollection<Group>? groups;
+        private ObservableCollection<Company>? companies;
+        private Group? selectedGroup;
+        private ICommand? createGroup;
+        private ICommand? removeGroup;
+        private ICommand? saveGroup;
+        private ICommand? showCompanies;
+        #endregion
+
+        #region Properties
+        public int PageId { get; set; }
+        public string Title { get; set; }
+        public ObservableCollection<Group>? Groups
+        {
+            get => groups;
+            set
+            {
+                if (groups == value)
+                {
+                    return;
+                }
+                groups = value;
+                OnPropertyChanged(nameof(Groups));
+            }
+        }
+        public ObservableCollection<Company>? Companies
+        {
+            get => companies;
+            set
+            {
+                if (companies == value)
+                {
+                    return;
+                }
+                companies = value;
+                OnPropertyChanged(nameof(Companies));
+            }
+        }
+        public Group? SelectedGroup
+        {
+            get => selectedGroup;
+            set
+            {
+                if (selectedGroup == value)
+                {
+                    return;
+                }
+                if (Companies != null)
+                {
+                    Companies.Clear();
+                }
+                selectedGroup = value;
+                OnPropertyChanged(nameof(SelectedGroup));
+            }
+        }
+        #endregion
+
+        #region Methods
+        private async void OnLoad()
+        {
+            var grps = await context.Groups.ReadAllAsync();
+            Groups = new ObservableCollection<Group>(grps);
+        }
+        #endregion
+
+        #region Commands
+        public ICommand CreateGroup
+        {
+            get
+            {
+                return createGroup ??= new RelayCommand(async x => {
+                    var newGroup = new Group { Name = "НОВАЯ ГРУППА", Comment = "Комментарий" };
+                    await context.Groups.CreateAsync(newGroup);
+                    OnLoad();
+                });
+            }
+        }
+
+        public ICommand RemoveGroup
+        {
+            get
+            {
+                if (removeGroup == null)
+                {
+                    removeGroup = new RelayCommand(ExecuteRemoveGroup, CanExecuteRemoveGroup);
+                }
+                return removeGroup;
+            }
+        }
+        public async void ExecuteRemoveGroup(object parameter)
+        {
+            await context.Groups.DeleteAsync(SelectedGroup);
+            OnLoad();
+        }
+        public bool CanExecuteRemoveGroup(object parameter)
+        {
+            if (parameter == null)
+            {
+                return false;
+            }
+
+            if (parameter is Group group)
+            {
+                return group.GroupId != 1;
+            }
+            return false;
+        }
+
+        public ICommand SaveGroup
+        {
+            get
+            {
+                if (saveGroup == null)
+                {
+                    saveGroup = new RelayCommand(ExecuteSaveGroup, CanExecuteSaveGroup);
+                }
+                return saveGroup;
+            }
+        }
+        public async void ExecuteSaveGroup(object parameter)
+        {
+            await context.Groups.UpdateAsync(SelectedGroup);
+            OnLoad();
+        }
+        public bool CanExecuteSaveGroup(object parameter)
+        {
+            if (parameter == null)
+            {
+                return false;
+            }
+
+            if (parameter is Group group)
+            {
+                return group.GroupId != 1;
+            }
+            return false;
+        }
+
+        public ICommand ShowCompanies
+        {
+            get
+            {
+                if (showCompanies == null)
+                {
+                    showCompanies = new RelayCommand(ExecuteShowCompanies, CanExecuteShowCompanies);
+                }
+                return showCompanies;
+            }
+        }
+        public async void ExecuteShowCompanies(object parameter)
+        {
+            var comps = await context.Companies.ReadListByIdAsync(SelectedGroup.GroupId);
+            Companies = new ObservableCollection<Company>(comps);
+        }
+        public bool CanExecuteShowCompanies(object parameter)
+        {
+            if (parameter == null)
+            {
+                return false;
+            }
+
+            if (parameter is Group group)
+            {
+                return group.GroupId != 1;
+            }
+            return false;
+        }
+        #endregion        
     }
 }
