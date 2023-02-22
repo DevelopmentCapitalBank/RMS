@@ -7,17 +7,9 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:local="clr-namespace:RMS.UI.Views"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <DockPanel>
         <TextBlock
+            DockPanel.Dock="Top"
             Text="Компании" 
             Grid.Row="0"
             Margin="10 10 0 0" 
@@ -25,9 +17,7 @@
             Style="{StaticResource MaterialDesignHeadline4TextBlock}" 
             VerticalAlignment="Center"/>
         <Grid
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.RowSpan="2"
+            DockPanel.Dock="Left"
             Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -62,7 +52,7 @@
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     materialDesign:HintAssist.Hint="По наименованию"  
-                    Text="{Binding Search.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                    Text="{Binding Search.CompanyName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                 <Button 
                     Grid.Row="0"
                     Grid.Column="2"
@@ -87,32 +77,33 @@
                 CanUserSortColumns="True"
                 ItemsSource="{Binding Companies}"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                SelectedItem="{Binding SelectedCompany}">
+                SelectedItem="{Binding SelectedCompanyView}">
                 <DataGrid.Columns>
                     <DataGridTextColumn
-                        Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                        Binding="{Binding Path=GroupName, UpdateSourceTrigger=PropertyChanged}"
                         Header="Группа"
-                        IsReadOnly="True"/>
+                        IsReadOnly="True"
+                        MaxWidth="100"/>
                     <DataGridTextColumn
-                        Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                        Binding="{Binding Path=CompanyId, UpdateSourceTrigger=PropertyChanged}"
                         Header="Номер клиента"
-                        IsReadOnly="True"/>
+                        IsReadOnly="True"
+                        MaxWidth="120"/>
                     <DataGridTextColumn
-                        Binding="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                        Binding="{Binding Path=Inn, UpdateSourceTrigger=PropertyChanged}"
                         Header="ИНН"
-                        IsReadOnly="True"/>
+                        IsReadOnly="True"
+                        MaxWidth="120"/>
                     <DataGridTextColumn
-                        Binding="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                        Binding="{Binding Path=CompanyName, UpdateSourceTrigger=PropertyChanged}"
                         Header="Наименование"
-                        IsReadOnly="True"/>
+                        IsReadOnly="True"
+                        MaxWidth="300"/>
                     <DataGridTextColumn
-                        Binding="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                        Binding="{Binding Path=ManagerName, UpdateSourceTrigger=PropertyChanged}"
                         Header="Менеджер"
-                        IsReadOnly="True"/>
-                    <DataGridTextColumn
-                        Binding="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
-                        Header="Офис"
-                        IsReadOnly="True"/>
+                        IsReadOnly="True"
+                        MaxWidth="120"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Border                
@@ -123,41 +114,23 @@
                 ClipToBounds="True"
                 CornerRadius="0 0 3 3">
                 <materialDesign:ColorZone Padding="10" Mode="PrimaryDark">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button
-                            Grid.Column="0"
-                            Margin="10"
-                            Command="{Binding CreateCompany}"
-                            Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                            ToolTip="Создать нового клиента">
-                            <materialDesign:PackIcon
-                                Width="22"
-                                Height="22"
-                                Kind="Plus" />
-                        </Button>
-                        <Button
-                            Grid.Column="1"
-                            Margin="10"
-                            Command="{Binding RemoveCompany}"
-                            CommandParameter="{Binding SelectedCompany}"
-                            Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                            ToolTip="Удалить клиента">
-                            <materialDesign:PackIcon
-                                Width="22"
-                                Height="22"
-                                Kind="Delete" />
-                        </Button>
-                    </Grid>
+                    <Button
+                        Grid.Column="1"
+                        Margin="10"
+                        Command="{Binding RemoveCompany}"
+                        CommandParameter="{Binding SelectedCompanyView}"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                        ToolTip="Удалить компанию">
+                        <materialDesign:PackIcon
+                            Width="22"
+                            Height="22"
+                            Kind="Delete" />
+                    </Button>
                 </materialDesign:ColorZone>
             </Border>
         </Grid>
-        <Grid 
-            Grid.Row="1"
-            Grid.Column="1"
+        <Grid
+            DockPanel.Dock="Top"
             Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -193,12 +166,12 @@
                 Grid.Column="0"
                 MinWidth="150"
                 HorizontalAlignment="Left"
-                DisplayMemberPath="StatusName"
+                DisplayMemberPath="Name"
                 Style="{StaticResource MaterialDesignFilledComboBox}"
                 materialDesign:HintAssist.Hint="Группа"
-                ItemsSource="{Binding Path=DataContext.List.IndicativeStatuses, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=3}}"
-                SelectedValue="{Binding Bid.IndicativeStatusID}"
-                SelectedValuePath="IndicativeStatusID">
+                ItemsSource="{Binding Groups}"
+                SelectedValue="{Binding SelectedCompany.GroupId}"
+                SelectedValuePath="GroupId">
                 <ComboBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel />
@@ -211,12 +184,12 @@
                 Grid.Column="1"
                 MinWidth="150"
                 HorizontalAlignment="Left"
-                DisplayMemberPath="StatusName"
+                DisplayMemberPath="Name"
                 Style="{StaticResource MaterialDesignFilledComboBox}"
                 materialDesign:HintAssist.Hint="Менеджер"
-                ItemsSource="{Binding Path=DataContext.List.IndicativeStatuses, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=3}}"
-                SelectedValue="{Binding Bid.IndicativeStatusID}"
-                SelectedValuePath="IndicativeStatusID">
+                ItemsSource="{Binding Managers}"
+                SelectedValue="{Binding SelectedCompany.ManagerId}"
+                SelectedValuePath="ManagerId">
                 <ComboBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel />
@@ -260,10 +233,9 @@
             <Button 
                 Grid.Row="5"
                 Grid.Column="0"
-                IsEnabled="{Binding Path=DataContext.IsEnabled, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2}}"
                 Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
-                Command="{Binding RemoveClient}" 
-                CommandParameter="{Binding  SelectedCompany}" 
+                Command="{Binding SaveCompany}" 
+                CommandParameter="{Binding SelectedCompany}" 
                 ToolTip="Сохранить изменения компании"
                 Margin="10">
                 <materialDesign:PackIcon Kind="ContentSave"  Height="22" Width="22" />
@@ -271,7 +243,6 @@
             <Button 
                 Grid.Row="5"
                 Grid.Column="1"
-                IsEnabled="{Binding Path=DataContext.IsEnabled, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2}}"
                 Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
                 Command="{Binding RemoveClient}" 
                 CommandParameter="{Binding  SelectedClient}" 
@@ -280,9 +251,7 @@
                 <materialDesign:PackIcon Kind="PersonCardDetails"  Height="22" Width="22" />
             </Button>
         </Grid>
-        <DataGrid
-            Grid.Row="2"
-            Grid.Column="1"               
+        <DataGrid              
             materialDesign:DataGridAssist.CellPadding="4 2 2 2"
             materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2"
             AutoGenerateColumns="False"
@@ -309,5 +278,5 @@
                         IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-    </Grid>
+    </DockPanel>
 </UserControl>

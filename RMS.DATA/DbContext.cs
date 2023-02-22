@@ -5,6 +5,7 @@ using RMS.DATA.BaseServices;
 using RMS.DATA.Entities;
 using RMS.DATA.Repositories;
 using RMS.DATA.Services;
+using RMS.DATA.Views;
 
 namespace RMS.DATA
 {
@@ -17,11 +18,13 @@ namespace RMS.DATA
             Groups = new GroupService(dbConfig, new GroupRepository());
             DateOps = new DateOpSercive(dbConfig, new DateOpRepository());
             Companies = new CompanyService(dbConfig, new CompanyRepository());
+            ViewCompanies = new CompanyViewService(dbConfig, new CompanyViewRepository());
         }
 
         public IServiceStandart<Group> Groups { get; private set; }
         public IServiceStandart<DateOp> DateOps { get; private set; }
         public IServiceExtended<Company, int, string> Companies { get; private set;}
+        public IServiceFind<CompanyView, CompanyView> ViewCompanies { get; private set; }
 
         public async Task Setup()
         {
@@ -186,6 +189,18 @@ namespace RMS.DATA
                 sql.Append("    Content          VARCHAR(100)   NOT NULL,                                           ");
                 sql.Append("    PRIMARY KEY(MaskId AUTOINCREMENT)                                                   ");
                 sql.Append(" );                                                                                     ");
+
+                sql.Append(" CREATE VIEW IF NOT EXISTS [CompanyView]                                                ");
+                sql.Append(" AS                                                                                     ");
+                sql.Append(" SELECT                                                                                 ");
+                sql.Append("    g.Name as GroupName,                                                                ");
+                sql.Append("    c.CompanyId,                                                                        ");
+                sql.Append("    c.Name as CompanyName,                                                              ");
+                sql.Append("    c.Inn,                                                                              ");
+                sql.Append("    m.Name as ManagerName                                                               ");
+                sql.Append(" FROM [Company] as c                                                                    ");
+                sql.Append(" INNER JOIN [Group] as g ON c.GroupId = g.GroupId                                       ");
+                sql.Append(" INNER JOIN [Manager] as m ON c.ManagerId = m.ManagerId;                                ");
 
                 using var connection = new SqliteConnection(dbConfig.Name);
                 await connection.ExecuteAsync(sql.ToString()).ConfigureAwait(false);
