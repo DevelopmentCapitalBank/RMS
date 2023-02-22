@@ -118,7 +118,7 @@
                         Grid.Column="1"
                         Margin="10"
                         Command="{Binding RemoveCompany}"
-                        CommandParameter="{Binding SelectedCompanyView}"
+                        CommandParameter="{Binding SelectedCompany}"
                         Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                         ToolTip="Удалить компанию">
                         <materialDesign:PackIcon
@@ -145,6 +145,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TextBlock
+                Margin="5"
                 Grid.Row="0"
                 Grid.Column="0"
                 Text="{Binding SelectedCompany.CompanyId}"
@@ -154,9 +155,17 @@
             <TextBox
                 Margin="5"
                 Grid.Row="0"
+                Grid.Column="0"
+                Width="150"
+                Visibility="{Binding VisibilityCompanyIdTextBox, UpdateSourceTrigger=PropertyChanged}"
+                materialDesign:HintAssist.Hint="Номер клиента"
+                HorizontalAlignment="Left"
+                Text="{Binding SelectedCompany.CompanyId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            <TextBox
+                Margin="5"
+                Grid.Row="0"
                 Grid.Column="1"
-                Width="140"
-                Height="30"
+                Width="150"
                 materialDesign:HintAssist.Hint="ИНН"
                 HorizontalAlignment="Left"
                 Text="{Binding SelectedCompany.Inn, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
@@ -201,9 +210,9 @@
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                MinWidth="265"
-                MaxWidth="485"
-                Height="30"
+                MinWidth="300"
+                MaxWidth="400"
+                HorizontalAlignment="Left"
                 materialDesign:HintAssist.Hint="Наименование"  
                 Text="{Binding SelectedCompany.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
             <CheckBox
@@ -225,31 +234,57 @@
                 Grid.Row="4"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                MinWidth="265"
-                MaxWidth="485"
-                Height="30"
+                MinWidth="300"
+                MaxWidth="400"
+                HorizontalAlignment="Left"
                 materialDesign:HintAssist.Hint="Описание"
                 Text="{Binding SelectedCompany.Comment, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
-            <Button 
+            <Grid
                 Grid.Row="5"
                 Grid.Column="0"
-                Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
-                Command="{Binding SaveCompany}" 
-                CommandParameter="{Binding SelectedCompany}" 
-                ToolTip="Сохранить изменения компании"
-                Margin="10">
-                <materialDesign:PackIcon Kind="ContentSave"  Height="22" Width="22" />
-            </Button>
-            <Button 
-                Grid.Row="5"
-                Grid.Column="1"
-                Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
-                Command="{Binding RemoveClient}" 
-                CommandParameter="{Binding  SelectedClient}" 
-                ToolTip="Загруить счета компании"
-                Margin="10">
-                <materialDesign:PackIcon Kind="PersonCardDetails"  Height="22" Width="22" />
-            </Button>
+                Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="0"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                    Command="{Binding SaveCompany}" 
+                    CommandParameter="{Binding SelectedCompany}" 
+                    ToolTip="Сохранить изменения компании"
+                    Margin="10">
+                    <materialDesign:PackIcon Kind="ContentSave"  Height="22" Width="22" />
+                </Button>
+                <Button
+                    Grid.Column="1"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                    Command="{Binding CreateCompany}"
+                    ToolTip="Создать компанию"
+                    Margin="10">
+                    <materialDesign:PackIcon Kind="Plus" Height="22" Width="22" />
+                </Button>
+                <Button
+                    Grid.Column="2"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                    Command="{Binding InsertCompany}"
+                    CommandParameter="{Binding  SelectedCompany}" 
+                    ToolTip="Записать данные по новой компании"
+                    Margin="10">
+                    <materialDesign:PackIcon Kind="ContentSaveEdit" Height="22" Width="22" />
+                </Button>
+                <Button
+                    Grid.Column="3"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                    Command="{Binding ShowAccounts}" 
+                    CommandParameter="{Binding  SelectedCompany}" 
+                    ToolTip="Загруить счета компании"
+                    Margin="10">
+                    <materialDesign:PackIcon Kind="PersonCardDetails"  Height="22" Width="22" />
+                </Button>
+            </Grid>
         </Grid>
         <DataGrid              
             materialDesign:DataGridAssist.CellPadding="4 2 2 2"
@@ -265,17 +300,20 @@
             Margin="10">
             <DataGrid.Columns>
                 <DataGridTextColumn
-                        Binding="{Binding Path=AccountNumber, UpdateSourceTrigger=PropertyChanged}"
-                        Header="Номер счета"
-                        IsReadOnly="True"/>
+                    Binding="{Binding Path=AccountNumber, UpdateSourceTrigger=PropertyChanged}"
+                    Header="Номер счета"
+                    IsReadOnly="True"
+                    Width="170"/>
                 <DataGridTextColumn
-                        Binding="{Binding Path=DateOpen, UpdateSourceTrigger=PropertyChanged}"
-                        Header="Дата открытия"
-                        IsReadOnly="True"/>
+                    Binding="{Binding Path=DateOpen, UpdateSourceTrigger=PropertyChanged}"
+                    Header="Дата открытия"
+                    IsReadOnly="True"
+                    Width="170"/>
                 <DataGridTextColumn
-                        Binding="{Binding Path=DateTimeLastOperation , UpdateSourceTrigger=PropertyChanged}"
-                        Header="Дата\Время пос. операции"
-                        IsReadOnly="True"/>
+                    Binding="{Binding Path=DateTimeLastOperation , UpdateSourceTrigger=PropertyChanged}"
+                    Header="Дата\Время пос. операции"
+                    IsReadOnly="True"
+                    Width="270"/>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

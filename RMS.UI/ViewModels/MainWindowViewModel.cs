@@ -48,7 +48,7 @@ namespace RMS.UI.ViewModels
             {
                 CurrentPageViewModel = _pageViewModels[s.Value];
             };
-            _pageViewModels[2] = new CompanyViewModel(2);
+            _pageViewModels[2] = new CompanyViewModel(context, 2);
             _pageViewModels[2].ViewChanged += ( o, s ) =>
             {
                 CurrentPageViewModel = _pageViewModels[s.Value];
