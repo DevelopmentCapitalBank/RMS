@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="RMS" MinHeight="500" MinWidth="1000">
+        Title="RMS" MinHeight="600" MinWidth="1000">
     <materialDesign:DialogHost  
         CloseOnClickAway="False"
         Identifier="RootDialog" >

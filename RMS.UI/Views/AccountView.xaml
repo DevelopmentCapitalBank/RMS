@@ -7,27 +7,16 @@
     xmlns:local="clr-namespace:RMS.UI.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <DockPanel>
         <TextBlock
             Text="{Binding Title}"
-            Grid.Row="0"
+            DockPanel.Dock="Top"
             Margin="10 10 0 0" 
             FontWeight="Bold"
             Style="{StaticResource MaterialDesignHeadline4TextBlock}" 
             VerticalAlignment="Center"/>
         <Grid
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.RowSpan="2"
+            DockPanel.Dock="Left"
             Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -204,5 +193,5 @@
                         IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-    </Grid>
+    </DockPanel>
 </UserControl>

@@ -29,15 +29,25 @@ namespace RMS.UI.ViewModels
         private ObservableCollection<CompanyView>? companies;
         private ObservableCollection<Group>? groups;
         private ObservableCollection<Manager>? managers;
+        private ObservableCollection<Office>? offices;
         private Company? selectedCompany;
+        private Company? newCompany;
         private ObservableCollection<Account>? accounts;
+        private Account? selectedAccount;
+        private Account? newAccount;
         private ICommand? searchCompany;
         private ICommand? removeCompany;
         private ICommand? saveCompany;
         private ICommand? showAccounts;
-        private ICommand? createCompany;
+        private ICommand? showPopupCreateCompany;
         private ICommand? insertCompany;
-        private string visibilityCompanyIdTextBox = "Collapsed";
+        private ICommand? cancelInsertCompany;
+        private ICommand? showPopupCreateAccount;
+        private ICommand? insertAccount;
+        private ICommand? removeAccount;
+        private ICommand? cancelInsertAccount;
+        private bool isShowCreateAccount = false;
+        private bool isShowCreateCompany = false;
         #endregion
 
         #region Properties
@@ -48,7 +58,7 @@ namespace RMS.UI.ViewModels
             get { return search; }
             set
             {
-                if (value == null)
+                if (value == search)
                 {
                     return;
                 }
@@ -61,7 +71,7 @@ namespace RMS.UI.ViewModels
             get { return selectedCompanyView; }
             set
             {
-                if (value == null)
+                if (value == selectedCompanyView)
                 {
                     return;
                 }
@@ -75,7 +85,7 @@ namespace RMS.UI.ViewModels
             get { return companies; }
             set
             {
-                if (value == null)
+                if (value == companies)
                 {
                     return;
                 }
@@ -88,7 +98,7 @@ namespace RMS.UI.ViewModels
             get { return groups; }
             set
             {
-                if (value == null)
+                if (value == groups)
                 {
                     return;
                 }
@@ -101,7 +111,7 @@ namespace RMS.UI.ViewModels
             get { return managers; }
             set
             {
-                if (value == null)
+                if (value == managers)
                 {
                     return;
                 }
@@ -109,12 +119,25 @@ namespace RMS.UI.ViewModels
                 OnPropertyChanged(nameof(Managers));
             }
         }
+        public ObservableCollection<Office>? Offices
+        {
+            get { return offices; }
+            set
+            {
+                if (value == offices)
+                {
+                    return;
+                }
+                offices = value;
+                OnPropertyChanged(nameof(Offices));
+            }
+        }
         public Company? SelectedCompany
         {
             get { return selectedCompany; }
             set
             {
-                if (value == null)
+                if (value == selectedCompany)
                 {
                     return;
                 }
@@ -122,12 +145,25 @@ namespace RMS.UI.ViewModels
                 OnPropertyChanged(nameof(SelectedCompany));
             }
         }
+        public Company? NewCompany
+        {
+            get { return newCompany; }
+            set
+            {
+                if (value == newCompany)
+                {
+                    return;
+                }
+                newCompany = value;
+                OnPropertyChanged(nameof(NewCompany));
+            }
+        }
         public ObservableCollection<Account>? Accounts
         {
             get { return accounts; }
             set
             {
-                if (value == null)
+                if (value == accounts)
                 {
                     return;
                 }
@@ -135,17 +171,56 @@ namespace RMS.UI.ViewModels
                 OnPropertyChanged(nameof(Accounts));
             }
         }
-        public string VisibilityCompanyIdTextBox
+        public Account? SelectedAccount
         {
-            get { return visibilityCompanyIdTextBox; }
+            get { return selectedAccount; }
             set
             {
-                if (value == null)
+                if (value == selectedAccount)
                 {
                     return;
                 }
-                visibilityCompanyIdTextBox = value;
-                OnPropertyChanged(nameof(VisibilityCompanyIdTextBox));
+                selectedAccount = value;
+                OnPropertyChanged(nameof(SelectedAccount));
+            }
+        }
+        public Account? NewAccount
+        {
+            get { return newAccount; }
+            set
+            {
+                if (value == newAccount)
+                {
+                    return;
+                }
+                newAccount = value;
+                OnPropertyChanged(nameof(NewAccount));
+            }
+        }
+        public bool IsShowCreateAccount
+        {
+            get => isShowCreateAccount;
+            set
+            {
+                if (IsShowCreateAccount == value)
+                {
+                    return;
+                }
+                isShowCreateAccount = value;
+                OnPropertyChanged(nameof(IsShowCreateAccount));
+            }
+        }
+        public bool IsShowCreateCompany
+        {
+            get => isShowCreateCompany;
+            set
+            {
+                if (isShowCreateCompany == value)
+                {
+                    return;
+                }
+                isShowCreateCompany = value;
+                OnPropertyChanged(nameof(IsShowCreateCompany));
             }
         }
         #endregion
@@ -155,6 +230,12 @@ namespace RMS.UI.ViewModels
         {
             try
             {
+                if (Accounts != null)
+                {
+                    Accounts.Clear();
+                }
+                SelectedAccount = new();
+
                 var gs = await context.Groups.ReadAllAsync().ConfigureAwait(false);
                 Groups = new ObservableCollection<Group>(gs);
 
@@ -189,26 +270,21 @@ namespace RMS.UI.ViewModels
                 var comps = await context.ViewCompanies.FindAsync(Search);
                 Companies = new ObservableCollection<CompanyView>(comps);
                 Search = new CompanyView();
-                SelectedCompany = new Company();
-                SelectedCompanyView = new CompanyView();
-                if (Accounts != null)
-                {
-                    Accounts.Clear();
-                }
-                VisibilityCompanyIdTextBox = "Collapsed";
             }
             catch (Exception ex)
             {
                 Companies = new ObservableCollection<CompanyView>();
-                Search = new CompanyView();
-                SelectedCompany = new Company();
-                SelectedCompanyView = new CompanyView();
+                await dialogService.ShowMsgOk($"Ошибка поиска компании!\n{ex.Message}").ConfigureAwait(false);
+            }
+            finally
+            {
+                SelectedCompany = new();
+                SelectedCompanyView = new();
+                SelectedAccount = new();
                 if (Accounts != null)
                 {
                     Accounts.Clear();
                 }
-                VisibilityCompanyIdTextBox = "Collapsed";
-                await dialogService.ShowMsgOk($"Ошибка поиска компании!\n{ex.Message}").ConfigureAwait(false);
             }
         }
         public bool CanExecuteSearchCompany(object parameter)
@@ -240,26 +316,22 @@ namespace RMS.UI.ViewModels
         {
             try
             {
-                await context.Companies.DeleteAsync(SelectedCompany);
-                VisibilityCompanyIdTextBox = "Collapsed";
-                Search = new CompanyView();
-                SelectedCompany = new Company();
-                SelectedCompanyView = new CompanyView();
-                if (Accounts != null)
+                bool isDelete = await dialogService.ShowMsgYesNo("Удалить выбранную компанию?\nВсе счета связанные с этой\nкомпанией также будут удалены.").ConfigureAwait(false);
+                if (isDelete)
                 {
-                    Accounts.Clear();
-                }
-                if (Companies != null)
-                {
-                    Companies.Clear();
+                    await context.Companies.DeleteAsync(SelectedCompany);
                 }
             }
             catch (Exception ex)
             {
-                VisibilityCompanyIdTextBox = "Collapsed";
-                Search = new CompanyView();
-                SelectedCompany = new Company();
-                SelectedCompanyView = new CompanyView();
+                await dialogService.ShowMsgOk($"Ошибка удаления компании!\n{ex.Message}").ConfigureAwait(false);
+            }
+            finally
+            {
+                Search = new();
+                SelectedCompany = new();
+                SelectedCompanyView = new();
+                SelectedAccount = new();
                 if (Accounts != null)
                 {
                     Accounts.Clear();
@@ -268,7 +340,6 @@ namespace RMS.UI.ViewModels
                 {
                     Companies.Clear();
                 }
-                await dialogService.ShowMsgOk($"Ошибка удаления компании!\n{ex.Message}").ConfigureAwait(false);
             }
         }
         public bool CanExecuteRemoveCompany(object parameter)
@@ -292,17 +363,15 @@ namespace RMS.UI.ViewModels
             try
             {
                 await context.Companies.UpdateAsync(SelectedCompany);
-                VisibilityCompanyIdTextBox = "Collapsed";
             }
             catch (Exception ex)
             {
-                VisibilityCompanyIdTextBox = "Collapsed";
                 await dialogService.ShowMsgOk($"Ошибка сохранения данных компании!\n{ex.Message}").ConfigureAwait(false);
             }
         }
         public bool CanExecuteSaveCompany(object parameter)
         {
-            return parameter != null && VisibilityCompanyIdTextBox != "Visible";
+            return parameter != null;
         }
 
         public ICommand ShowAccounts
@@ -322,42 +391,37 @@ namespace RMS.UI.ViewModels
             {
                 var ac = await context.Accounts.ReadListByIdAsync(SelectedCompany.CompanyId);
                 Accounts = new ObservableCollection<Account>(ac);
-                VisibilityCompanyIdTextBox = "Collapsed";
             }
             catch (Exception ex)
             {
                 Accounts = new ObservableCollection<Account>();
-                VisibilityCompanyIdTextBox = "Collapsed";
                 await dialogService.ShowMsgOk($"Ошибка чтения счетов в компании!\n{ex.Message}").ConfigureAwait(false);
+            }
+            finally
+            {
+                SelectedAccount = new();
             }
         }
         public bool CanExecuteShowAccounts(object parameter)
         {
-            return parameter != null && VisibilityCompanyIdTextBox != "Visible";
+            return parameter != null;
         }
         
-        public ICommand CreateCompany
+        public ICommand ShowPopupCreateCompany
         {
             get
             {
-                return createCompany ??= new RelayCommand(async x => {
+                return showPopupCreateCompany ??= new RelayCommand(async x => {
                     try
                     {
-                        Search = new CompanyView();
-                        if (Companies != null)
-                        {
-                            Companies.Clear();
-                        }
+                        IsShowCreateCompany = true;
+                        IsShowCreateAccount = false;
 
-                        SelectedCompany = new Company {
-                            CompanyId = 77777,
-                            Name = "ИМЯ КОМПАНИИ",
+                        NewCompany = new Company {
                             ManagerId = 1,
                             GroupId = 1,
                             IsActive = true,
-                            IsAttraction = false,
-                            Inn = "1234567890",
-                            Comment = "Комментарий"
+                            IsAttraction = false
                         };
 
                         var gs = await context.Groups.ReadAllAsync().ConfigureAwait(false);
@@ -365,12 +429,9 @@ namespace RMS.UI.ViewModels
 
                         var ms = await context.Managers.ReadAllAsync().ConfigureAwait(false);
                         Managers = new ObservableCollection<Manager>(ms);
-
-                        VisibilityCompanyIdTextBox = "Visible";
                     }
                     catch (Exception ex)
                     {
-                        VisibilityCompanyIdTextBox = "Collapsed";
                         await dialogService.ShowMsgOk($"Ошибка создания пустой записи компании!\n{ex.Message}").ConfigureAwait(false);
                     }
                 });
@@ -392,18 +453,185 @@ namespace RMS.UI.ViewModels
         {
             try
             {
-                SelectedCompany = await context.Companies.CreateAsync(SelectedCompany);
-                VisibilityCompanyIdTextBox = "Collapsed";
+                SelectedCompany = await context.Companies.CreateAsync(NewCompany);
+                Search = new();
+                SelectedCompanyView = new();
+                SelectedAccount = new();
+                if (Accounts != null)
+                {
+                    Accounts.Clear();
+                }
+                if (Companies != null)
+                {
+                    Companies.Clear();
+                }
             }
             catch (Exception ex)
             {
-                VisibilityCompanyIdTextBox = "Collapsed";
                 await dialogService.ShowMsgOk($"Ошибка при создании новой компании!\n{ex.Message}").ConfigureAwait(false);
+            }
+            finally
+            {
+                IsShowCreateCompany = false;
+                IsShowCreateAccount = false;
             }
         }
         public bool CanExecuteInsertCompany(object parameter)
         {
-            return parameter != null && VisibilityCompanyIdTextBox != "Collapsed";
+            if (parameter is Company c)
+            {
+                return c.Inn.Length >= 6 && c.Inn.Length <= 12 && c.Name.Length <= 255
+                    && c.CompanyId > 0;
+            }
+            return false;
+        }
+
+        public ICommand CancelInsertCompany
+        {
+            get
+            {
+                return cancelInsertCompany ??= new RelayCommand(x => {
+                    IsShowCreateCompany = false;
+                    IsShowCreateAccount = false;
+                    NewCompany = new();
+                });
+            }
+        }
+
+        public ICommand ShowPopupCreateAccount
+        {
+            get
+            {
+                if (showPopupCreateAccount == null)
+                {
+                    showPopupCreateAccount = new RelayCommand(ExecuteShowPopupCreateAccount, CanExecuteShowPopupCreateAccount);
+                }
+                return showPopupCreateAccount;
+            }
+        }
+        public async void ExecuteShowPopupCreateAccount(object parameter)
+        {
+            try
+            {
+                IsShowCreateCompany = false;
+                IsShowCreateAccount = true;
+                NewAccount = new Account
+                {
+                    CompanyId = selectedCompany.CompanyId,
+                    OfficeId = 1,
+                    DateOpen = DateTime.Now
+                };
+                var offcs = await context.Offices.ReadAllAsync().ConfigureAwait(false);
+                Offices = new ObservableCollection<Office>(offcs);
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка создания пустой записи счета!\n{ex.Message}").ConfigureAwait(false);
+            }
+        }
+        public bool CanExecuteShowPopupCreateAccount(object parameter)
+        {
+            return parameter != null;
+        }
+
+        public ICommand InsertAccount
+        {
+            get
+            {
+                if (insertAccount == null)
+                {
+                    insertAccount = new RelayCommand(ExecuteInsertAccount, CanExecuteInsertAccount);
+                }
+                return insertAccount;
+            }
+        }
+        public async void ExecuteInsertAccount(object parameter)
+        {
+            try
+            {
+                NewAccount = await context.Accounts.CreateAsync(NewAccount).ConfigureAwait(false);
+                if (Accounts == null)
+                {
+                    Accounts = new ObservableCollection<Account>();
+                }
+                Accounts.Add(NewAccount);
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка добавления нового счета!\n{ex.Message}").ConfigureAwait(false);
+            }
+            finally
+            {
+                IsShowCreateCompany = false;
+                IsShowCreateAccount = false;
+            }
+        }
+        public bool CanExecuteInsertAccount(object parameter)
+        {
+            if (parameter == null)
+            {
+                return false; 
+            }
+            if (parameter is Account ac)
+            {
+                if (ac.AccountNumber.Length == 20)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public ICommand RemoveAccount
+        {
+            get
+            {
+                if (removeAccount == null)
+                {
+                    removeAccount = new RelayCommand(ExecuteRemoveAccount, CanExecuteRemoveAccount);
+                }
+                return removeAccount;
+            }
+        }
+        public async void ExecuteRemoveAccount(object parameter)
+        {
+            try
+            {
+                bool isDeleteAccount = await dialogService.ShowMsgYesNo("Удалить счет?").ConfigureAwait(false);
+                if (isDeleteAccount)
+                {
+                    Accounts.Remove(SelectedAccount);
+                    await context.Accounts.DeleteAsync(SelectedAccount).ConfigureAwait(false);
+                    SelectedAccount = new();
+                }
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка удаления счета!\n{ex.Message}").ConfigureAwait(false);
+            }
+        }
+        public bool CanExecuteRemoveAccount(object parameter)
+        {
+            return parameter != null;
+        }
+
+        public ICommand CancelInsertAccount
+        {
+            get
+            {
+                return cancelInsertAccount ??= new RelayCommand(async x => {
+                    try
+                    {
+                        IsShowCreateCompany = false;
+                        IsShowCreateAccount = false;
+                        NewAccount = new();
+                    }
+                    catch (Exception ex)
+                    {
+                        await dialogService.ShowMsgOk($"Ошибка!\n{ex.Message}").ConfigureAwait(false);
+                    }
+                });
+            }
         }
         #endregion
     }

@@ -21,11 +21,13 @@ namespace RMS.DATA
             ViewCompanies = new CompanyViewService(dbConfig, new CompanyViewRepository());
             Managers = new ManagerService(dbConfig, new ManagerRepository());
             Accounts = new AccountService(dbConfig, new AccountRepository());
+            Offices = new OfficeService(dbConfig,new OfficeRepository());
         }
 
         public IServiceStandart<Group> Groups { get; private set; }
         public IServiceStandart<DateOp> DateOps { get; private set; }
         public IServiceStandart<Manager> Managers { get; private set; }
+        public IServiceStandart<Office> Offices { get; private set; }
         public IServiceExtended<Company, int, string> Companies { get; private set;}
         public IServiceFind<CompanyView, CompanyView> ViewCompanies { get; private set; }
         public IServiceExtended<Account, int, string> Accounts { get; private set; }
