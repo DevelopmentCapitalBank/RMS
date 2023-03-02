@@ -32,7 +32,7 @@ namespace RMS.UI
             var context = new DbContext(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
             await context.Setup();
 
-            startupForm!.DataContext = new MainWindowViewModel(context);
+            startupForm!.DataContext = new MainWindowViewModel(context, new DialogService());
             startupForm!.Show();
             base.OnStartup(e);
         }

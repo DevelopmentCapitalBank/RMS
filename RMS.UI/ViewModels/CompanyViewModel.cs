@@ -5,22 +5,25 @@ using RMS.DATA;
 using RMS.DATA.Entities;
 using RMS.DATA.Views;
 using RMS.UI.Commands;
+using RMS.UI.DialogBoxes;
 
 namespace RMS.UI.ViewModels
 {
     public class CompanyViewModel : BaseViewModel, IPageViewModel
     {
-        public CompanyViewModel(DbContext context, int pageIndex = 0)
+        public CompanyViewModel(DbContext context, IDialogService dialogService, int pageIndex = 0)
         {
             PageId = pageIndex;
             Title = "Companies";
             this.context = context;
+            this.dialogService = dialogService;
         }
 
         public event EventHandler<EventArgs<int>>? ViewChanged;
 
         #region Fields
         private readonly DbContext context;
+        private readonly IDialogService dialogService;
         private CompanyView search = new();
         private CompanyView selectedCompanyView = new();
         private ObservableCollection<CompanyView>? companies;

@@ -4,16 +4,18 @@ using System.Windows.Input;
 using RMS.DATA;
 using RMS.DATA.Entities;
 using RMS.UI.Commands;
+using RMS.UI.DialogBoxes;
 
 namespace RMS.UI.ViewModels
 {
     public class GroupViewModel : BaseViewModel, IPageViewModel
     {
-        public GroupViewModel(DbContext context, int pageIndex = 0)
+        public GroupViewModel(DbContext context, IDialogService dialogService, int pageIndex = 0)
         {
             PageId = pageIndex;
             Title = "Groups";
             this.context = context;
+            this.dialogService = dialogService;
             OnLoad();
         }
 
@@ -21,6 +23,7 @@ namespace RMS.UI.ViewModels
 
         #region Fields
         private readonly DbContext context;
+        private readonly IDialogService dialogService;
         private ObservableCollection<Group>? groups;
         private ObservableCollection<Company>? companies;
         private Group? selectedGroup;
