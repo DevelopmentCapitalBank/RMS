@@ -4,16 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:RMS.UI.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="RMS" Height="450" Width="800">
     <materialDesign:DialogHost  
         CloseOnClickAway="False"
         Identifier="RootDialog" >
         <DockPanel>
             <Grid
                 DockPanel.Dock="Left"
-                Width="60" 
+                Width="110" 
                 HorizontalAlignment="Left">
                 <ListView 
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -21,23 +20,89 @@
                     Background="#FF222222"
                     FontFamily="Champagne &amp; Limousines" 
                     FontSize="12" >
-                    <ListViewItem Height="60" Padding="0" ToolTip="Домашняя страница" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" >
-                        <materialDesign:PackIcon Kind="Home" Width="30" Height="30" VerticalAlignment="Center" />
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Домашняя страница"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock
+                            Margin="10"
+                            Text="Главная"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </ListViewItem>
-                    <ListViewItem Height="60" Padding="0" ToolTip="Группы" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-                        <materialDesign:PackIcon Kind="AccountGroup" Width="30" Height="30" VerticalAlignment="Center"/>
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Домашняя страница"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="Группы"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </ListViewItem>
-                    <ListViewItem Height="60" Padding="0" ToolTip="Компании" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-                        <materialDesign:PackIcon Kind="AccountSearch" Width="30" Height="30" VerticalAlignment="Center"/>
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Домашняя страница"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="Компании"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </ListViewItem>
-                    <ListViewItem Height="60" Padding="0" ToolTip="Импорт данных" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-                        <materialDesign:PackIcon Kind="Import" Width="30" Height="30" VerticalAlignment="Center"/>
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Домашняя страница"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="Счета"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </ListViewItem>
-                    <ListViewItem Height="60" Padding="0" ToolTip="Экспорт данных" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-                        <materialDesign:PackIcon Kind="Export" Width="30" Height="30" VerticalAlignment="Center"/>
+                    <ListViewItem 
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Домашняя страница"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="Импорт"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </ListViewItem>
-                    <ListViewItem Height="60" Padding="0" ToolTip="Настройки" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-                        <materialDesign:PackIcon Kind="Settings" Width="30" Height="30" VerticalAlignment="Center"/>
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Домашняя страница"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="Экспорт"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                    </ListViewItem>
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Домашняя страница"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="Настройки"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </ListViewItem>
                 </ListView>
             </Grid>
