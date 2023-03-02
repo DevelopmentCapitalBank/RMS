@@ -84,8 +84,15 @@ namespace RMS.UI.ViewModels
         #region Methods
         private async void OnLoad()
         {
-            var grps = await context.Groups.ReadAllAsync();
-            Groups = new ObservableCollection<Group>(grps);
+            try
+            {
+                var grps = await context.Groups.ReadAllAsync();
+                Groups = new ObservableCollection<Group>(grps);
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка чтения списка всех групп!\n{ex.Message}");
+            }
         }
         #endregion
 
@@ -115,8 +122,20 @@ namespace RMS.UI.ViewModels
         }
         public async void ExecuteRemoveGroup(object parameter)
         {
-            await context.Groups.DeleteAsync(SelectedGroup);
-            OnLoad();
+            try
+            {
+                bool isYes = await dialogService.ShowMsgYesNo("Удалить группу? \nВсе компании закрепленные за данной группой\nбудут перенесены в группу ПУСТО.").ConfigureAwait(false);
+
+                if (isYes)
+                {
+                    await context.Groups.DeleteAsync(SelectedGroup);
+                    OnLoad();
+                }
+            }
+            catch(Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка удаления группы!\n{ex.Message}");
+            }
         }
         public bool CanExecuteRemoveGroup(object parameter)
         {
@@ -145,8 +164,15 @@ namespace RMS.UI.ViewModels
         }
         public async void ExecuteSaveGroup(object parameter)
         {
-            await context.Groups.UpdateAsync(SelectedGroup);
-            OnLoad();
+            try
+            {
+                await context.Groups.UpdateAsync(SelectedGroup);
+                OnLoad();
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка сохранения изменений в группе!\n{ex.Message}");
+            }
         }
         public bool CanExecuteSaveGroup(object parameter)
         {
@@ -175,8 +201,15 @@ namespace RMS.UI.ViewModels
         }
         public async void ExecuteShowCompanies(object parameter)
         {
-            var comps = await context.Companies.ReadListByIdAsync(SelectedGroup.GroupId);
-            Companies = new ObservableCollection<Company>(comps);
+            try
+            {
+                var comps = await context.Companies.ReadListByIdAsync(SelectedGroup.GroupId);
+                Companies = new ObservableCollection<Company>(comps);
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка чтения списка компаний в группе!\n{ex.Message}");
+            }
         }
         public bool CanExecuteShowCompanies(object parameter)
         {
