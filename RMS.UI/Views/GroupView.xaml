@@ -10,7 +10,7 @@
     <DockPanel>
         <TextBlock
             DockPanel.Dock="Top"
-            Text="Группы" 
+            Text="{Binding Title}"
             Margin="10 10 0 0" 
             FontWeight="Bold"
             Style="{StaticResource MaterialDesignHeadline4TextBlock}" 

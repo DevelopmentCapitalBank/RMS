@@ -13,7 +13,7 @@ namespace RMS.UI.ViewModels
         public HomeViewModel(int pageIndex = 0)
         {
             PageId = pageIndex;
-            Title = "View 1";
+            Title = "Домашняя страница";
         }
     }
 }

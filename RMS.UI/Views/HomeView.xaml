@@ -6,6 +6,6 @@
              xmlns:local="clr-namespace:RMS.UI.Views"
              mc:Ignorable="d">
     <Grid>
-        <TextBlock Text="Home page" FontSize="36"/>
+        <TextBlock Text="{Binding Title}" FontSize="36"/>
     </Grid>
 </UserControl>

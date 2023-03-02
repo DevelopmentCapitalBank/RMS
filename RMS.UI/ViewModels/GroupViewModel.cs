@@ -13,7 +13,7 @@ namespace RMS.UI.ViewModels
         public GroupViewModel(DbContext context, IDialogService dialogService, int pageIndex = 0)
         {
             PageId = pageIndex;
-            Title = "Groups";
+            Title = "Группы";
             this.context = context;
             this.dialogService = dialogService;
             OnLoad();

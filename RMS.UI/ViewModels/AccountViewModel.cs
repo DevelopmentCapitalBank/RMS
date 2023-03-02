@@ -14,7 +14,7 @@ namespace RMS.UI.ViewModels
             this.PageId = PageId;
             this.context = context;
             this.dialogService = dialogService;
-            Title = "View 1";
+            Title = "Счета";
         }
 
         #region Fields
