@@ -7,6 +7,16 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
     xmlns:local="clr-namespace:RMS.UI.Views"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}" TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        </Style>
+    </UserControl.Resources>
     <DockPanel>
         <TextBlock
             DockPanel.Dock="Top"

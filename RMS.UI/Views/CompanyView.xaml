@@ -7,6 +7,16 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:local="clr-namespace:RMS.UI.Views"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}" TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        </Style>
+    </UserControl.Resources>
     <DockPanel>
         <TextBlock
             DockPanel.Dock="Top"
@@ -36,21 +46,22 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <TextBox
-                    Margin="0 0 10 0"
                     Grid.Row="0"
                     Grid.Column="0"
+                    Width="150"
                     materialDesign:HintAssist.Hint="По id"  
                     Text="{Binding Search.CompanyId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                 <TextBox
-                    Margin="0 0 10 0"
                     Grid.Row="0"
                     Grid.Column="1"
+                    Width="150"
                     materialDesign:HintAssist.Hint="По ИНН"  
                     Text="{Binding Search.Inn, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                 <TextBox
                     Grid.Row="1"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
+                    Width="300"
                     materialDesign:HintAssist.Hint="По наименованию"  
                     Text="{Binding Search.CompanyName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                 <Button 

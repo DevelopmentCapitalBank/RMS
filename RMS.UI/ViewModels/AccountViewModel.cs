@@ -28,9 +28,13 @@ namespace RMS.UI.ViewModels
         private Account? selectedAccount;
         private Company? company;
         private ObservableCollection<Office>? offices;
+        private Acquiring? acquiring;
         private ICommand? searchAccount;
         private ICommand? removeAccount;
         private ICommand? saveAccount;
+        private ICommand? createAcquiring;
+        private ICommand? saveAcquiring;
+        private bool isVisibilityAcquiring = false;
         #endregion
 
         #region Properties
@@ -102,6 +106,32 @@ namespace RMS.UI.ViewModels
                 OnPropertyChanged(nameof(Offices));
             }
         }
+        public Acquiring? Acquiring
+        {
+            get => acquiring;
+            set
+            {
+                if (value == acquiring)
+                {
+                    return;
+                }
+                acquiring = value;
+                OnPropertyChanged(nameof(Acquiring));
+            }
+        }
+        public bool IsVisibilityAcquiring
+        {
+            get => isVisibilityAcquiring;
+            set
+            {
+                if (value == isVisibilityAcquiring)
+                {
+                    return;
+                }
+                isVisibilityAcquiring = value;
+                OnPropertyChanged(nameof(IsVisibilityAcquiring));
+            }
+        }
         #endregion
 
         #region Methods
@@ -113,6 +143,10 @@ namespace RMS.UI.ViewModels
                 Offices = new ObservableCollection<Office>(offcs);
 
                 Company = await context.Companies.ReadByIdAsync(acc.CompanyId).ConfigureAwait(false);
+
+                Acquiring = await context.Acquirings.ReadByIdAsync(acc.AccountId).ConfigureAwait(false);
+
+                IsVisibilityAcquiring = Acquiring != null;
             }
             catch(Exception ex)
             {
@@ -217,6 +251,69 @@ namespace RMS.UI.ViewModels
             }
         }
         public bool CanExecuteSaveAccount(object parameter)
+        {
+            return parameter != null;
+        }
+
+        public ICommand CreateAcquiring
+        {
+            get
+            {
+                if (createAcquiring == null)
+                {
+                    createAcquiring = new RelayCommand(ExecuteCreateAcquiring, CanExecuteCreateAcquiring);
+                }
+                return createAcquiring;
+            }
+        }
+        public async void ExecuteCreateAcquiring(object parameter)
+        {
+            try
+            {
+                Acquiring = new Acquiring()
+                {
+                    AccountId = SelectedAccount.AccountId,
+                    Comission = 0M,
+                    Tarif = 0M,
+                    WriteOffOther = 0M,
+                    IsActive = true
+                };
+                await context.Acquirings.CreateAsync(Acquiring).ConfigureAwait(false);
+                IsVisibilityAcquiring = true;
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка создания записи эквайрингу!\n{ex.Message}").ConfigureAwait(false);
+            }
+        }
+        public bool CanExecuteCreateAcquiring(object parameter)
+        {
+            return parameter != null && !IsVisibilityAcquiring;
+        }
+
+        public ICommand SaveAcquiring
+        {
+            get
+            {
+                if (saveAcquiring == null)
+                {
+                    saveAcquiring = new RelayCommand(ExecuteSaveAcquiring, CanExecuteSaveAcquiring);
+                }
+                return saveAcquiring;
+            }
+        }
+        public async void ExecuteSaveAcquiring(object parameter)
+        {
+            try
+            {
+                await context.Acquirings.UpdateAsync(Acquiring).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowMsgOk($"Ошибка сохранения данных по эквайрингу!\n{ex.Message}").ConfigureAwait(false);
+            }
+        }
+        public bool CanExecuteSaveAcquiring(object parameter)
         {
             return parameter != null;
         }

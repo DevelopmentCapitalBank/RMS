@@ -7,6 +7,16 @@
     xmlns:local="clr-namespace:RMS.UI.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}" TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        </Style>
+    </UserControl.Resources>
     <DockPanel>
         <TextBlock
             Text="{Binding Title}"
@@ -154,8 +164,6 @@
                 Grid.ColumnSpan="2"
                 MinWidth="265"
                 MaxWidth="485"
-                Height="30"
-                Margin="5"
                 HorizontalAlignment="Left"
                 materialDesign:HintAssist.Hint="Номер счета"  
                 Text="{Binding SelectedAccount.AccountNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
@@ -215,6 +223,83 @@
                 Command="{Binding SaveAccount}" 
                 CommandParameter="{Binding  SelectedAccount}" 
                 ToolTip="Сохранить изменения счета"
+                Margin="10">
+                <materialDesign:PackIcon Kind="ContentSave"  Height="22" Width="22" />
+            </Button>
+            <Button 
+                Grid.Row="5"
+                Grid.Column="2"
+                Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                Command="{Binding CreateAcquiring}" 
+                CommandParameter="{Binding  SelectedAccount}" 
+                ToolTip="Добавить эквайринг к счету"
+                Margin="10">
+                <materialDesign:PackIcon Kind="Calculator"  Height="22" Width="22" />
+            </Button>
+        </Grid>
+        <Grid
+            Visibility="{Binding IsVisibilityAcquiring, Converter={StaticResource TrueToVisibilityConv}}"
+            Margin="10 0 10 10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                FontWeight="Bold"
+                Margin="5"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                Text="Эквайринг"/>
+            <TextBox
+                Grid.Row="1"
+                Grid.Column="0"
+                Width="150"
+                Margin="5"
+                HorizontalAlignment="Left"
+                materialDesign:HintAssist.Hint="Комиссия"
+                ToolTip="Комиссия" 
+                Text="{Binding Acquiring.Comission, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+            <TextBox
+                Grid.Row="1"
+                Grid.Column="2"
+                Width="150"
+                Margin="5"
+                HorizontalAlignment="Left"
+                materialDesign:HintAssist.Hint="Тариф"
+                ToolTip="Тариф" 
+                Text="{Binding Acquiring.Tarif, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+            <TextBox
+                Grid.Row="2"
+                Grid.Column="0"
+                Width="150"
+                Margin="5"
+                HorizontalAlignment="Left"
+                materialDesign:HintAssist.Hint="Прочие списания"
+                ToolTip="Прочие списания (с некоторых снимают эту сумму за эквайринг)" 
+                Text="{Binding Acquiring.WriteOffOther, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+            <CheckBox
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="5"
+                Content="Действующий"
+                IsChecked="{Binding Acquiring.IsActive, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Эквайринг действует в настоящее время" />
+            <Button 
+                Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                Command="{Binding SaveAcquiring}" 
+                CommandParameter="{Binding Acquiring}" 
+                ToolTip="Сохранить изменения данных по эквайрингу"
                 Margin="10">
                 <materialDesign:PackIcon Kind="ContentSave"  Height="22" Width="22" />
             </Button>
