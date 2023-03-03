@@ -1,34 +1,41 @@
-﻿using RMS.DATA;
-using RMS.UI.DialogBoxes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace RMS.UI.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
         #region Fields
-        private readonly Dictionary<int, IPageViewModel>? _pageViewModels = new();
+        private Dictionary<int, IPageViewModel> _pageViewModels = new();
         private int _SelectedViewModelIndex;
-        private IPageViewModel? _pageViewModel;
+        private IPageViewModel _pageViewModel;
         #endregion
 
         #region Properties
+        public Dictionary<int, IPageViewModel> PageViewModels
+        {
+            get { return _pageViewModels; }
+            set { _pageViewModels = value; }
+        }
         public int SelectedViewModelIndex
         {
             get { return _SelectedViewModelIndex; }
             set 
             {
                 if (_SelectedViewModelIndex == value)
+                {
                     return;
+                }
                 _SelectedViewModelIndex = value;
                 CurrentPageViewModel = _pageViewModels[_SelectedViewModelIndex];
                 OnPropertyChanged(nameof(SelectedViewModelIndex));
             }
         }
-        public IPageViewModel? CurrentPageViewModel
+        public IPageViewModel CurrentPageViewModel
         {
-            get => _pageViewModel;
-
+            get
+            {
+                return _pageViewModel;
+            }
             set
             {
                 _pageViewModel = value;
@@ -36,45 +43,5 @@ namespace RMS.UI.ViewModels
             }
         }
         #endregion
-
-        public MainWindowViewModel(DbContext context, IDialogService dialogService)
-        {
-            _pageViewModels[0] = new HomeViewModel(0);
-            _pageViewModels[0].ViewChanged += (o, s) =>
-            {
-                CurrentPageViewModel = _pageViewModels[s.Value];
-            };
-            _pageViewModels[1] = new GroupViewModel(context, dialogService, 1);
-            _pageViewModels[1].ViewChanged += ( o, s ) => 
-            {
-                CurrentPageViewModel = _pageViewModels[s.Value];
-            };
-            _pageViewModels[2] = new CompanyViewModel(context, dialogService, 2);
-            _pageViewModels[2].ViewChanged += ( o, s ) =>
-            {
-                CurrentPageViewModel = _pageViewModels[s.Value];
-            };
-            _pageViewModels[3] = new AccountViewModel(context, dialogService, 3);
-            _pageViewModels[3].ViewChanged += (o, s) => {
-                CurrentPageViewModel = _pageViewModels[s.Value];
-            };
-            _pageViewModels[4] = new ImportViewModel(4);
-            _pageViewModels[4].ViewChanged += ( o, s ) =>
-            {
-                CurrentPageViewModel = _pageViewModels[s.Value];
-            };
-            _pageViewModels[5] = new ExportViewModel(5);
-            _pageViewModels[5].ViewChanged += ( o, s ) =>
-            {
-                CurrentPageViewModel = _pageViewModels[s.Value];
-            };
-            _pageViewModels[6] = new SettingsViewModel(6);
-            _pageViewModels[6].ViewChanged += ( o, s ) =>
-            {
-                CurrentPageViewModel = _pageViewModels[s.Value];
-            };
-
-            CurrentPageViewModel = _pageViewModels[0];
-        }
     }
 }

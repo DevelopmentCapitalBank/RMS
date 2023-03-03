@@ -17,23 +17,44 @@ namespace RMS.UI
             AppHost = Host.CreateDefaultBuilder().ConfigureServices((hostContext, services) =>
             {
                 services.AddSingleton<MainWindow>();
+
                 services.AddTransient<IDataModel, DataModel>();
                 services.AddTransient<IDialogService, DialogService>();
                 services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
                 services.AddSingleton<DbContext>();
+
+                services.AddTransient<HomeViewModel>();
+                services.AddTransient<GroupViewModel>();
+                services.AddTransient<CompanyViewModel>();
+                services.AddTransient<AccountViewModel>();
+                services.AddTransient<ImportViewModel>();
+                services.AddTransient<ExportViewModel>();
+                services.AddTransient<SettingsViewModel>();
             }).Build();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
         {
             await AppHost!.StartAsync();
+
+            var dbContext = AppHost.Services.GetRequiredService<DbContext>();
+            await dbContext.Setup();
+
             var startupForm = AppHost.Services.GetRequiredService<MainWindow>();
 
-            var context = new DbContext(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
-            await context.Setup();
+            var mainViewModel = new MainWindowViewModel();
+            mainViewModel.PageViewModels[0] = AppHost.Services.GetRequiredService<HomeViewModel>();
+            mainViewModel.PageViewModels[1] = AppHost.Services.GetRequiredService<GroupViewModel>();
+            mainViewModel.PageViewModels[2] = AppHost.Services.GetRequiredService<CompanyViewModel>();
+            mainViewModel.PageViewModels[3] = AppHost.Services.GetRequiredService<AccountViewModel>();
+            mainViewModel.PageViewModels[4] = AppHost.Services.GetRequiredService<ImportViewModel>();
+            mainViewModel.PageViewModels[5] = AppHost.Services.GetRequiredService<ExportViewModel>();
+            mainViewModel.PageViewModels[6] = AppHost.Services.GetRequiredService<SettingsViewModel>();
+            mainViewModel.CurrentPageViewModel = mainViewModel.PageViewModels[0];
 
-            startupForm!.DataContext = new MainWindowViewModel(context, new DialogService());
+            startupForm!.DataContext = mainViewModel;
             startupForm!.Show();
+
             base.OnStartup(e);
         }
 

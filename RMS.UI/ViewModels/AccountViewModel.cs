@@ -9,7 +9,7 @@ namespace RMS.UI.ViewModels
     {
         public event EventHandler<EventArgs<int>>? ViewChanged;
 
-        public AccountViewModel(DbContext context, IDialogService dialogService, int PageId = 0)
+        public AccountViewModel(DbContext context, IDialogService dialogService, int PageId = 3)
         {
             this.PageId = PageId;
             this.context = context;

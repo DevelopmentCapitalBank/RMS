@@ -10,7 +10,7 @@ namespace RMS.UI.ViewModels
 
         public event EventHandler<EventArgs<int>>? ViewChanged;
 
-        public ImportViewModel( int pageIndex = 0 )
+        public ImportViewModel( int pageIndex = 4 )
         {
             PageId = pageIndex;
             Title = "Import data";

@@ -11,7 +11,7 @@ namespace RMS.UI.ViewModels
 {
     public class CompanyViewModel : BaseViewModel, IPageViewModel
     {
-        public CompanyViewModel(DbContext context, IDialogService dialogService, int pageIndex = 0)
+        public CompanyViewModel(DbContext context, IDialogService dialogService, int pageIndex = 2)
         {
             PageId = pageIndex;
             Title = "Компании";
