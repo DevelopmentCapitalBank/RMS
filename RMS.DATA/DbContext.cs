@@ -22,6 +22,7 @@ namespace RMS.DATA
             Managers = new ManagerService(dbConfig, new ManagerRepository());
             Accounts = new AccountService(dbConfig, new AccountRepository());
             Offices = new OfficeService(dbConfig,new OfficeRepository());
+            Acquirings = new AcquiringService(dbConfig, new AcquiringRepository());
         }
 
         public IServiceStandart<Group> Groups { get; private set; }
@@ -31,6 +32,7 @@ namespace RMS.DATA
         public IServiceExtended<Company, int, string> Companies { get; private set;}
         public IServiceFind<CompanyView, CompanyView> ViewCompanies { get; private set; }
         public IServiceExtended<Account, int, string> Accounts { get; private set; }
+        public IServiceStandart<Acquiring> Acquirings { get; private set; }
 
         public async Task Setup()
         {
