@@ -71,7 +71,7 @@ namespace RMS.UI.ViewModels
             get { return selectedCompanyView; }
             set
             {
-                if (value == selectedCompanyView)
+                if (value == selectedCompanyView || value == null)
                 {
                     return;
                 }
@@ -424,11 +424,16 @@ namespace RMS.UI.ViewModels
                             IsAttraction = false
                         };
 
-                        var gs = await context.Groups.ReadAllAsync().ConfigureAwait(false);
-                        Groups = new ObservableCollection<Group>(gs);
-
-                        var ms = await context.Managers.ReadAllAsync().ConfigureAwait(false);
-                        Managers = new ObservableCollection<Manager>(ms);
+                        if (Groups == null)
+                        {
+                            var gs = await context.Groups.ReadAllAsync().ConfigureAwait(false);
+                            Groups = new ObservableCollection<Group>(gs);
+                        }
+                        if (Managers == null)
+                        {
+                            var ms = await context.Managers.ReadAllAsync().ConfigureAwait(false);
+                            Managers = new ObservableCollection<Manager>(ms);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -455,7 +460,6 @@ namespace RMS.UI.ViewModels
             {
                 SelectedCompany = await context.Companies.CreateAsync(NewCompany);
                 Search = new();
-                SelectedCompanyView = new();
                 SelectedAccount = new();
                 if (Accounts != null)
                 {
@@ -480,7 +484,8 @@ namespace RMS.UI.ViewModels
         {
             if (parameter is Company c)
             {
-                return c.Inn.Length >= 6 && c.Inn.Length <= 12 && c.Name.Length <= 255
+                return c.Inn.Length >= 6 && c.Inn.Length <= 12 
+                    && c.Name.Length >= 3 && c.Name.Length <= 255
                     && c.CompanyId > 0;
             }
             return false;
@@ -513,6 +518,8 @@ namespace RMS.UI.ViewModels
         {
             try
             {
+                var offcs = await context.Offices.ReadAllAsync().ConfigureAwait(false);
+                Offices = new ObservableCollection<Office>(offcs);
                 IsShowCreateCompany = false;
                 IsShowCreateAccount = true;
                 NewAccount = new Account
@@ -521,8 +528,6 @@ namespace RMS.UI.ViewModels
                     OfficeId = 1,
                     DateOpen = DateTime.Now
                 };
-                var offcs = await context.Offices.ReadAllAsync().ConfigureAwait(false);
-                Offices = new ObservableCollection<Office>(offcs);
             }
             catch (Exception ex)
             {

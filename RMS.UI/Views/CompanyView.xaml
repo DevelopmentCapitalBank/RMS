@@ -142,6 +142,7 @@
                                 BorderThickness="1">
                                 <materialDesign:Card
                                     Padding="40"
+                                    Background="Gray"
                                     materialDesign:ShadowAssist.ShadowDepth="Depth1">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -478,7 +479,10 @@
                             Padding="1"
                             BorderBrush="Black"
                             BorderThickness="1">
-                            <materialDesign:Card Padding="40" materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                            <materialDesign:Card
+                                Padding="40"
+                                Background="Gray"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth1">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
@@ -494,7 +498,8 @@
                                         SelectedValuePath="OfficeId" />
                                     <TextBox
                                         Grid.Row="1"
-                                        Width="100"
+                                        Width="150"
+                                        HorizontalAlignment="Left"
                                         materialDesign:HintAssist.Hint="Счет"
                                         Text="{Binding NewAccount.AccountNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                                     <StackPanel
@@ -504,6 +509,7 @@
                                         <Button
                                             Width="100"
                                             Command="{Binding InsertAccount}"
+                                            CommandParameter="{Binding NewAccount}"
                                             Content="Добавить" />
                                         <Button
                                             Width="100"
