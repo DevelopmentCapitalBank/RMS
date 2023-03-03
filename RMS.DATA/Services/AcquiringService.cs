@@ -5,12 +5,12 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Services
 {
-    internal class AcquiringService : IServiceStandart<Acquiring>
+    internal class AcquiringService : IServiceMin<Acquiring, int>
     {
-        private readonly IRepositoryStandart<Acquiring> repo;
+        private readonly IRepositoryMin<Acquiring, int> repo;
         private readonly DbConfig dbConfig;
         public AcquiringService(DbConfig dbConfig,
-            IRepositoryStandart<Acquiring> repo)
+            IRepositoryMin<Acquiring, int> repo)
         {
             this.dbConfig = dbConfig;
             this.repo = repo;
@@ -28,10 +28,11 @@ namespace RMS.DATA.Services
             await repo.DeleteAsync(entity, connection);
         }
 
-        public async Task<IEnumerable<Acquiring>> ReadAllAsync()
+        public async Task<Acquiring> ReadByIdAsync(int id)
         {
             using var connection = new SqliteConnection(dbConfig.Name);
-            return await repo.ReadAllAsync(connection).ConfigureAwait(false);
+            var acq = await repo.ReadByIdAsync(id, connection).ConfigureAwait(false);
+            return acq;
         }
 
         public async Task UpdateAsync(Acquiring entity)

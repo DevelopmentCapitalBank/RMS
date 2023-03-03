@@ -32,7 +32,7 @@ namespace RMS.DATA
         public IServiceExtended<Company, int, string> Companies { get; private set;}
         public IServiceFind<CompanyView, CompanyView> ViewCompanies { get; private set; }
         public IServiceExtended<Account, int, string> Accounts { get; private set; }
-        public IServiceStandart<Acquiring> Acquirings { get; private set; }
+        public IServiceMin<Acquiring, int> Acquirings { get; private set; }
 
         public async Task Setup()
         {

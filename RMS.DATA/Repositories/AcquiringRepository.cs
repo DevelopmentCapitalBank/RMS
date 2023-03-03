@@ -5,10 +5,11 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Repositories
 {
-    internal class AcquiringRepository : IRepositoryStandart<Acquiring>
+    internal class AcquiringRepository : IRepositoryMin<Acquiring, int>
     {
         #region SQL
         private static readonly string Select = "SELECT AccountId, Comission, Tarif, WriteOffOther, IsActive FROM [Acquiring];";
+        private static readonly string SelectById = "SELECT AccountId, Comission, Tarif, WriteOffOther, IsActive FROM [Acquiring] WHERE AccountId=@AccountId;";
         private static readonly string Update = "UPDATE [Acquiring] " +
             "SET Comission=@Comission, Tarif=@Tarif, WriteOffOther=@WriteOffOther, IsActive=@IsActive " +
             "WHERE AccountId=@AccountId;";
@@ -42,6 +43,13 @@ namespace RMS.DATA.Repositories
         public async Task<IEnumerable<Acquiring>> ReadAllAsync(IDbConnection connection)
         {
             return await connection.QueryAsync<Acquiring>(Select).ConfigureAwait(false);
+        }
+
+        public async Task<Acquiring> ReadByIdAsync(int id, IDbConnection connection)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("AccountId", id);
+            return await connection.QueryFirstOrDefaultAsync<Acquiring>(SelectById, parameters).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(Acquiring entity, IDbConnection connection)
