@@ -438,7 +438,7 @@
                         Binding="{Binding Path=DateTimeLastOperation , UpdateSourceTrigger=PropertyChanged}"
                         Header="Дата\Время пос. операции"
                         IsReadOnly="True"
-                        Width="270"/>
+                        Width="170"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Border

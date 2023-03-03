@@ -605,9 +605,9 @@ namespace RMS.UI.ViewModels
                 bool isDeleteAccount = await dialogService.ShowMsgYesNo("Удалить счет?").ConfigureAwait(false);
                 if (isDeleteAccount)
                 {
-                    Accounts.Remove(SelectedAccount);
                     await context.Accounts.DeleteAsync(SelectedAccount).ConfigureAwait(false);
                     SelectedAccount = new();
+                    Accounts = new ObservableCollection<Account>();
                 }
             }
             catch (Exception ex)

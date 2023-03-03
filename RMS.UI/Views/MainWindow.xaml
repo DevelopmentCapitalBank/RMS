@@ -35,7 +35,7 @@
                     <ListViewItem
                         Height="60"
                         Padding="0"
-                        ToolTip="Домашняя страница"
+                        ToolTip="Страница для работы с группами клиентов"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Left" >
                         <TextBlock 
@@ -47,7 +47,7 @@
                     <ListViewItem
                         Height="60"
                         Padding="0"
-                        ToolTip="Домашняя страница"
+                        ToolTip="Страница для работы с компаниями"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Left" >
                         <TextBlock 
@@ -59,7 +59,7 @@
                     <ListViewItem
                         Height="60"
                         Padding="0"
-                        ToolTip="Домашняя страница"
+                        ToolTip="Страница для работы с счетами компаний"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Left" >
                         <TextBlock 
@@ -71,7 +71,7 @@
                     <ListViewItem 
                         Height="60"
                         Padding="0"
-                        ToolTip="Домашняя страница"
+                        ToolTip="Импорт данных"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Left" >
                         <TextBlock 
@@ -83,7 +83,7 @@
                     <ListViewItem
                         Height="60"
                         Padding="0"
-                        ToolTip="Домашняя страница"
+                        ToolTip="Экспорт данных"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Left" >
                         <TextBlock 
@@ -95,7 +95,7 @@
                     <ListViewItem
                         Height="60"
                         Padding="0"
-                        ToolTip="Домашняя страница"
+                        ToolTip="Настройки приложения"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Left" >
                         <TextBlock 
