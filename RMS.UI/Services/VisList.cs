@@ -106,22 +106,22 @@ namespace RMS.UI.Services
 
         private static bool IsValidVisList(SharedStringTable sst, Row row)
         {
-            return GetValue(sst, row.Descendants<Cell>().ElementAt(0)) != "клиент" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(1)) != "счет" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(2)) != "баланс" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(3)) != "вал" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(4)) != "Ключ" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(5)) != "Номер" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(6)) != "название" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(7)) != "Группа" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(8)) != "Привлечение" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(9)) != "Рекомендация" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(10)) != "Офис" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(11)) != "дата открытия" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(12)) != "дата закрытия" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(13)) != "дата последней проводки" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(14)) != "ИНН" ||
-                GetValue(sst, row.Descendants<Cell>().ElementAt(15)) != "Комментарий";
+            return GetValue(sst, row.Descendants<Cell>().ElementAt(0)) == "клиент" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(1)) == "счет" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(2)) == "баланс" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(3)) == "вал" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(4)) == "Ключ" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(5)) == "Номер" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(6)) == "название" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(7)) == "Группа" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(8)) == "Привлечение" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(9)) == "Рекомендация" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(10)) == "Офис" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(11)) == "дата открытия" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(12)) == "дата закрытия" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(13)) == "дата последней проводки" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(14)) == "ИНН" ||
+                GetValue(sst, row.Descendants<Cell>().ElementAt(15)) == "Комментарий";
         }
 
         private static DateTime? TryParseExcelDateTime(string excelDateTimeAsString)
