@@ -100,7 +100,7 @@ namespace RMS.DATA
                 sql.Append("                                                                ON UPDATE CASCADE       ");
                 sql.Append("                                NOT NULL                                                ");
                 sql.Append("                                DEFAULT(1),                                             ");
-                sql.Append("    DateOpen         DATE       NOT NULL,                                               ");
+                sql.Append("    DateOpen         DATE,                                                              ");
                 sql.Append("    DateClose        DATE,                                                              ");
                 sql.Append("    DateTimeLastOperation       DATETIME,                                               ");
                 sql.Append("    AccountNumber               CHARACTER(20) NOT NULL,                                 ");
