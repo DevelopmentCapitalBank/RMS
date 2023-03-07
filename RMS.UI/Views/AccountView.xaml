@@ -6,8 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:RMS.UI.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:Behaviors="clr-namespace:RMS.UI.Behaviors"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}" TargetType="{x:Type TextBox}">
@@ -268,10 +266,7 @@
                 HorizontalAlignment="Left"
                 materialDesign:HintAssist.Hint="Комиссия"
                 ToolTip="Комиссия" 
-                Text="{Binding Acquiring.Comission, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                <i:Interaction.Behaviors>
-                    <Behaviors:TextBoxInputBehavior InputMode="DecimalInput" JustPositivDecimalInput="False"/>
-                </i:Interaction.Behaviors>
+                Text="{Binding Acquiring.Comission, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:f2\}, ValidatesOnDataErrors=True}">
             </TextBox>
             <TextBox
                 Grid.Row="1"
@@ -281,7 +276,7 @@
                 HorizontalAlignment="Left"
                 materialDesign:HintAssist.Hint="Тариф"
                 ToolTip="Тариф" 
-                Text="{Binding Acquiring.Tarif, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                Text="{Binding Acquiring.Tarif, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:f2\}, ValidatesOnDataErrors=True}" />
             <TextBox
                 Grid.Row="2"
                 Grid.Column="0"
@@ -290,7 +285,7 @@
                 HorizontalAlignment="Left"
                 materialDesign:HintAssist.Hint="Прочие списания"
                 ToolTip="Прочие списания (с некоторых снимают эту сумму за эквайринг)" 
-                Text="{Binding Acquiring.WriteOffOther, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                Text="{Binding Acquiring.WriteOffOther, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:f2\}, ValidatesOnDataErrors=True}" />
             <CheckBox
                 Grid.Row="2"
                 Grid.Column="1"

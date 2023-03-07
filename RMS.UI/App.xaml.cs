@@ -20,8 +20,8 @@ namespace RMS.UI
 
                 services.AddTransient<IDataModel, DataModel>();
                 services.AddTransient<IDialogService, DialogService>();
-                //services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
-                services.AddSingleton(new DbConfig { Name = @"Data Source=E:\RMS.db" });
+                services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
+                //services.AddSingleton(new DbConfig { Name = @"Data Source=E:\RMS.db" });
                 services.AddSingleton<DbContext>();
 
                 services.AddTransient<HomeViewModel>();
