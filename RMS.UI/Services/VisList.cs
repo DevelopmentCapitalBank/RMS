@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using RMS.UI.Models;
@@ -13,35 +16,102 @@ namespace RMS.UI.Services
     {
         public IEnumerable<VisListData> Read(string path)
         {
+            using var cnn = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" +
+                               path + @";Extended Properties=""Excel 12.0;HDR=No;IMEX=1""");
+            cnn.Open();
+            var lines = new List<VisListData>();
+            try
+            {
+                var cmd = new OleDbCommand("select * from [Лист1$]", cnn);
+                using (var dr = cmd.ExecuteReader())
+                {
+                    if (dr != null)
+                    {
+                        bool isFirtsRow = true;
+                        while (dr.Read())
+                        {
+                            if (isFirtsRow)
+                            {
+                                bool isValidList = dr[0].ToString() == "клиент" ||
+                                dr[1].ToString() == "счет" ||
+                                dr[2].ToString() == "баланс" ||
+                                dr[3].ToString() == "вал" ||
+                                dr[4].ToString() == "Ключ" ||
+                                dr[5].ToString() == "Номер" ||
+                                dr[6].ToString() == "название" ||
+                                dr[7].ToString() == "Группа" ||
+                                dr[8].ToString() == "Привлечение" ||
+                                dr[9].ToString() == "Рекомендация" ||
+                                dr[10].ToString() == "Офис" ||
+                                dr[11].ToString() == "дата открытия" ||
+                                dr[12].ToString() == "дата закрытия" ||
+                                dr[13].ToString() == "дата последней проводки" ||
+                                dr[14].ToString() == "ИНН" ||
+                                dr[15].ToString() == "Комментарий";
+                                isFirtsRow = false;
+                            }
+                            else
+                            {
+                                VisListData vld = new();
+                                vld.ClientId = int.Parse(dr[0].ToString());
+                                lines.Add(vld);
+                            }
+                        }
+
+                    }
+                }
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+                cnn.Close();
+            }
+            return lines;
+        }
+        public IEnumerable<VisListData> Read2(string path)
+        {
             using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using SpreadsheetDocument doc = SpreadsheetDocument.Open(fs, false);
-            
-            var workbookPart = doc.WorkbookPart; 
-            var sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
-            var sst = sstpart.SharedStringTable;
-            var worksheetPart = workbookPart.WorksheetParts.First();
-            var sheet = worksheetPart.Worksheet;
-            var rows = sheet.Descendants<Row>();
-            List<VisListData> retults = new List<VisListData>();
 
-            foreach (var row in rows)
+            WorkbookPart workbookPart = doc.WorkbookPart;
+            WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+
+            OpenXmlReader reader = OpenXmlReader.Create(worksheetPart);
+            List<VisListData> retults = new List<VisListData>();
+            string text;
+            while (reader.Read())
             {
-                if (row.RowIndex.Value != 1)
+                if (reader.ElementType == typeof(CellValue))
                 {
-                    retults.Add(FillVisListData(sst, row));
-                }
-                else
-                {
-                    if (!IsValidVisList(sst, row))
-                    {
-                        throw new Exception("Данный документ не является ВизЛистом!\nВозможно были переименованы/перенесены столбцы.");
-                    };
+                    text = reader.GetText();
+                    Debug.Print(text + " ");
                 }
             }
 
+            //var sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
+            //var sst = sstpart.SharedStringTable;
+            //var worksheetPart = workbookPart.WorksheetParts.First();
+            //var sheet = worksheetPart.Worksheet;
+            //var rows = sheet.Descendants<Row>();
+            //List<VisListData> retults = new List<VisListData>();
+
+            //foreach (var row in rows)
+            //{
+            //    if (row.RowIndex.Value != 1)
+            //    {
+            //        retults.Add(FillVisListData(sst, row));
+            //    }
+            //    else
+            //    {
+            //        if (!IsValidVisList(sst, row))
+            //        {
+            //            throw new Exception("Данный документ не является ВизЛистом!\nВозможно были переименованы/перенесены столбцы.");
+            //        };
+            //    }
+            //}
+
             return retults;
         }
-
         private static VisListData FillVisListData(SharedStringTable sst, Row row)
         {
             VisListData vld = new();
