@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Windows.Input;
 using RMS.UI.Commands;
 using RMS.UI.DialogBoxes;
@@ -44,7 +45,8 @@ namespace RMS.UI.ViewModels
                         if (isChoice)
                         {
                             string path = dialogService.FilePath;
-                            visList.Read(path);
+                            string[] sl = visList.GetSheets(path);
+                            DataTable dt = visList.Read(sl[1], path);
                         }
                     }));
             }

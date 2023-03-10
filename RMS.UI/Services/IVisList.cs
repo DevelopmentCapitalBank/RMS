@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using RMS.UI.Models;
+﻿using System.Data;
 
 namespace RMS.UI.Services
 {
     public interface IVisList
     {
-        IEnumerable<VisListData> Read(string path);
+        DataTable Read(string sheet, string path);
+        string[] GetSheets(string path);
     }
 }

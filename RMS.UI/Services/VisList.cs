@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
 using System.Globalization;
@@ -14,7 +15,8 @@ namespace RMS.UI.Services
 {
     public class VisList : IVisList
     {
-        public IEnumerable<VisListData> Read(string path)
+
+        public DataTable Read2(string path, string nameSheet)
         {
             using var cnn = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" +
                                path + @";Extended Properties=""Excel 12.0;HDR=No;IMEX=1""");
@@ -22,7 +24,7 @@ namespace RMS.UI.Services
             var lines = new List<VisListData>();
             try
             {
-                var cmd = new OleDbCommand("select * from [Лист1$]", cnn);
+                var cmd = new OleDbCommand(string.Format("select * from [{0}$]", nameSheet), cnn);
                 using (var dr = cmd.ExecuteReader())
                 {
                     if (dr != null)
@@ -66,7 +68,7 @@ namespace RMS.UI.Services
             {
                 cnn.Close();
             }
-            return lines;
+            return null ;
         }
         public IEnumerable<VisListData> Read2(string path)
         {
@@ -225,6 +227,85 @@ namespace RMS.UI.Services
             else
             {
                 return cell.CellValue.InnerText;
+            }
+        }
+
+        public DataTable Read(string sheet, string path)
+        {
+            string Extension = Path.GetExtension(path);
+            string conStr = "";
+            switch (Extension)
+            {
+                case ".xls":
+                    conStr = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties=""Excel 8.0;HDR=No;IMEX=1""";
+                    break;
+                case ".xlsx":
+                    conStr = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=""Excel 12.0;HDR=No;IMEX=1""";
+                    break;
+            }
+            conStr = string.Format(conStr, path);
+            try
+            {
+                using OleDbConnection connExcel = new OleDbConnection(conStr);
+                DataTable schemaTable = new DataTable();
+                connExcel.Open();
+                var MyCommand = new OleDbDataAdapter("Select * from [" + sheet + "$]", connExcel);
+                var dt = connExcel.GetSchema("Tables"); ;
+                MyCommand.TableMappings.Add("Table", "TestTable");
+                var DtSet = new DataSet();
+                MyCommand.Fill(DtSet);
+
+                connExcel.Close();
+                return DtSet.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public string[] GetSheets(string path)
+        {
+            DataTable dt = null;
+            string FileName = Path.GetFileName(path);
+            string Extension = Path.GetExtension(path);
+            string conStr = "";
+            switch (Extension)
+            {
+                case ".xls":
+                    conStr = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties=""Excel 8.0;HDR=No;IMEX=1""";
+                    break;
+                case ".xlsx":
+                    conStr = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=""Excel 12.0;HDR=No;IMEX=1""";
+                    break;
+            }
+            conStr = string.Format(conStr, path);
+            try
+            {
+                using OleDbConnection connExcel = new OleDbConnection(conStr);
+                connExcel.Open();
+
+                dt = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+
+                if (dt == null)
+                {
+                    return null;
+                }
+
+                string[] excelSheets = new string[dt.Rows.Count];
+                int i = 0;
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    excelSheets[i] = row["TABLE_NAME"].ToString().Replace("$", "");
+                    i++;
+                }
+
+                return excelSheets;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }
