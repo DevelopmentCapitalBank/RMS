@@ -17,21 +17,106 @@
         </Style>
     </UserControl.Resources>
     <DockPanel>
-    <TextBlock
-        Text="{Binding Title}"
-        DockPanel.Dock="Top"
-        Margin="10 10 0 0" 
-        FontWeight="Bold"
-        Style="{StaticResource MaterialDesignHeadline4TextBlock}" 
-        VerticalAlignment="Center"/>
-    <Button 
-        Grid.Row="5"
-        Grid.Column="2"
-        Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
-        Command="{Binding ImportVislist}" 
-        ToolTip="Импортировать данные из визлиста"
-        Margin="10">
-        <materialDesign:PackIcon Kind="FileExcel"  Height="22" Width="22" />
-    </Button>
+        <TextBlock
+            Text="{Binding Title}"
+            DockPanel.Dock="Top"
+            Margin="10 10 0 0" 
+            FontWeight="Bold"
+            Style="{StaticResource MaterialDesignHeadline4TextBlock}" 
+            VerticalAlignment="Center"/>
+        <Border
+            DockPanel.Dock="Left"
+            Margin="10 10 10 10"
+            Padding="5"
+            BorderThickness="1"
+            CornerRadius="3"
+            ClipToBounds="True"
+            HorizontalAlignment="Stretch"
+            BorderBrush="{DynamicResource PrimaryHueMidBrush}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ComboBox
+                    Margin="5"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    MinWidth="250"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignFilledComboBox}"
+                    materialDesign:HintAssist.Hint="Выгрузка\Файл"
+                    ItemsSource="{Binding TypesOfUnloading}"
+                    SelectedValuePath="Key" 
+                    DisplayMemberPath="Value"
+                    SelectedValue="{Binding TypeKey}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+                <TextBox
+                    Margin="5"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Width="770"
+                    materialDesign:HintAssist.Hint="Путь к файлу"
+                    HorizontalAlignment="Left"
+                    Text="{Binding Path, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <Button 
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Style="{StaticResource MaterialDesignOutlinedDarkButton}" 
+                    Command="{Binding SearchFile}" 
+                    ToolTip="Поиск файла"
+                    Margin="5">
+                    <materialDesign:PackIcon Kind="FileFind"  Height="22" Width="22" />
+                </Button>
+                <ComboBox
+                    Margin="5"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    MinWidth="250"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignFilledComboBox}"
+                    materialDesign:HintAssist.Hint="Листы файла"
+                    ItemsSource="{Binding Sheets}"
+                    SelectedValue="{Binding SelectedSheet}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+                <Button 
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Style="{StaticResource MaterialDesignOutlinedDarkButton}" 
+                    Command="{Binding ImportData}"
+                    CommandParameter="{Binding SelectedSheet}"
+                    ToolTip="Импортировать данные из файла в базу данных"
+                    Margin="5">
+                    <materialDesign:PackIcon Kind="DatabaseImport"  Height="22" Width="22" />
+                </Button>
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2" 
+                    Width="830"  
+                    TextWrapping="Wrap" 
+                    AcceptsReturn="True"
+                    materialDesign:HintAssist.Hint="Вывод"
+                    IsReadOnly="True"
+                    ToolTip="Вывод информации о работе с файломи"
+                    Text="{Binding Output, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            </Grid>
+        </Border>
     </DockPanel>
 </UserControl>

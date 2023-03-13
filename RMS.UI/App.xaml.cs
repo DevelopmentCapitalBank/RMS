@@ -20,7 +20,7 @@ namespace RMS.UI
 
                 services.AddTransient<IDataModel, DataModel>();
                 services.AddTransient<IDialogService, DialogService>();
-                services.AddTransient<IVisList, VisList>();
+                services.AddTransient<IExcelReader, ExcelReader>();
                 services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
                 //services.AddSingleton(new DbConfig { Name = @"Data Source=D:\RMS.db" });
                 services.AddSingleton<DbContext>();

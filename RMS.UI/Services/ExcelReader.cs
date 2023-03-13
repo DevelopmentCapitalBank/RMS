@@ -13,7 +13,7 @@ using RMS.UI.Models;
 
 namespace RMS.UI.Services
 {
-    public class VisList : IVisList
+    public class ExcelReader : IExcelReader
     {
 
         public DataTable Read2(string path, string nameSheet)
@@ -246,8 +246,8 @@ namespace RMS.UI.Services
             conStr = string.Format(conStr, path);
             try
             {
-                using OleDbConnection connExcel = new OleDbConnection(conStr);
-                DataTable schemaTable = new DataTable();
+                using OleDbConnection connExcel = new(conStr);
+                DataTable schemaTable = new();
                 connExcel.Open();
                 var MyCommand = new OleDbDataAdapter("Select * from [" + sheet + "$]", connExcel);
                 var dt = connExcel.GetSchema("Tables"); ;
@@ -266,8 +266,6 @@ namespace RMS.UI.Services
 
         public string[] GetSheets(string path)
         {
-            DataTable dt = null;
-            string FileName = Path.GetFileName(path);
             string Extension = Path.GetExtension(path);
             string conStr = "";
             switch (Extension)
@@ -282,10 +280,10 @@ namespace RMS.UI.Services
             conStr = string.Format(conStr, path);
             try
             {
-                using OleDbConnection connExcel = new OleDbConnection(conStr);
+                using OleDbConnection connExcel = new(conStr);
                 connExcel.Open();
 
-                dt = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                var dt = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
 
                 if (dt == null)
                 {
@@ -305,7 +303,8 @@ namespace RMS.UI.Services
             }
             catch (Exception ex)
             {
-                return null;
+                string[] errror = new string[] { "Error", ex.Message };
+                return errror;
             }
         }
     }
