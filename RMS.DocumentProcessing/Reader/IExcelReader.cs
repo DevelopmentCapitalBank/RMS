@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace RMS.UI.Services
+namespace RMS.DocumentProcessing.Reader
 {
     public interface IExcelReader
     {

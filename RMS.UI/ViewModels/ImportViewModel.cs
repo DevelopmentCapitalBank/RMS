@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using RMS.DocumentProcessing.Reader;
 using RMS.UI.Commands;
 using RMS.UI.DialogBoxes;
-using RMS.UI.Services;
 
 namespace RMS.UI.ViewModels
 {
@@ -34,7 +34,7 @@ namespace RMS.UI.ViewModels
         private readonly IDialogService dialogService;
         private int typeKey;
         private string path = "";
-        private ObservableCollection<string> sheets = new ObservableCollection<string>();
+        private ObservableCollection<string> sheets = new();
         private string? selectedSheet;
         private string output = "";
         private ICommand? importData;
@@ -118,7 +118,16 @@ namespace RMS.UI.ViewModels
         #region Methods
         private async Task ImportVisList(DataTable dt)
         {
+            /*
+             * проверить на соответствие данной книге
+             * трансформировать данные в сущности в бд
+             * проверить и занести данные в бд
+             *
+            bool isOriginal = vislist.IsOriginal(dt);
+            if (isOriginal)
+            {
 
+            }*/
         }
         private async Task ImportRemains(DataTable dt)
         {
