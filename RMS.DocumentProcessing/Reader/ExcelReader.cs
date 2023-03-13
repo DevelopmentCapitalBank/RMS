@@ -75,11 +75,16 @@ namespace RMS.DocumentProcessing.Reader
                 MyCommand.Fill(DtSet);
 
                 connExcel.Close();
+                throw new Exception("ёбушки воробушки");
                 return DtSet.Tables[0];
             }
             catch (Exception ex)
             {
-                throw ex;
+                var errDataTable = new DataTable("Error");
+                var errColumn = new DataColumn("Name", Type.GetType("System.String"));
+                errDataTable.Columns.Add(errColumn);
+                errDataTable.Rows.Add(new object[] { ex.Message });
+                return errDataTable;
             }
         }
     }

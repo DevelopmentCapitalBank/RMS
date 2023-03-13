@@ -2,6 +2,7 @@
 using MaterialDesignThemes.Wpf;
 using System.Threading.Tasks;
 using Microsoft.Win32;
+using System.Windows;
 
 namespace RMS.UI.DialogBoxes
 {
@@ -110,7 +111,7 @@ namespace RMS.UI.DialogBoxes
                 var dialog_v = new OkView {
                     DataContext = dialog_vm
                 };
-                var result = await DialogHost.Show(dialog_v, "RootDialog");
+                var result = await DialogHost.Show(dialog_v, "RootDialog").ConfigureAwait(false);
                 return (bool)result;
             }
             catch
@@ -128,7 +129,7 @@ namespace RMS.UI.DialogBoxes
                     DataContext = dialog_vm
                 };
 
-                var result = await DialogHost.Show(dialog_v, "RootDialog");
+                var result = await DialogHost.Show(dialog_v, "RootDialog").ConfigureAwait(false);
 
                 return (bool)result;
             }
@@ -147,7 +148,7 @@ namespace RMS.UI.DialogBoxes
                     DataContext = dialog_vm
                 };
 
-                var result = await DialogHost.Show(dialog_v, "RootDialog");
+                var result = await DialogHost.Show(dialog_v, "RootDialog").ConfigureAwait(false);
 
                 return (bool)result;
             }
@@ -155,6 +156,11 @@ namespace RMS.UI.DialogBoxes
             {
                 return false;
             }
+        }
+
+        public void ShowMsg(string msg)
+        {
+            MessageBox.Show(msg);
         }
     }
 }

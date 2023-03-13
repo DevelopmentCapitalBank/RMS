@@ -193,6 +193,11 @@ namespace RMS.UI.ViewModels
             {
                 var dt = await Task.Run(() => reader.Read(SelectedSheet, Path)).ConfigureAwait(false);
 
+                if (dt.TableName == "Error")
+                {
+                    throw new Exception(dt.Rows[0].ItemArray[0].ToString());
+                }
+
                 switch (TypeKey)
                 {
                     case 1:
@@ -216,7 +221,7 @@ namespace RMS.UI.ViewModels
             }
             catch(Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка импорта данных!\n{ ex.Message }").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка импорта данных!\n{ ex.Message }");
             }
         }
         public bool CanExecuteImportData(object parameter)

@@ -16,7 +16,7 @@ namespace RMS.UI.DialogBoxes
     }
     public interface IDialogService
     {
-
+        void ShowMsg(string msg);
         /// <summary>
         /// Вывод диалогового окна Ok
         /// </summary>
