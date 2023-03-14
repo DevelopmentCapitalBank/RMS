@@ -75,7 +75,6 @@ namespace RMS.DocumentProcessing.Reader
                 MyCommand.Fill(DtSet);
 
                 connExcel.Close();
-                throw new Exception("ёбушки воробушки");
                 return DtSet.Tables[0];
             }
             catch (Exception ex)
