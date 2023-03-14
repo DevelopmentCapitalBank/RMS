@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RMS.UI.DialogBoxes
@@ -16,13 +13,12 @@ namespace RMS.UI.DialogBoxes
     }
     public interface IDialogService
     {
-        void ShowMsg(string msg);
         /// <summary>
         /// Вывод диалогового окна Ok
         /// </summary>
         /// <param name="msg">Сообщение пользователю</param>
         /// <returns></returns>
-        Task<bool> ShowMsgOk(string msg);
+        void ShowMsg(string msg);
         /// <summary>
         /// Вывод диалогового окна Ок Отмена
         /// </summary>

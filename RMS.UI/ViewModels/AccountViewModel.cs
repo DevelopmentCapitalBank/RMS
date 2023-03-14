@@ -150,7 +150,7 @@ namespace RMS.UI.ViewModels
             }
             catch(Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка чтения данных по счету!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка чтения данных по счету!\n{ex.Message}");
             }
         }
         #endregion
@@ -176,7 +176,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка поиска счета!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка поиска счета!\n{ex.Message}");
             }
         }
         public bool CanExecuteSearchAccount(object parameter)
@@ -220,7 +220,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка удаления счета!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка удаления счета!\n{ex.Message}");
             }
         }
         public bool CanExecuteRemoveAccount(object parameter)
@@ -247,7 +247,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка сохранения данных по счету!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка сохранения данных по счету!\n{ex.Message}");
             }
         }
         public bool CanExecuteSaveAccount(object parameter)
@@ -283,7 +283,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка создания записи эквайрингу!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка создания записи эквайрингу!\n{ex.Message}");
             }
         }
         public bool CanExecuteCreateAcquiring(object parameter)
@@ -310,7 +310,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка сохранения данных по эквайрингу!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка сохранения данных по эквайрингу!\n{ex.Message}");
             }
         }
         public bool CanExecuteSaveAcquiring(object parameter)

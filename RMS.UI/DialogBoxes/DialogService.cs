@@ -103,22 +103,22 @@ namespace RMS.UI.DialogBoxes
             return false;
         }
 
-        public async Task<bool> ShowMsgOk(string msg)
-        {
-            try
-            {
-                DialogViewModel dialog_vm = new DialogViewModel { Msg = msg };
-                var dialog_v = new OkView {
-                    DataContext = dialog_vm
-                };
-                var result = await DialogHost.Show(dialog_v, "RootDialog").ConfigureAwait(false);
-                return (bool)result;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        //public async Task<bool> ShowMsgOk(string msg)
+        //{
+        //    try
+        //    {
+        //        DialogViewModel dialog_vm = new DialogViewModel { Msg = msg };
+        //        var dialog_v = new OkView {
+        //            DataContext = dialog_vm
+        //        };
+        //        var result = await DialogHost.Show(dialog_v, "RootDialog").ConfigureAwait(false);
+        //        return (bool)result;
+        //    }
+        //    catch
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public async Task<bool> ShowMsgOkCancel(string msg)
         {

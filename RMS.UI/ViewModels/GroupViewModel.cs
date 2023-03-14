@@ -91,7 +91,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка чтения списка всех групп!\n{ex.Message}");
+                dialogService.ShowMsg($"Ошибка чтения списка всех групп!\n{ex.Message}");
             }
         }
         #endregion
@@ -134,7 +134,7 @@ namespace RMS.UI.ViewModels
             }
             catch(Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка удаления группы!\n{ex.Message}");
+                dialogService.ShowMsg($"Ошибка удаления группы!\n{ex.Message}");
             }
         }
         public bool CanExecuteRemoveGroup(object parameter)
@@ -171,7 +171,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка сохранения изменений в группе!\n{ex.Message}");
+                dialogService.ShowMsg($"Ошибка сохранения изменений в группе!\n{ex.Message}");
             }
         }
         public bool CanExecuteSaveGroup(object parameter)
@@ -208,7 +208,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка чтения списка компаний в группе!\n{ex.Message}");
+                dialogService.ShowMsg($"Ошибка чтения списка компаний в группе!\n{ex.Message}");
             }
         }
         public bool CanExecuteShowCompanies(object parameter)

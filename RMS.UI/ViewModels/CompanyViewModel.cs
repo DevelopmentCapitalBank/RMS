@@ -246,7 +246,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка чтения данных компании!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка чтения данных компании!\n{ex.Message}");
             }
         }
         #endregion
@@ -274,7 +274,7 @@ namespace RMS.UI.ViewModels
             catch (Exception ex)
             {
                 Companies = new ObservableCollection<CompanyView>();
-                await dialogService.ShowMsgOk($"Ошибка поиска компании!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка поиска компании!\n{ex.Message}");
             }
             finally
             {
@@ -324,7 +324,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка удаления компании!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка удаления компании!\n{ex.Message}");
             }
             finally
             {
@@ -366,7 +366,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка сохранения данных компании!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка сохранения данных компании!\n{ex.Message}");
             }
         }
         public bool CanExecuteSaveCompany(object parameter)
@@ -395,7 +395,7 @@ namespace RMS.UI.ViewModels
             catch (Exception ex)
             {
                 Accounts = new ObservableCollection<Account>();
-                await dialogService.ShowMsgOk($"Ошибка чтения счетов в компании!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка чтения счетов в компании!\n{ex.Message}");
             }
             finally
             {
@@ -437,7 +437,7 @@ namespace RMS.UI.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        await dialogService.ShowMsgOk($"Ошибка создания пустой записи компании!\n{ex.Message}").ConfigureAwait(false);
+                        dialogService.ShowMsg($"Ошибка создания пустой записи компании!\n{ex.Message}");
                     }
                 });
             }
@@ -472,7 +472,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка при создании новой компании!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка при создании новой компании!\n{ex.Message}");
             }
             finally
             {
@@ -531,7 +531,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка создания пустой записи счета!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка создания пустой записи счета!\n{ex.Message}");
             }
         }
         public bool CanExecuteShowPopupCreateAccount(object parameter)
@@ -563,7 +563,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка добавления нового счета!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка добавления нового счета!\n{ex.Message}");
             }
             finally
             {
@@ -612,7 +612,7 @@ namespace RMS.UI.ViewModels
             }
             catch (Exception ex)
             {
-                await dialogService.ShowMsgOk($"Ошибка удаления счета!\n{ex.Message}").ConfigureAwait(false);
+                dialogService.ShowMsg($"Ошибка удаления счета!\n{ex.Message}");
             }
         }
         public bool CanExecuteRemoveAccount(object parameter)
@@ -633,7 +633,7 @@ namespace RMS.UI.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        await dialogService.ShowMsgOk($"Ошибка!\n{ex.Message}").ConfigureAwait(false);
+                        dialogService.ShowMsg($"Ошибка!\n{ex.Message}");
                     }
                 });
             }
