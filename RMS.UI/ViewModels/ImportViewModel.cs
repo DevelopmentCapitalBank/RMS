@@ -5,6 +5,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using RMS.DocumentProcessing.Reader;
+using RMS.DocumentProcessing.Verification;
 using RMS.UI.Commands;
 using RMS.UI.DialogBoxes;
 
@@ -19,20 +20,20 @@ namespace RMS.UI.ViewModels
             Title = "Import data";
             this.reader = reader;
             this.dialogService = dialogService;
-            TypesOfUnloading = new Dictionary<int, string> {
-                { 1, "ВизЛист" },
-                { 2, "Обороты" },
-                { 3, "Депозиты" },
-                { 4, "Платежки" },
-                { 5, "Конверсия ДБО" }
+            TypesOfUnloading = new Dictionary<TypeDocument, string> {
+                { TypeDocument.VisList, "ВизЛист" },
+                { TypeDocument.Turnovers, "Обороты" },
+                { TypeDocument.Deposits, "Депозиты" },
+                { TypeDocument.Operation, "Платежки" },
+                { TypeDocument.Conversion, "Конверсия ДБО" }
             };
-            typeKey = 1;
+            typeKey = TypeDocument.VisList;
         }
 
         #region Fields
         private readonly IExcelReader reader;
         private readonly IDialogService dialogService;
-        private int typeKey;
+        private TypeDocument typeKey;
         private string path = "";
         private ObservableCollection<string> sheets = new();
         private string? selectedSheet;
@@ -44,8 +45,8 @@ namespace RMS.UI.ViewModels
         #region Properties
         public int PageId { get; set; }
         public string Title { get; set; }
-        public Dictionary<int, string> TypesOfUnloading { get; set; }
-        public int TypeKey
+        public Dictionary<TypeDocument, string> TypesOfUnloading { get; set; }
+        public TypeDocument TypeKey
         {
             get => typeKey;
             set
@@ -129,7 +130,7 @@ namespace RMS.UI.ViewModels
 
             }*/
         }
-        private async Task ImportRemains(DataTable dt)
+        private async Task ImportTurnovers(DataTable dt)
         {
 
         }
@@ -148,7 +149,6 @@ namespace RMS.UI.ViewModels
         #endregion
 
         #region Commands
-
         /// <summary>команда поиска файла</summary> 
         public ICommand SearchFile
         {
@@ -200,19 +200,19 @@ namespace RMS.UI.ViewModels
 
                 switch (TypeKey)
                 {
-                    case 1:
+                    case TypeDocument.VisList:
                         await ImportVisList(dt).ConfigureAwait(false);
                         break;
-                    case 2:
-                        await ImportRemains(dt).ConfigureAwait(false);
+                    case TypeDocument.Turnovers:
+                        await ImportTurnovers(dt).ConfigureAwait(false);
                         break;
-                    case 3:
+                    case TypeDocument.Deposits:
                         await ImportDeposits(dt).ConfigureAwait(false);
                         break;
-                    case 4:
+                    case TypeDocument.Operation:
                         await ImportOperations(dt).ConfigureAwait(false);
                         break;
-                    case 5:
+                    case TypeDocument.Conversion:
                         await ImportConversions(dt).ConfigureAwait(false);
                         break;
                     default:
