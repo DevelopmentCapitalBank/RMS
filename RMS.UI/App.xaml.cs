@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using RMS.DATA;
 using RMS.DocumentProcessing.Reader;
+using RMS.DocumentProcessing.Verification;
 using RMS.UI.DialogBoxes;
 using RMS.UI.ViewModels;
 using RMS.UI.Views;
@@ -19,7 +20,8 @@ namespace RMS.UI
                 services.AddSingleton<MainWindow>();
 
                 services.AddTransient<IDialogService, DialogService>();
-                services.AddTransient<IExcelReader, ExcelReader>();
+                services.AddTransient<IExcelReader, ExcelReader>(); 
+                services.AddTransient<IDocumentVerification, DocumentVerification>();
                 services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
                 //services.AddSingleton(new DbConfig { Name = @"Data Source=D:\RMS.db" });
                 services.AddSingleton<DbContext>();

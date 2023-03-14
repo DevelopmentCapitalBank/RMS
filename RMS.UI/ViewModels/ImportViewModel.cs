@@ -14,12 +14,14 @@ namespace RMS.UI.ViewModels
     public class ImportViewModel : BaseViewModel, IPageViewModel
     {
         public event EventHandler<EventArgs<int>>? ViewChanged;
-        public ImportViewModel(IDialogService dialogService, IExcelReader reader, int pageIndex = 4)
+        public ImportViewModel(IDialogService dialogService, IExcelReader reader,
+            IDocumentVerification verification, int pageIndex = 4)
         {
             PageId = pageIndex;
             Title = "Import data";
             this.reader = reader;
             this.dialogService = dialogService;
+            this.verification = verification;
             TypesOfUnloading = new Dictionary<TypeDocument, string> {
                 { TypeDocument.VisList, "ВизЛист" },
                 { TypeDocument.Turnovers, "Обороты" },
@@ -33,6 +35,7 @@ namespace RMS.UI.ViewModels
         #region Fields
         private readonly IExcelReader reader;
         private readonly IDialogService dialogService;
+        private readonly IDocumentVerification verification;
         private TypeDocument typeKey;
         private string path = "";
         private ObservableCollection<string> sheets = new();
@@ -119,6 +122,8 @@ namespace RMS.UI.ViewModels
         #region Methods
         private async Task ImportVisList(DataTable dt)
         {
+            bool isVerified = verification.IsVerified(TypeDocument.VisList, dt);
+            dialogService.ShowMsg(isVerified.ToString());
             /*
              * проверить на соответствие данной книге
              * трансформировать данные в сущности в бд
@@ -132,19 +137,23 @@ namespace RMS.UI.ViewModels
         }
         private async Task ImportTurnovers(DataTable dt)
         {
-
+            bool isVerified = verification.IsVerified(TypeDocument.Turnovers, dt);
+            dialogService.ShowMsg(isVerified.ToString());
         }
         private async Task ImportDeposits(DataTable dt)
         {
-
+            bool isVerified = verification.IsVerified(TypeDocument.Deposits, dt);
+            dialogService.ShowMsg(isVerified.ToString());
         }
         private async Task ImportOperations(DataTable dt)
         {
-
+            bool isVerified = verification.IsVerified(TypeDocument.Operation, dt);
+            dialogService.ShowMsg(isVerified.ToString());
         }
         private async Task ImportConversions(DataTable dt)
         {
-
+            bool isVerified = verification.IsVerified(TypeDocument.Conversion, dt);
+            dialogService.ShowMsg(isVerified.ToString());
         }
         #endregion
 

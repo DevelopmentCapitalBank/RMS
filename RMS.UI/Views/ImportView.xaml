@@ -84,6 +84,8 @@
                     Grid.Row="2"
                     Grid.Column="0"
                     MinWidth="250"
+                    IsEditable="True"
+                    StaysOpenOnEdit="True"
                     HorizontalAlignment="Left"
                     Style="{StaticResource MaterialDesignFilledComboBox}"
                     materialDesign:HintAssist.Hint="Листы файла"
