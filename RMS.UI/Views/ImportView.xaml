@@ -79,24 +79,35 @@
                     Margin="5">
                     <materialDesign:PackIcon Kind="FileFind"  Height="22" Width="22" />
                 </Button>
-                <ComboBox
-                    Margin="5"
+                <StackPanel
                     Grid.Row="2"
                     Grid.Column="0"
-                    MinWidth="250"
-                    IsEditable="True"
-                    StaysOpenOnEdit="True"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource MaterialDesignFilledComboBox}"
-                    materialDesign:HintAssist.Hint="Листы файла"
-                    ItemsSource="{Binding Sheets}"
-                    SelectedValue="{Binding SelectedSheet}">
-                    <ComboBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ComboBox.ItemsPanel>
-                </ComboBox>
+                    Orientation="Horizontal">
+                    <ComboBox
+                        Margin="5"
+                        MinWidth="250"
+                        IsEditable="True"
+                        StaysOpenOnEdit="True"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource MaterialDesignFilledComboBox}"
+                        materialDesign:HintAssist.Hint="Листы файла"
+                        ItemsSource="{Binding Sheets}"
+                        SelectedValue="{Binding SelectedSheet}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                    <TextBox
+                        Margin="5"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Width="510"
+                        materialDesign:HintAssist.Hint="Выбранный лист"
+                        HorizontalAlignment="Left"
+                        Text="{Binding SelectedSheet, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                </StackPanel>
                 <Button 
                     Grid.Row="2"
                     Grid.Column="1"

@@ -36,7 +36,7 @@ namespace RMS.DocumentProcessing.Reader
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    excelSheets[i] = row["TABLE_NAME"].ToString().Replace("$", "");
+                    excelSheets[i] = row["TABLE_NAME"].ToString();//.Replace("$", "");
                     i++;
                 }
 
@@ -68,7 +68,7 @@ namespace RMS.DocumentProcessing.Reader
                 using OleDbConnection connExcel = new(conStr);
                 DataTable schemaTable = new();
                 connExcel.Open();
-                var MyCommand = new OleDbDataAdapter("Select * from [" + sheet + "$]", connExcel);
+                var MyCommand = new OleDbDataAdapter("Select * from [" + sheet + "]", connExcel);
                 var dt = connExcel.GetSchema("Tables"); ;
                 MyCommand.TableMappings.Add("Table", "TestTable");
                 var DtSet = new DataSet();
