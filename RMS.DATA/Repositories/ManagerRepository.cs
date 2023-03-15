@@ -31,11 +31,15 @@ namespace RMS.DATA.Repositories
         public async Task CreateListOfEntitiesAsync(IEnumerable<Manager> list, IDbConnection connection)
         {
             connection.Open();
-            foreach (var c in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("Name", c.Name);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var c in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("Name", c.Name);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
         }
