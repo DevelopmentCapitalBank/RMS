@@ -10,6 +10,8 @@ namespace RMS.DATA.Repositories
         #region SQL
         private static readonly string Select = "SELECT AccountId, CompanyId, OfficeId, DateOpen, " +
             "DateClose, DateTimeLastOperation, AccountNumber FROM [Account] WHERE AccountId=@AccountId;";
+        private static readonly string SelectAll = "SELECT AccountId, CompanyId, OfficeId, DateOpen, " +
+            "DateClose, DateTimeLastOperation, AccountNumber FROM [Account];";
         private static readonly string SelectByCompanyId = "SELECT AccountId, CompanyId, OfficeId, DateOpen, " +
             "DateClose, DateTimeLastOperation, AccountNumber FROM [Account] WHERE CompanyId=@CompanyId;";
         private static readonly string SelectByAccountNumber = "SELECT AccountId, CompanyId, OfficeId, DateOpen, " +
@@ -55,6 +57,11 @@ namespace RMS.DATA.Repositories
         public async Task<IEnumerable<Account>> FindAsync(string f, IDbConnection connection)
         {
             return await connection.QueryAsync<Account>(SelectByAccountNumber, new { f }).ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Account>> ReadAllAsync(IDbConnection connection)
+        {
+            return await connection.QueryAsync<Account>(SelectAll).ConfigureAwait(false);
         }
 
         public async Task<Account> ReadByIdAsync(int id, IDbConnection connection)

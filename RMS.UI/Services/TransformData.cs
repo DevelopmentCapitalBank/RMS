@@ -19,7 +19,7 @@ namespace RMS.UI.Services
                     await TransformTurnoversAsync(context, dataTable);
                     break;
                 case TypeDocument.Deposits:
-                    await TransformTurnoversAsync(context, dataTable);
+                    await TransformDepositsAsync(context, dataTable);
                     break;
                 case TypeDocument.Operation:
                     await TransformOperationsAsync(context, dataTable);
@@ -34,10 +34,18 @@ namespace RMS.UI.Services
 
         private async Task TransformVisListAsync(DbContext context, DataTable dataTable)
         {
-            throw new NotImplementedException();
+            var groups = await context.Groups.ReadAllAsync().ConfigureAwait(false);
+            var managers = await context.Managers.ReadAllAsync().ConfigureAwait(false);
+            var companies = await context.Companies.ReadAllAsync().ConfigureAwait(false);
+            var accounts = await context.Accounts.ReadAllAsync().ConfigureAwait(false);
         }
 
         private async Task TransformTurnoversAsync(DbContext context, DataTable dataTable)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task TransformDepositsAsync(DbContext context, DataTable dataTable)
         {
             throw new NotImplementedException();
         }

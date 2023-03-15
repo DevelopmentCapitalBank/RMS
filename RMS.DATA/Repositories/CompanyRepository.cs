@@ -9,7 +9,9 @@ namespace RMS.DATA.Repositories
     {
         #region SQL
         private static readonly string Select = "SELECT CompanyId, ManagerId, GroupId, Name, " +
-            "IsActive, IsAttraction, Inn, Comment FROM [Company] WHERE CompanyId=@CompanyId;";        
+            "IsActive, IsAttraction, Inn, Comment FROM [Company] WHERE CompanyId=@CompanyId;";
+        private static readonly string SelectAll = "SELECT CompanyId, ManagerId, GroupId, Name, " +
+            "IsActive, IsAttraction, Inn, Comment FROM [Company];";
         private static readonly string SelectByGroupId = "SELECT CompanyId, ManagerId, GroupId, Name, " +
             "IsActive ,IsAttraction, Inn, Comment FROM [Company] WHERE GroupId=@GroupId;";        
         private static readonly string SelectByName = "SELECT CompanyId, ManagerId, GroupId, Name, " +
@@ -53,6 +55,11 @@ namespace RMS.DATA.Repositories
         public async Task<IEnumerable<Company>> FindAsync(string f, IDbConnection connection)
         {
             return await connection.QueryAsync<Company>(SelectByName, new { f }).ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Company>> ReadAllAsync(IDbConnection connection)
+        {
+            return await connection.QueryAsync<Company>(SelectAll).ConfigureAwait(false);
         }
 
         public async Task<Company> ReadByIdAsync(int id, IDbConnection connection)

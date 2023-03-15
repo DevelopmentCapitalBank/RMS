@@ -34,6 +34,12 @@ namespace RMS.DATA.Services
             return await repo.FindAsync(f, connection).ConfigureAwait(false);
         }
 
+        public async Task<IEnumerable<Account>> ReadAllAsync()
+        {
+            using var connection = new SqliteConnection(dbConfig.Name);
+            return await repo.ReadAllAsync(connection).ConfigureAwait(false);
+        }
+
         public async Task<Account> ReadByIdAsync(int id)
         {
             using var connection = new SqliteConnection(dbConfig.Name);
