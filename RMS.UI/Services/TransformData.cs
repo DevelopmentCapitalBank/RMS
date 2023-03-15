@@ -8,8 +8,14 @@ using RMS.DocumentProcessing.Verification;
 
 namespace RMS.UI.Services
 {
-    public class TransformData : ITransformData
+    public class TransformData : ITransformData 
     {
+        private readonly IVisListHandler handler;
+        public TransformData(IVisListHandler handler)
+        {
+            this.handler = handler;
+        }
+
         public async Task Transform(TypeDocument type, DbContext context, DataTable dataTable)
         {
             switch (type)
@@ -44,50 +50,23 @@ namespace RMS.UI.Services
             var companies = await context.Companies.ReadAllAsync().ConfigureAwait(false);
             var accounts = await context.Accounts.ReadAllAsync().ConfigureAwait(false);
 
-            DataView view = new DataView(dataTable);
-            DataTable distinctValues = view.ToTable(true, "Группа");
-            foreach (DataRow row in distinctValues.Rows)
-            {
-                string groupName = row.ItemArray[0].ToString().Trim();
-                if (!string.IsNullOrEmpty(groupName))
-                {
-                    var g = groups.FirstOrDefault(i => string.Compare(i.Name, groupName) == 0);
-                    //if (g == null)
-                    //{
-                    //    await context.Groups.CreateAsync(new Group { Name = groupName }).ConfigureAwait(false);
-                    //}
-                }
-            }
+            var newGroups = handler.GetNewItems(new DataView(dataTable).ToTable(true, "Группа"), groups);
+            var newManagers = handler.GetNewItems(new DataView(dataTable).ToTable(true, "Рекомендация"), managers);
+            var newOffices = handler.GetNewItems(new DataView(dataTable).ToTable(true, "Офис"), offices);
+            var newCompanies = handler.GetNewItems(dataTable, companies);
+            var newAccounts = handler.GetNewItems(dataTable, accounts);
 
-            view = new DataView(dataTable);
-            distinctValues = view.ToTable(true, "Рекомендация");
-            foreach (DataRow row in distinctValues.Rows)
-            {
-                string managerName = row.ItemArray[0].ToString().Trim();
-                if (!string.IsNullOrEmpty(managerName))
-                {
-                    var m = managers.FirstOrDefault(i => string.Compare(i.Name, managerName) == 0);
-                    //if (m == null)
-                    //{
-                    //    await context.Managers.CreateAsync(new Manager { Name = managerName }).ConfigureAwait(false);
-                    //}
-                }
-            }
+            await context.Groups.CreateListOfEntitiesAsync(newGroups).ConfigureAwait(false);
+            await context.Managers.CreateListOfEntitiesAsync(newManagers).ConfigureAwait(false);
+            await context.Offices.CreateListOfEntitiesAsync(newOffices).ConfigureAwait(false);
+            await context.Companies.CreateListOfEntitiesAsync(newCompanies).ConfigureAwait(false);
+            await context.Accounts.CreateListOfEntitiesAsync(newAccounts).ConfigureAwait(false);
 
-            view = new DataView(dataTable);
-            distinctValues = view.ToTable(true, "Офис");
-            foreach (DataRow row in distinctValues.Rows)
-            {
-                string officeName = row.ItemArray[0].ToString().Trim();
-                if (!string.IsNullOrEmpty(officeName))
-                {
-                    var g = offices.FirstOrDefault(i => string.Compare(i.Name, officeName) == 0);
-                    //if (g == null)
-                    //{
-                    //    await context.Offices.CreateAsync(new Office { Name = officeName }).ConfigureAwait(false);
-                    //}
-                }
-            }
+            var companiesToUpdate = handler.GetItemsToUpdate(dataTable, companies);
+            var accountsToUpdate = handler.GetItemsToUpdate(dataTable, accounts);
+
+            await context.Companies.UpdateListOfEntitiesAsync(newCompanies).ConfigureAwait(false);
+            await context.Accounts.UpdateListOfEntitiesAsync(newAccounts).ConfigureAwait(false);
         }
 
         private async Task TransformTurnoversAsync(DbContext context, DataTable dataTable)
