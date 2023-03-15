@@ -47,6 +47,23 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
+        public async Task CreateListOfEntitiesAsync(IEnumerable<Account> list, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var c in list)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("CompanyId", c.CompanyId);
+                parameters.Add("OfficeId", c.OfficeId);
+                parameters.Add("DateOpen", c.DateOpen);
+                parameters.Add("DateClose", c.DateClose);
+                parameters.Add("DateTimeLastOperation", c.DateTimeLastOperation);
+                parameters.Add("AccountNumber", c.AccountNumber);
+                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
+        }
+
         public async Task DeleteAsync(Account entity, IDbConnection connection)
         {
             var parameters = new DynamicParameters();
@@ -89,6 +106,24 @@ namespace RMS.DATA.Repositories
             parameters.Add("AccountNumber", entity.AccountNumber);
             parameters.Add("AccountId", entity.AccountId);
             await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+        }
+
+        public async Task UpdateListOfEntitiesAsync(IEnumerable<Account> items, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var entity in items)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("CompanyId", entity.CompanyId);
+                parameters.Add("OfficeId", entity.OfficeId);
+                parameters.Add("DateOpen", entity.DateOpen);
+                parameters.Add("DateClose", entity.DateClose);
+                parameters.Add("DateTimeLastOperation", entity.DateTimeLastOperation);
+                parameters.Add("AccountNumber", entity.AccountNumber);
+                parameters.Add("AccountId", entity.AccountId);
+                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
         }
     }
 }

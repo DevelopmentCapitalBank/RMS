@@ -45,6 +45,25 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
+        public async Task CreateListOfEntitiesAsync(IEnumerable<Company> list, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var c in list)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("CompanyId", c.CompanyId);
+                parameters.Add("ManagerId", c.ManagerId);
+                parameters.Add("GroupId", c.GroupId);
+                parameters.Add("Name", c.Name);
+                parameters.Add("IsActive", c.IsActive);
+                parameters.Add("IsAttraction", c.IsAttraction);
+                parameters.Add("Inn", c.Inn);
+                parameters.Add("Comment", c.Comment);
+                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
+        }
+
         public async Task DeleteAsync(Company entity, IDbConnection connection)
         {
             var parameters = new DynamicParameters();
@@ -88,6 +107,25 @@ namespace RMS.DATA.Repositories
             parameters.Add("Comment", entity.Comment);
             parameters.Add("CompanyId", entity.CompanyId);
             await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+        }
+
+        public async Task UpdateListOfEntitiesAsync(IEnumerable<Company> items, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var entity in items)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("ManagerId", entity.ManagerId);
+                parameters.Add("GroupId", entity.GroupId);
+                parameters.Add("Name", entity.Name);
+                parameters.Add("IsActive", entity.IsActive);
+                parameters.Add("IsAttraction", entity.IsAttraction);
+                parameters.Add("Inn", entity.Inn);
+                parameters.Add("Comment", entity.Comment);
+                parameters.Add("CompanyId", entity.CompanyId);
+                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
         }
     }
 }

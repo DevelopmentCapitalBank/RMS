@@ -28,6 +28,18 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
+        public async Task CreateListOfEntitiesAsync(IEnumerable<MaskType> list, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var entity in list)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("Name", entity.Name);
+                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
+        }
+
         public async Task DeleteAsync(MaskType entity, IDbConnection connection)
         {
             var parameters = new DynamicParameters();
@@ -46,6 +58,19 @@ namespace RMS.DATA.Repositories
             parameters.Add("Name", entity.Name);
             parameters.Add("MaskTypeId", entity.MaskTypeId);
             await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+        }
+
+        public async Task UpdateListOfEntitiesAsync(IEnumerable<MaskType> items, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var entity in items)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("Name", entity.Name);
+                parameters.Add("MaskTypeId", entity.MaskTypeId);
+                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
         }
     }
 }

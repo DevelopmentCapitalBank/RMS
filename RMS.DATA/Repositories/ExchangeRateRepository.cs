@@ -25,6 +25,20 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
+        public async Task CreateListOfEntitiesAsync(IEnumerable<ExchangeRate> list, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var entity in list)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("Iso", entity.Iso);
+                parameters.Add("DateId", entity.DateId);
+                parameters.Add("Rate", entity.Rate);
+                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
+        }
+
         public async Task DeleteAsync(ExchangeRate entity, IDbConnection connection)
         {
             var parameters = new DynamicParameters();
@@ -45,6 +59,20 @@ namespace RMS.DATA.Repositories
             parameters.Add("Iso", entity.Iso);
             parameters.Add("DateId", entity.DateId);
             await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+        }
+
+        public async Task UpdateListOfEntitiesAsync(IEnumerable<ExchangeRate> items, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var entity in items)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("Rate", entity.Rate);
+                parameters.Add("Iso", entity.Iso);
+                parameters.Add("DateId", entity.DateId);
+                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
         }
     }
 }

@@ -22,6 +22,12 @@ namespace RMS.DATA.Services
             return await repo.CreateAsync(entity, connection).ConfigureAwait(false);
         }
 
+        public async Task CreateListOfEntitiesAsync(IEnumerable<Account> list)
+        {
+            using var connection = new SqliteConnection(dbConfig.Name);
+            await repo.CreateListOfEntitiesAsync(list, connection).ConfigureAwait(false);
+        }
+
         public async Task DeleteAsync(Account entity)
         {
             using var connection = new SqliteConnection(dbConfig.Name);
@@ -57,6 +63,12 @@ namespace RMS.DATA.Services
         {
             using var connection = new SqliteConnection(dbConfig.Name);
             await repo.UpdateAsync(entity, connection);
+        }
+
+        public async Task UpdateListOfEntitiesAsync(IEnumerable<Account> items)
+        {
+            using var connection = new SqliteConnection(dbConfig.Name);
+            await repo.UpdateListOfEntitiesAsync(items, connection);
         }
     }
 }

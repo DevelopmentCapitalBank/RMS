@@ -29,6 +29,19 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
+        public async Task CreateListOfEntitiesAsync(IEnumerable<Group> list, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var entity in list)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("Name", entity.Name);
+                parameters.Add("Comment", entity.Comment);
+                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
+        }
+
         public async Task DeleteAsync(Group entity, IDbConnection connection)
         {
             var parameters = new DynamicParameters();
@@ -48,6 +61,20 @@ namespace RMS.DATA.Repositories
             parameters.Add("Comment", entity.Comment);
             parameters.Add("GroupId", entity.GroupId);
             await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+        }
+
+        public async Task UpdateListOfEntitiesAsync(IEnumerable<Group> items, IDbConnection connection)
+        {
+            connection.Open();
+            foreach (var entity in items)
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("Name", entity.Name);
+                parameters.Add("Comment", entity.Comment);
+                parameters.Add("GroupId", entity.GroupId);
+                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+            }
+            connection.Close();
         }
     }
 }

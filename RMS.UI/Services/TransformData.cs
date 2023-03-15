@@ -38,9 +38,7 @@ namespace RMS.UI.Services
                 default:
                     break;
             }
-        }
-
-        
+        }    
 
         private async Task TransformVisListAsync(DbContext context, DataTable dataTable)
         {
@@ -65,8 +63,8 @@ namespace RMS.UI.Services
             var companiesToUpdate = handler.GetItemsToUpdate(dataTable, companies);
             var accountsToUpdate = handler.GetItemsToUpdate(dataTable, accounts);
 
-            await context.Companies.UpdateListOfEntitiesAsync(newCompanies).ConfigureAwait(false);
-            await context.Accounts.UpdateListOfEntitiesAsync(newAccounts).ConfigureAwait(false);
+            await context.Companies.UpdateListOfEntitiesAsync(companiesToUpdate).ConfigureAwait(false);
+            await context.Accounts.UpdateListOfEntitiesAsync(accountsToUpdate).ConfigureAwait(false);
         }
 
         private async Task TransformTurnoversAsync(DbContext context, DataTable dataTable)
