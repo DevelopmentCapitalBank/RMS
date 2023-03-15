@@ -4,10 +4,12 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using RMS.DATA;
 using RMS.DocumentProcessing.Reader;
 using RMS.DocumentProcessing.Verification;
 using RMS.UI.Commands;
 using RMS.UI.DialogBoxes;
+using RMS.UI.Services;
 
 namespace RMS.UI.ViewModels
 {
@@ -15,13 +17,16 @@ namespace RMS.UI.ViewModels
     {
         public event EventHandler<EventArgs<int>>? ViewChanged;
         public ImportViewModel(IDialogService dialogService, IExcelReader reader,
-            IDocumentVerification verification, int pageIndex = 4)
+            IDocumentVerification verification, ITransformData transform, 
+            DbContext context, int pageIndex = 4)
         {
             PageId = pageIndex;
             Title = "Import data";
             this.reader = reader;
             this.dialogService = dialogService;
             this.verification = verification;
+            this.transform = transform;
+            this.context = context;
             TypesOfUnloading = new Dictionary<TypeDocument, string> {
                 { TypeDocument.VisList, "ВизЛист" },
                 { TypeDocument.Turnovers, "Обороты" },
@@ -36,6 +41,8 @@ namespace RMS.UI.ViewModels
         private readonly IExcelReader reader;
         private readonly IDialogService dialogService;
         private readonly IDocumentVerification verification;
+        private readonly ITransformData transform;
+        private readonly DbContext context;
         private TypeDocument typeKey;
         private string path = "";
         private ObservableCollection<string> sheets = new();
@@ -123,37 +130,47 @@ namespace RMS.UI.ViewModels
         private async Task ImportVisList(DataTable dt)
         {
             bool isVerified = verification.IsVerified(TypeDocument.VisList, dt);
-            dialogService.ShowMsg(isVerified.ToString());
-            /*
-             * проверить на соответствие данной книге
-             * трансформировать данные в сущности в бд
-             * проверить и занести данные в бд
-             *
-            bool isOriginal = vislist.IsOriginal(dt);
-            if (isOriginal)
+            if (isVerified)
             {
-
-            }*/
+                await transform.Transform(TypeDocument.VisList, context, dt);
+                Output = "Данные визлиста успешно обновлены.\n" + Output;
+            }
         }
         private async Task ImportTurnovers(DataTable dt)
         {
             bool isVerified = verification.IsVerified(TypeDocument.Turnovers, dt);
-            dialogService.ShowMsg(isVerified.ToString());
+            if (isVerified)
+            {
+                await transform.Transform(TypeDocument.Turnovers, context, dt);
+                Output = "Данные по оборотам успешно обновлены.\n" + Output;
+            }
         }
         private async Task ImportDeposits(DataTable dt)
         {
             bool isVerified = verification.IsVerified(TypeDocument.Deposits, dt);
-            dialogService.ShowMsg(isVerified.ToString());
+            if (isVerified)
+            {
+                await transform.Transform(TypeDocument.Deposits, context, dt);
+                Output = "Данные по депозитам успешно обновлены.\n" + Output;
+            }
         }
         private async Task ImportOperations(DataTable dt)
         {
             bool isVerified = verification.IsVerified(TypeDocument.Operation, dt);
-            dialogService.ShowMsg(isVerified.ToString());
+            if (isVerified)
+            {
+                await transform.Transform(TypeDocument.Operation, context, dt);
+                Output = "Данные по платежным операциям успешно обновлены.\n" + Output;
+            }
         }
         private async Task ImportConversions(DataTable dt)
         {
             bool isVerified = verification.IsVerified(TypeDocument.Conversion, dt);
-            dialogService.ShowMsg(isVerified.ToString());
+            if (isVerified)
+            {
+                await transform.Transform(TypeDocument.Conversion, context, dt);
+                Output = "Данные по конверсии ДБО успешно обновлены.\n" + Output;
+            }
         }
         #endregion
 
