@@ -193,5 +193,43 @@ namespace RMS.UI.Services.Tests
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual("N", actual[0].Name);
         }
+
+        [TestMethod]
+        public void GetNewItemsCompanies__datatable_2items__allItems_1item__return_empty()
+        {
+            DataTable dt = new();
+
+            dt.Columns.Add(new DataColumn("клиент", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("счет", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("баланс", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("вал", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Ключ", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Номер", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("название", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Группа", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Привлечение", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Рекомендация", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Офис", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата открытия", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата закрытия", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата последней проводки", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("ИНН", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Комментарий", Type.GetType("System.String")));
+            dt.Rows.Add(new object[] { "1", "123", "1", "2", "3", "4", "JS", "ND", "", "Jack", "00-2", "2023-11-11", "...", "2023-12-11 11:23:35", "444", "Comm"});
+            dt.Rows.Add(new object[] { "1", "124", "1", "2", "3", "4", "JS", "ND", "", "Jack", "00-2", "2023-10-21", "...", "2023-02-01 12:03:55", "444", "Comm" });
+            
+            var allItems = new List<Company> {
+                new Company { GroupId = 1, CompanyId = 2, Comment = "comm", Inn = "444", IsActive = true, IsAttraction = false, ManagerId = 1, Name = "JS" }
+            };
+            var groups = new List<Group> { new Group { Name = "ND", GroupId = 1 } };
+            var managers = new List<Manager> { new Manager { Name = "Jack", ManagerId = 1 } };
+
+            VisListHandler handler = new();
+            var actual = (List<Office>)handler.GetNewItems(dt, allItems, groups, managers);
+            Assert.AreEqual(0, actual.Count);
+        }
+
+        [TestMethod]
+        public void CheckIntegrityOfCompanyData_datatable_not
     }
 }

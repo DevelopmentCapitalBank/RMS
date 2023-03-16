@@ -61,11 +61,11 @@ namespace RMS.UI.Services
             return results;
         }
 
-        public IEnumerable<Company> GetNewItems(DataTable dt, IEnumerable<Company> allItems)
+        public IEnumerable<Company> GetNewItems(DataTable dt, IEnumerable<Company> allItems, IEnumerable<Group> groups, IEnumerable<Manager> managers)
         {
             throw new System.NotImplementedException();
         }
-        public IEnumerable<Account> GetNewItems(DataTable dt, IEnumerable<Account> allItems)
+        public IEnumerable<Account> GetNewItems(DataTable dt, IEnumerable<Account> allItems, IEnumerable<Office> offices)
         {
             throw new System.NotImplementedException();
         }
@@ -74,6 +74,10 @@ namespace RMS.UI.Services
             throw new System.NotImplementedException();
         }
         public IEnumerable<Account> GetItemsToUpdate(DataTable dt, IEnumerable<Account> allItems)
+        {
+            throw new System.NotImplementedException();
+        }
+        public string CheckIntegrityOfCompanyData(DataTable dt)
         {
             throw new System.NotImplementedException();
         }

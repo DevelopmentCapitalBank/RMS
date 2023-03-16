@@ -53,23 +53,31 @@ namespace RMS.UI.Services
             var newGroups = handler.GetNewItems(new DataView(dataTable).ToTable(true, "Группа"), groups);
             var newManagers = handler.GetNewItems(new DataView(dataTable).ToTable(true, "Рекомендация"), managers);
             var newOffices = handler.GetNewItems(new DataView(dataTable).ToTable(true, "Офис"), offices);
-            //var newCompanies = handler.GetNewItems(dataTable, companies);
-            //var newAccounts = handler.GetNewItems(dataTable, accounts);
-            await context.Groups.CreateListOfEntitiesAsync(newGroups).ConfigureAwait(false);
-            await context.Managers.CreateListOfEntitiesAsync(newManagers).ConfigureAwait(false);
-            await context.Offices.CreateListOfEntitiesAsync(newOffices).ConfigureAwait(false);
+
+            newGroups = await context.Groups.CreateListOfEntitiesAsync(newGroups).ConfigureAwait(false);
+            var allGroups = groups.Union(newGroups);
+            newManagers = await context.Managers.CreateListOfEntitiesAsync(newManagers).ConfigureAwait(false);
+            var allManagers = managers.Union(newManagers);
+            newOffices = await context.Offices.CreateListOfEntitiesAsync(newOffices).ConfigureAwait(false);
+            var allOffices = offices.Union(newOffices);
+
+            var newCompanies = handler.GetNewItems(dataTable, companies, allGroups, allManagers);
+            newCompanies = await context.Companies.CreateListOfEntitiesAsync(newCompanies).ConfigureAwait(false);
+            var allCompanies = companies.Union(newCompanies);
+
+            var newAccounts = handler.GetNewItems(dataTable, accounts, allOffices);
+            newAccounts = await context.Accounts.CreateListOfEntitiesAsync(newAccounts).ConfigureAwait(false);
+            var allAccounts = accounts.Union(newAccounts);
 
             //TODO Подумать над реализацией события для выполнения нескольких комманд к бд за одну транзакцию(соединение)
             //Dependency injection in class lib
 
-            //await context.Companies.CreateListOfEntitiesAsync(newCompanies).ConfigureAwait(false);
-            //await context.Accounts.CreateListOfEntitiesAsync(newAccounts).ConfigureAwait(false);
+            var companiesToUpdate = handler.GetItemsToUpdate(dataTable, allCompanies);
+            var accountsToUpdate = handler.GetItemsToUpdate(dataTable, allAccounts);
 
-            //var companiesToUpdate = handler.GetItemsToUpdate(dataTable, companies);
-            //var accountsToUpdate = handler.GetItemsToUpdate(dataTable, accounts);
+            await context.Companies.UpdateListOfEntitiesAsync(companiesToUpdate).ConfigureAwait(false);
+            await context.Accounts.UpdateListOfEntitiesAsync(accountsToUpdate).ConfigureAwait(false);
 
-            //await context.Companies.UpdateListOfEntitiesAsync(companiesToUpdate).ConfigureAwait(false);
-            //await context.Accounts.UpdateListOfEntitiesAsync(accountsToUpdate).ConfigureAwait(false);
             TimeSpan sp = DateTime.Now - dold;
             Debug.Print("millesec-" + sp.TotalMilliseconds.ToString() + " | sec-" + sp.TotalSeconds.ToString());
         }
