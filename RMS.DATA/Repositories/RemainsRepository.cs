@@ -14,20 +14,25 @@ namespace RMS.DATA.Repositories
         private static readonly string Delete = "DELETE FROM [Remains] WHERE DateOfUnloading=@d;";
         private static readonly string Read = "SELECT * FROM [Remains] WHERE DateOfUnloading BETWEEN @v1 AND @v2 ORDER BY DateOfUnloading DESC;";
         #endregion
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Remains> list, IDbConnection connection)
+        public async Task<IEnumerable<Remains>> CreateListOfEntitiesAsync(IEnumerable<Remains> list, IDbConnection connection)
         {
             connection.Open();
-            foreach (var c in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("DateOfUnloading", c.DateOfUnloading);
-                parameters.Add("Account", c.Account);
-                parameters.Add("Debit", c.Debit);
-                parameters.Add("Credit", c.Credit);
-                parameters.Add("AverageBalance", c.AverageBalance);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var c in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("DateOfUnloading", c.DateOfUnloading);
+                    parameters.Add("Account", c.Account);
+                    parameters.Add("Debit", c.Debit);
+                    parameters.Add("Credit", c.Credit);
+                    parameters.Add("AverageBalance", c.AverageBalance);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteByConditionAsync(DateTime condition, IDbConnection connection)

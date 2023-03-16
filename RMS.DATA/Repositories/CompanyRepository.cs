@@ -45,23 +45,28 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Company> list, IDbConnection connection)
+        public async Task<IEnumerable<Company>> CreateListOfEntitiesAsync(IEnumerable<Company> list, IDbConnection connection)
         {
             connection.Open();
-            foreach (var c in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("CompanyId", c.CompanyId);
-                parameters.Add("ManagerId", c.ManagerId);
-                parameters.Add("GroupId", c.GroupId);
-                parameters.Add("Name", c.Name);
-                parameters.Add("IsActive", c.IsActive);
-                parameters.Add("IsAttraction", c.IsAttraction);
-                parameters.Add("Inn", c.Inn);
-                parameters.Add("Comment", c.Comment);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var c in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("CompanyId", c.CompanyId);
+                    parameters.Add("ManagerId", c.ManagerId);
+                    parameters.Add("GroupId", c.GroupId);
+                    parameters.Add("Name", c.Name);
+                    parameters.Add("IsActive", c.IsActive);
+                    parameters.Add("IsAttraction", c.IsAttraction);
+                    parameters.Add("Inn", c.Inn);
+                    parameters.Add("Comment", c.Comment);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteAsync(Company entity, IDbConnection connection)
@@ -112,18 +117,22 @@ namespace RMS.DATA.Repositories
         public async Task UpdateListOfEntitiesAsync(IEnumerable<Company> items, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in items)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("ManagerId", entity.ManagerId);
-                parameters.Add("GroupId", entity.GroupId);
-                parameters.Add("Name", entity.Name);
-                parameters.Add("IsActive", entity.IsActive);
-                parameters.Add("IsAttraction", entity.IsAttraction);
-                parameters.Add("Inn", entity.Inn);
-                parameters.Add("Comment", entity.Comment);
-                parameters.Add("CompanyId", entity.CompanyId);
-                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                foreach (var entity in items)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("ManagerId", entity.ManagerId);
+                    parameters.Add("GroupId", entity.GroupId);
+                    parameters.Add("Name", entity.Name);
+                    parameters.Add("IsActive", entity.IsActive);
+                    parameters.Add("IsAttraction", entity.IsAttraction);
+                    parameters.Add("Inn", entity.Inn);
+                    parameters.Add("Comment", entity.Comment);
+                    parameters.Add("CompanyId", entity.CompanyId);
+                    await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
         }

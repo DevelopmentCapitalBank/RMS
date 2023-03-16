@@ -14,22 +14,27 @@ namespace RMS.DATA.Repositories
         private static readonly string Delete = "DELETE FROM [Operation] WHERE DateOfUnloading=@d;";
         private static readonly string Read = "SELECT * FROM [Operation] WHERE DateOfUnloading BETWEEN @v1 AND @v2 ORDER BY DateOfUnloading DESC;";
         #endregion
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Operation> list, IDbConnection connection)
+        public async Task<IEnumerable<Operation>> CreateListOfEntitiesAsync(IEnumerable<Operation> list, IDbConnection connection)
         {
             connection.Open();
-            foreach (var c in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("DateOfUnloading", c.DateOfUnloading);
-                parameters.Add("Amount", c.Amount);
-                parameters.Add("AmountEquivalent", c.AmountEquivalent);
-                parameters.Add("Purpose", c.Purpose);
-                parameters.Add("Payer", c.Payer);
-                parameters.Add("Recipient", c.Recipient);
-                parameters.Add("DateOperation", c.DateOperation);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var c in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("DateOfUnloading", c.DateOfUnloading);
+                    parameters.Add("Amount", c.Amount);
+                    parameters.Add("AmountEquivalent", c.AmountEquivalent);
+                    parameters.Add("Purpose", c.Purpose);
+                    parameters.Add("Payer", c.Payer);
+                    parameters.Add("Recipient", c.Recipient);
+                    parameters.Add("DateOperation", c.DateOperation);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteByConditionAsync(DateTime condition, IDbConnection connection)

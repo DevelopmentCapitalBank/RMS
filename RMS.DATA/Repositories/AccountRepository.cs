@@ -47,21 +47,29 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Account> list, IDbConnection connection)
+        public async Task<IEnumerable<Account>> CreateListOfEntitiesAsync(IEnumerable<Account> list, IDbConnection connection)
         {
             connection.Open();
-            foreach (var c in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("CompanyId", c.CompanyId);
-                parameters.Add("OfficeId", c.OfficeId);
-                parameters.Add("DateOpen", c.DateOpen);
-                parameters.Add("DateClose", c.DateClose);
-                parameters.Add("DateTimeLastOperation", c.DateTimeLastOperation);
-                parameters.Add("AccountNumber", c.AccountNumber);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var c in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("CompanyId", c.CompanyId);
+                    parameters.Add("OfficeId", c.OfficeId);
+                    parameters.Add("DateOpen", c.DateOpen);
+                    parameters.Add("DateClose", c.DateClose);
+                    parameters.Add("DateTimeLastOperation", c.DateTimeLastOperation);
+                    parameters.Add("AccountNumber", c.AccountNumber);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+
+                    int? AccountId = await connection.QueryFirstOrDefaultAsync<int>(SqlIdentity).ConfigureAwait(false);
+                    c.AccountId = AccountId.Value;
+                }
+                transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteAsync(Account entity, IDbConnection connection)
@@ -111,17 +119,21 @@ namespace RMS.DATA.Repositories
         public async Task UpdateListOfEntitiesAsync(IEnumerable<Account> items, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in items)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("CompanyId", entity.CompanyId);
-                parameters.Add("OfficeId", entity.OfficeId);
-                parameters.Add("DateOpen", entity.DateOpen);
-                parameters.Add("DateClose", entity.DateClose);
-                parameters.Add("DateTimeLastOperation", entity.DateTimeLastOperation);
-                parameters.Add("AccountNumber", entity.AccountNumber);
-                parameters.Add("AccountId", entity.AccountId);
-                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                foreach (var entity in items)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("CompanyId", entity.CompanyId);
+                    parameters.Add("OfficeId", entity.OfficeId);
+                    parameters.Add("DateOpen", entity.DateOpen);
+                    parameters.Add("DateClose", entity.DateClose);
+                    parameters.Add("DateTimeLastOperation", entity.DateTimeLastOperation);
+                    parameters.Add("AccountNumber", entity.AccountNumber);
+                    parameters.Add("AccountId", entity.AccountId);
+                    await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
         }

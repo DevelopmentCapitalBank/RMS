@@ -14,25 +14,30 @@ namespace RMS.DATA.Repositories
         private static readonly string Delete = "DELETE FROM [Conversion] WHERE DateOperation BETWEEN @d1 AND @d2;";
         private static readonly string Read = "SELECT * FROM [Conversion] WHERE DateOperation BETWEEN @v1 AND @v2 ORDER BY DateOperation DESC;";
         #endregion
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Conversion> list, IDbConnection connection)
+        public async Task<IEnumerable<Conversion>> CreateListOfEntitiesAsync(IEnumerable<Conversion> list, IDbConnection connection)
         {
             connection.Open();
-            foreach(var c in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("DateOperation", c.DateOperation);
-                parameters.Add("TypeOfTransaction", c.TypeOfTransaction);
-                parameters.Add("ReceivesAmount", c.ReceivesAmount);
-                parameters.Add("ReceivedCurrency", c.ReceivedCurrency);
-                parameters.Add("GivesAmount", c.GivesAmount);
-                parameters.Add("GivesCurrency", c.GivesCurrency);
-                parameters.Add("RateCurrencyOfCrediting", c.RateCurrencyOfCrediting);
-                parameters.Add("RateCurrencyOfDebiting", c.RateCurrencyOfDebiting);
-                parameters.Add("ReceivesToAccount", c.ReceivesToAccount);
-                parameters.Add("GivesFromAccount", c.GivesFromAccount);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var c in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("DateOperation", c.DateOperation);
+                    parameters.Add("TypeOfTransaction", c.TypeOfTransaction);
+                    parameters.Add("ReceivesAmount", c.ReceivesAmount);
+                    parameters.Add("ReceivedCurrency", c.ReceivedCurrency);
+                    parameters.Add("GivesAmount", c.GivesAmount);
+                    parameters.Add("GivesCurrency", c.GivesCurrency);
+                    parameters.Add("RateCurrencyOfCrediting", c.RateCurrencyOfCrediting);
+                    parameters.Add("RateCurrencyOfDebiting", c.RateCurrencyOfDebiting);
+                    parameters.Add("ReceivesToAccount", c.ReceivesToAccount);
+                    parameters.Add("GivesFromAccount", c.GivesFromAccount);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteByConditionAsync(DateTime condition, IDbConnection connection)

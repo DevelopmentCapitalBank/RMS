@@ -29,7 +29,7 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Group> list, IDbConnection connection)
+        public async Task<IEnumerable<Group>> CreateListOfEntitiesAsync(IEnumerable<Group> list, IDbConnection connection)
         {
             connection.Open(); 
             using (var transaction = connection.BeginTransaction())
@@ -40,10 +40,14 @@ namespace RMS.DATA.Repositories
                     parameters.Add("Name", entity.Name);
                     parameters.Add("Comment", entity.Comment);
                     await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+
+                    int? GroupId = await connection.QueryFirstOrDefaultAsync<int>(SqlIdentity).ConfigureAwait(false);
+                    entity.GroupId = GroupId.Value;
                 }
                 transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteAsync(Group entity, IDbConnection connection)
@@ -70,13 +74,17 @@ namespace RMS.DATA.Repositories
         public async Task UpdateListOfEntitiesAsync(IEnumerable<Group> items, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in items)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("Name", entity.Name);
-                parameters.Add("Comment", entity.Comment);
-                parameters.Add("GroupId", entity.GroupId);
-                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                foreach (var entity in items)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("Name", entity.Name);
+                    parameters.Add("Comment", entity.Comment);
+                    parameters.Add("GroupId", entity.GroupId);
+                    await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
         }

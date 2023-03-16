@@ -28,7 +28,7 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Manager> list, IDbConnection connection)
+        public async Task<IEnumerable<Manager>> CreateListOfEntitiesAsync(IEnumerable<Manager> list, IDbConnection connection)
         {
             connection.Open();
             using (var transaction = connection.BeginTransaction())
@@ -38,10 +38,14 @@ namespace RMS.DATA.Repositories
                     var parameters = new DynamicParameters();
                     parameters.Add("Name", c.Name);
                     await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+
+                    int? ManagerId = await connection.QueryFirstOrDefaultAsync<int>(SqlIdentity).ConfigureAwait(false);
+                    c.ManagerId = ManagerId.Value;
                 }
                 transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteAsync(Manager entity, IDbConnection connection)
@@ -67,12 +71,16 @@ namespace RMS.DATA.Repositories
         public async Task UpdateListOfEntitiesAsync(IEnumerable<Manager> items, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in items)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("Name", entity.Name);
-                parameters.Add("ManagerId", entity.ManagerId);
-                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                foreach (var entity in items)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("Name", entity.Name);
+                    parameters.Add("ManagerId", entity.ManagerId);
+                    await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
         }

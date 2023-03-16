@@ -26,18 +26,23 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Currency> list, IDbConnection connection)
+        public async Task<IEnumerable<Currency>> CreateListOfEntitiesAsync(IEnumerable<Currency> list, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("Iso", entity.Iso);
-                parameters.Add("Code", entity.Code);
-                parameters.Add("Description", entity.Description);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var entity in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("Iso", entity.Iso);
+                    parameters.Add("Code", entity.Code);
+                    parameters.Add("Description", entity.Description);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteAsync(Currency entity, IDbConnection connection)
@@ -64,13 +69,17 @@ namespace RMS.DATA.Repositories
         public async Task UpdateListOfEntitiesAsync(IEnumerable<Currency> items, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in items)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("Code", entity.Code);
-                parameters.Add("Description", entity.Description);
-                parameters.Add("Iso", entity.Iso);
-                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                foreach (var entity in items)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("Code", entity.Code);
+                    parameters.Add("Description", entity.Description);
+                    parameters.Add("Iso", entity.Iso);
+                    await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
         }

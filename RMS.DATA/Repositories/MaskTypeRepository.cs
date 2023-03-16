@@ -28,16 +28,24 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
-        public async Task CreateListOfEntitiesAsync(IEnumerable<MaskType> list, IDbConnection connection)
+        public async Task<IEnumerable<MaskType>> CreateListOfEntitiesAsync(IEnumerable<MaskType> list, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("Name", entity.Name);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var entity in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("Name", entity.Name);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+
+                    int? MaskTypeId = await connection.QueryFirstOrDefaultAsync<int>(SqlIdentity).ConfigureAwait(false);
+                    entity.MaskTypeId = MaskTypeId.Value;
+                }
+                transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteAsync(MaskType entity, IDbConnection connection)
@@ -63,12 +71,16 @@ namespace RMS.DATA.Repositories
         public async Task UpdateListOfEntitiesAsync(IEnumerable<MaskType> items, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in items)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("Name", entity.Name);
-                parameters.Add("MaskTypeId", entity.MaskTypeId);
-                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                foreach (var entity in items)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("Name", entity.Name);
+                    parameters.Add("MaskTypeId", entity.MaskTypeId);
+                    await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
         }

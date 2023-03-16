@@ -22,10 +22,10 @@ namespace RMS.DATA.Services
             return await repo.CreateAsync(entity, connection).ConfigureAwait(false);
         }
 
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Manager> list)
+        public async Task<IEnumerable<Manager>> CreateListOfEntitiesAsync(IEnumerable<Manager> list)
         {
             using var connection = new SqliteConnection(dbConfig.Name);
-            await repo.CreateListOfEntitiesAsync(list, connection).ConfigureAwait(false);
+            return await repo.CreateListOfEntitiesAsync(list, connection).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(Manager entity)

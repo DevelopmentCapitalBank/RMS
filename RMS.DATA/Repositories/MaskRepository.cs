@@ -29,17 +29,25 @@ namespace RMS.DATA.Repositories
             return entity;
         }
 
-        public async Task CreateListOfEntitiesAsync(IEnumerable<Mask> list, IDbConnection connection)
+        public async Task<IEnumerable<Mask>> CreateListOfEntitiesAsync(IEnumerable<Mask> list, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in list)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("MaskTypeId", entity.MaskTypeId);
-                parameters.Add("Content", entity.Content);
-                await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+                foreach (var entity in list)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("MaskTypeId", entity.MaskTypeId);
+                    parameters.Add("Content", entity.Content);
+                    await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
+
+                    int? MaskId = await connection.QueryFirstOrDefaultAsync<int>(SqlIdentity).ConfigureAwait(false);
+                    entity.MaskId = MaskId.Value;
+                }
+                transaction.Commit();
             }
             connection.Close();
+            return list;
         }
 
         public async Task DeleteAsync(Mask entity, IDbConnection connection)
@@ -66,13 +74,17 @@ namespace RMS.DATA.Repositories
         public async Task UpdateListOfEntitiesAsync(IEnumerable<Mask> items, IDbConnection connection)
         {
             connection.Open();
-            foreach (var entity in items)
+            using (var transaction = connection.BeginTransaction())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("MaskTypeId", entity.MaskTypeId);
-                parameters.Add("Content", entity.Content);
-                parameters.Add("MaskId", entity.MaskId);
-                await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                foreach (var entity in items)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("MaskTypeId", entity.MaskTypeId);
+                    parameters.Add("Content", entity.Content);
+                    parameters.Add("MaskId", entity.MaskId);
+                    await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
+                }
+                transaction.Commit();
             }
             connection.Close();
         }
