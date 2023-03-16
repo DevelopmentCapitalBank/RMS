@@ -2,6 +2,6 @@
 {
     public interface IServiceCreateList<T> where T : class
     {
-        Task CreateListOfEntitiesAsync(IEnumerable<T> list);
+        Task<IEnumerable<T>> CreateListOfEntitiesAsync(IEnumerable<T> list);
     }
 }
