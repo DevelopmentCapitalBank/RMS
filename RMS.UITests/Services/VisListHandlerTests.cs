@@ -195,7 +195,7 @@ namespace RMS.UI.Services.Tests
         }
 
         [TestMethod]
-        public void GetItemsCompanies__datatable_2items__allItems_1item__return_company()
+        public void GetItemsCompanies__datatable_2items__return_company()
         {
             DataTable dt = new();
 
@@ -232,7 +232,7 @@ namespace RMS.UI.Services.Tests
             Assert.AreEqual("444", actual[0].Inn);
         }
         [TestMethod]
-        public void GetItemsCompanies__datatable_3items__allItems_1item__return_2company()
+        public void GetItemsCompanies__datatable_3items__return_2company()
         {
             DataTable dt = new();
 
@@ -275,6 +275,87 @@ namespace RMS.UI.Services.Tests
             Assert.AreEqual("HH", actual[1].Name);
             Assert.IsTrue(actual[1].IsAttraction);
             Assert.AreEqual("555", actual[1].Inn);
+        }
+
+        [TestMethod]
+        public void GetItemsAccounts__datatable_1item__return_account()
+        {
+            DataTable dt = new();
+
+            dt.Columns.Add(new DataColumn("клиент", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("счет", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("баланс", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("вал", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Ключ", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Номер", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("название", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Группа", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Привлечение", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Рекомендация", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Офис", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата открытия", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата закрытия", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата последней проводки", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("ИНН", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Комментарий", Type.GetType("System.String")));
+
+            dt.Rows.Add(new object[] { "1", "4080381010000298898", "1", "2", "3", "4", "JS", "ND", "", "Jack", "00-2", "2023-11-11", "...", "2023-12-11 11:23:35", "444", "Comm" });
+
+            var offices = new List<Office> { new Office { Name = "00-2", OfficeId = 4 } };
+
+            VisListHandler handler = new();
+            var actual = (List<Account>)handler.GetItems(dt, offices);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(1, actual[0].CompanyId);
+            Assert.AreEqual("4080381010000298898", actual[0].AccountNumber);
+            Assert.AreEqual(new DateTime(2023, 11, 11), actual[0].DateOpen);
+            Assert.IsNull(actual[0].DateClose);
+            Assert.AreEqual(new DateTime(2023, 12, 11, 11, 23, 35), actual[0].DateTimeLastOperation);
+        }
+        [TestMethod]
+        public void GetItemsAccounts__datatable_2item__return_accounts()
+        {
+            DataTable dt = new();
+
+            dt.Columns.Add(new DataColumn("клиент", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("счет", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("баланс", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("вал", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Ключ", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Номер", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("название", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Группа", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Привлечение", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Рекомендация", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Офис", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата открытия", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата закрытия", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("дата последней проводки", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("ИНН", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Комментарий", Type.GetType("System.String")));
+
+            dt.Rows.Add(new object[] { "1", "4080381010000298898", "1", "2", "3", "4", "JS", "ND", "", "Jack", "00-2", "11/11/2023", "...", "11/12/2023 11:23:35", "444", "Comm" });
+            dt.Rows.Add(new object[] { "1", "4080381010000254398", "1", "2", "3", "4", "JS", "ND", "", "Jack", "00-3", null, "...", "...", "555", "Comm" });
+
+            var offices = new List<Office> { new Office { Name = "00-2", OfficeId = 4 } };
+
+            VisListHandler handler = new();
+            var actual = (List<Account>)handler.GetItems(dt, offices);
+
+            Assert.AreEqual(2, actual.Count);
+
+            Assert.AreEqual(1, actual[0].CompanyId);
+            Assert.AreEqual("4080381010000298898", actual[0].AccountNumber);
+            Assert.AreEqual(new DateTime(2023, 11, 11), actual[0].DateOpen);
+            Assert.IsNull(actual[0].DateClose);
+            Assert.AreEqual(new DateTime(2023, 12, 11, 11, 23, 35), actual[0].DateTimeLastOperation);
+
+            Assert.AreEqual(1, actual[1].CompanyId);
+            Assert.AreEqual("4080381010000254398", actual[1].AccountNumber);
+            Assert.IsNull(actual[1].DateOpen);
+            Assert.IsNull(actual[1].DateClose);
+            Assert.IsNull(actual[1].DateTimeLastOperation);
         }
 
         [TestMethod]

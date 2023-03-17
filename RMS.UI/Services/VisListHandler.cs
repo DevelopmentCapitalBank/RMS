@@ -1,6 +1,8 @@
 ﻿using RMS.DATA.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -128,7 +130,31 @@ namespace RMS.UI.Services
 
         public IEnumerable<Account> GetItems(DataTable dt, IEnumerable<Office> offices)
         {
-            throw new System.NotImplementedException();
+            Dictionary<string, Account> fields = new();
+
+            foreach (DataRow r in dt.Rows)
+            {
+                var accountNumber = r.ItemArray[1].ToString().Trim();
+
+                if (!fields.ContainsKey(accountNumber))
+                {
+                    var office = offices.FirstOrDefault(g => string.Equals(g.Name, r.ItemArray[10].ToString().Trim()));
+                    var strDateOpen = r.ItemArray[11].ToString().Trim();
+                    var strDateClose = r.ItemArray[12].ToString().Trim();
+                    var strDateTimeLastOperation = r.ItemArray[13].ToString().Trim();
+
+                    fields.Add(accountNumber, new Account {
+                        CompanyId = int.Parse(r.ItemArray[0].ToString().Trim()),
+                        OfficeId = office == null ? 1 : office.OfficeId,
+                        AccountNumber = accountNumber,
+                        DateOpen = strDateOpen == null ? null : Convert.ToDateTime(strDateOpen),
+                        DateClose = string.Equals(strDateClose, "...") ? null : Convert.ToDateTime(strDateClose),
+                        DateTimeLastOperation = string.Equals(strDateTimeLastOperation, "...") ? null : Convert.ToDateTime(strDateTimeLastOperation)
+                    });
+                }
+            }
+
+            return fields.Values.ToList();
         }
 
         public IEnumerable<Company> GetNewItems(IEnumerable<Company> currentItems, IEnumerable<Company> oldItems)
