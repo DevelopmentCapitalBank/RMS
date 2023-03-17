@@ -132,7 +132,11 @@ namespace RMS.UI.ViewModels
             bool isVerified = verification.IsVerified(TypeDocument.VisList, dt);
             if (isVerified)
             {
-                await transform.Transform(TypeDocument.VisList, context, dt);
+                string result = await transform.Transform(TypeDocument.VisList, context, dt);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                }
                 Output = "Данные визлиста успешно обновлены.\n" + Output;
             }
         }

@@ -7,6 +7,6 @@ namespace RMS.UI.Services
 {
     public interface ITransformData
     {
-        Task Transform(TypeDocument type, DbContext context, DataTable dt);
+        Task<string> Transform(TypeDocument type, DbContext context, DataTable dt);
     }
 }
