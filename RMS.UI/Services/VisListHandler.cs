@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 
 namespace RMS.UI.Services
 {
@@ -79,7 +80,39 @@ namespace RMS.UI.Services
         }
         public string CheckIntegrityOfCompanyData(DataTable dt)
         {
-            throw new System.NotImplementedException();
+            StringBuilder result = new();
+
+            Dictionary<int, string[]> fields = new();
+            
+            foreach (DataRow r in dt.Rows)
+            {
+                int companyId = int.Parse(r.ItemArray[0].ToString().Trim());
+                string groupName = r.ItemArray[7].ToString().Trim();
+                string attraction = r.ItemArray[8].ToString().Trim();
+                string managerName = r.ItemArray[9].ToString().Trim();
+                if (fields.ContainsKey(companyId))
+                {
+                    string[] values = fields[companyId];
+                    if (string.Compare(values[0], groupName) != 0)
+                    {
+                        result.Append($"Компания: {companyId}, неоднозначные данные по группе.\n");
+                    }
+                    if (string.Compare(values[1], attraction) != 0)
+                    {
+                        result.Append($"Компания: {companyId}, неоднозначные данные по привлечению.\n");
+                    }
+                    if (string.Compare(values[2], managerName) != 0)
+                    {
+                        result.Append($"Компания: {companyId}, неоднозначные данные по рекомендации.\n");
+                    }
+                } 
+                else
+                {
+                    fields.Add(companyId, new string[] { groupName, attraction, managerName });
+                }
+            }
+
+            return result.ToString();
         }
     }
 }
