@@ -6,8 +6,44 @@ using System.Text;
 
 namespace RMS.UI.Services
 {
-    public class VisListHandler : IVisListHandler 
+    public class VisListHandler : IVisListHandler
     {
+        public string CheckIntegrityOfCompanyData(DataTable dt)
+        {
+            StringBuilder result = new();
+
+            Dictionary<int, string[]> fields = new();
+
+            foreach (DataRow r in dt.Rows)
+            {
+                int companyId = int.Parse(r.ItemArray[0].ToString().Trim());
+                string groupName = r.ItemArray[7].ToString().Trim();
+                string attraction = r.ItemArray[8].ToString().Trim();
+                string managerName = r.ItemArray[9].ToString().Trim();
+                if (fields.ContainsKey(companyId))
+                {
+                    string[] values = fields[companyId];
+                    if (string.Compare(values[0], groupName) != 0)
+                    {
+                        result.Append($"Компания: {companyId}, неоднозначные данные по группе.\n");
+                    }
+                    if (string.Compare(values[1], attraction) != 0)
+                    {
+                        result.Append($"Компания: {companyId}, неоднозначные данные по привлечению.\n");
+                    }
+                    if (string.Compare(values[2], managerName) != 0)
+                    {
+                        result.Append($"Компания: {companyId}, неоднозначные данные по рекомендации.\n");
+                    }
+                }
+                else
+                {
+                    fields.Add(companyId, new string[] { groupName, attraction, managerName });
+                }
+            }
+
+            return result.ToString();
+        }
         public IEnumerable<Group> GetNewItems(DataTable dt, IEnumerable<Group> allItems)
         {
             List<Group> results = new();
@@ -62,57 +98,57 @@ namespace RMS.UI.Services
             return results;
         }
 
-        public IEnumerable<Company> GetNewItems(DataTable dt, IEnumerable<Company> allItems, IEnumerable<Group> groups, IEnumerable<Manager> managers)
+        public IEnumerable<Company> GetItems(DataTable dt, IEnumerable<Group> groups, IEnumerable<Manager> managers)
         {
-            throw new System.NotImplementedException();
-        }
-        public IEnumerable<Account> GetNewItems(DataTable dt, IEnumerable<Account> allItems, IEnumerable<Office> offices)
-        {
-            throw new System.NotImplementedException();
-        }
-        public IEnumerable<Company> GetItemsToUpdate(DataTable dt, IEnumerable<Company> allItems)
-        {
-            throw new System.NotImplementedException();
-        }
-        public IEnumerable<Account> GetItemsToUpdate(DataTable dt, IEnumerable<Account> allItems)
-        {
-            throw new System.NotImplementedException();
-        }
-        public string CheckIntegrityOfCompanyData(DataTable dt)
-        {
-            StringBuilder result = new();
+            Dictionary<int, Company> fields = new();
 
-            Dictionary<int, string[]> fields = new();
-            
-            foreach (DataRow r in dt.Rows)
+            foreach(DataRow r in dt.Rows)
             {
                 int companyId = int.Parse(r.ItemArray[0].ToString().Trim());
-                string groupName = r.ItemArray[7].ToString().Trim();
-                string attraction = r.ItemArray[8].ToString().Trim();
-                string managerName = r.ItemArray[9].ToString().Trim();
-                if (fields.ContainsKey(companyId))
+
+                if (!fields.ContainsKey(companyId))
                 {
-                    string[] values = fields[companyId];
-                    if (string.Compare(values[0], groupName) != 0)
-                    {
-                        result.Append($"Компания: {companyId}, неоднозначные данные по группе.\n");
-                    }
-                    if (string.Compare(values[1], attraction) != 0)
-                    {
-                        result.Append($"Компания: {companyId}, неоднозначные данные по привлечению.\n");
-                    }
-                    if (string.Compare(values[2], managerName) != 0)
-                    {
-                        result.Append($"Компания: {companyId}, неоднозначные данные по рекомендации.\n");
-                    }
-                } 
-                else
-                {
-                    fields.Add(companyId, new string[] { groupName, attraction, managerName });
+                    var group = groups.FirstOrDefault(g => string.Equals(g.Name, r.ItemArray[7].ToString().Trim()));
+                    var manager = managers.FirstOrDefault(m => string.Equals(m.Name, r.ItemArray[9].ToString().Trim()));
+
+                    fields.Add(companyId, new Company {
+                        CompanyId = companyId,
+                        GroupId = group == null ? 1 : group.GroupId,
+                        ManagerId = manager == null ? 1 : manager.ManagerId,
+                        Name = r.ItemArray[6].ToString().Trim(),
+                        IsAttraction = r.ItemArray[8].ToString().Trim().ToLower() == "да",
+                        Inn = r.ItemArray[14].ToString().Trim(),
+                        Comment = r.ItemArray[15].ToString().Trim()
+                    });
                 }
             }
 
-            return result.ToString();
+            return fields.Values.ToList();
+        }
+
+        public IEnumerable<Account> GetItems(DataTable dt, IEnumerable<Office> offices)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<Company> GetNewItems(IEnumerable<Company> currentItems, IEnumerable<Company> oldItems)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<Account> GetNewItems(IEnumerable<Account> currentItems, IEnumerable<Account> oldItems)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<Company> GetItemsToUpdate(IEnumerable<Company> oldItems)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<Account> GetItemsToUpdate(IEnumerable<Account> oldItems)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

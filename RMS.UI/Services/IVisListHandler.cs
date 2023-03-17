@@ -12,10 +12,12 @@ namespace RMS.UI.Services
         IEnumerable<Group> GetNewItems(DataTable dt, IEnumerable<Group> allItems);
         IEnumerable<Manager> GetNewItems(DataTable dt, IEnumerable<Manager> allItems);
         IEnumerable<Office> GetNewItems(DataTable dt, IEnumerable<Office> allItems);
-        IEnumerable<Company> GetNewItems(DataTable dt, IEnumerable<Company> allItems, IEnumerable<Group> groups, IEnumerable<Manager> managers);
-        IEnumerable<Account> GetNewItems(DataTable dt, IEnumerable<Account> allItems, IEnumerable<Office> offices);
-        IEnumerable<Company> GetItemsToUpdate(DataTable dt, IEnumerable<Company> allItems);
-        IEnumerable<Account> GetItemsToUpdate(DataTable dt, IEnumerable<Account> allItems);
+        IEnumerable<Company> GetItems(DataTable dt, IEnumerable<Group> groups, IEnumerable<Manager> managers);
+        IEnumerable<Account> GetItems(DataTable dt, IEnumerable<Office> offices);
+        IEnumerable<Company> GetNewItems(IEnumerable<Company> currentItems, IEnumerable<Company> oldItems);
+        IEnumerable<Account> GetNewItems(IEnumerable<Account> currentItems, IEnumerable<Account> oldItems);
+        IEnumerable<Company> GetItemsToUpdate(IEnumerable<Company> oldItems);
+        IEnumerable<Account> GetItemsToUpdate(IEnumerable<Account> oldItems);
         string CheckIntegrityOfCompanyData(DataTable dt);
     }
 }
