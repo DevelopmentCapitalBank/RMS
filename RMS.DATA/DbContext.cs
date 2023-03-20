@@ -23,6 +23,10 @@ namespace RMS.DATA
             Accounts = new AccountService(dbConfig, new AccountRepository());
             Offices = new OfficeService(dbConfig,new OfficeRepository());
             Acquirings = new AcquiringService(dbConfig, new AcquiringRepository());
+            Remains = new RemainsService(dbConfig, new RemainsRepository());
+            RemainsDeposit = new RemainsService(dbConfig, new RemainsDepositRepository());
+            Operations = new OperationService(dbConfig, new OperationRepository());
+            Conversions = new ConversionService(dbConfig, new ConversionRepository());
         }
 
         public IServiceStandart<Group> Groups { get; private set; }
@@ -33,6 +37,11 @@ namespace RMS.DATA
         public IServiceFind<CompanyView, CompanyView> ViewCompanies { get; private set; }
         public IServiceExtended<Account, int, string> Accounts { get; private set; }
         public IServiceMin<Acquiring, int> Acquirings { get; private set; }
+        public IServiceUnload<Remains, DateTime, DateTime> Remains { get; private set; }
+        public IServiceUnload<Remains, DateTime, DateTime> RemainsDeposit { get; private set; }
+        public IServiceUnload<Operation, DateTime, DateTime> Operations { get; private set; }
+        public IServiceUnload<Conversion, DateTime, DateTime> Conversions { get; private set; }
+
 
         public async Task Setup()
         {

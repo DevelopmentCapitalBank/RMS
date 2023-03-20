@@ -6,7 +6,7 @@
     /// <typeparam name="T">Сущность</typeparam>
     /// <typeparam name="V">Условие отбора</typeparam>
     /// <typeparam name="C">Условие для удаления</typeparam>
-    public interface IServiceUnload<T, V, C> : IServiceBetween<T, V>, IServiceDeleteByCondition<C>, IServiceCreateList<T>
+    public interface IServiceUnload<T, V, C> : IServiceBetween<T, V>, IServiceDeleteByCondition<C>, IServiceCreateList<T>, IServiceCount<V>
         where T : class
     {  }
 }
