@@ -10,7 +10,7 @@ namespace RMS.UI.ViewModels
         public string Title { get; set; }
 
         public event EventHandler<EventArgs<int>>? ViewChanged;
-        public SettingsViewModel(int pageIndex = 6)
+        public SettingsViewModel(int pageIndex = 7)
         {
             PageId = pageIndex;
             Title = "View 2";

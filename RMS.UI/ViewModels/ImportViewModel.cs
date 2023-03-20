@@ -18,7 +18,7 @@ namespace RMS.UI.ViewModels
         public event EventHandler<EventArgs<int>>? ViewChanged;
         public ImportViewModel(IDialogService dialogService, IExcelReader reader,
             IDocumentVerification verification, ITransformData transform, 
-            DbContext context, int pageIndex = 4)
+            DbContext context, int pageIndex = 5)
         {
             PageId = pageIndex;
             Title = "Import data";

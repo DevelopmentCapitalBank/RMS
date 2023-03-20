@@ -13,7 +13,7 @@ namespace RMS.UI.ViewModels
     {
         public event EventHandler<EventArgs<int>>? ViewChanged;
 
-        public MaskViewModel(IDialogService dialogService, DbContext context)
+        public MaskViewModel(IDialogService dialogService, DbContext context, int pageIndex = 4)
         {
             this.dialogService = dialogService;
             this.context = context;

@@ -10,7 +10,7 @@ namespace RMS.UI.ViewModels
 
         public event EventHandler<EventArgs<int>>? ViewChanged;
 
-        public ExportViewModel( int pageIndex = 5 )
+        public ExportViewModel( int pageIndex = 6 )
         {
             PageId = pageIndex;
             Title = "Export data";
