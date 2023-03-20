@@ -31,6 +31,7 @@ namespace RMS.UI.ViewModels
         private ICommand? removeGroup;
         private ICommand? saveGroup;
         private ICommand? showCompanies;
+        private ICommand? refreshGroup;
         #endregion
 
         #region Properties
@@ -97,6 +98,16 @@ namespace RMS.UI.ViewModels
         #endregion
 
         #region Commands
+        public ICommand RefreshGroup
+        {
+            get
+            {
+                return refreshGroup ??= new RelayCommand(x => {
+                    OnLoad();
+                });
+            }
+        }
+
         public ICommand CreateGroup
         {
             get
