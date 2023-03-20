@@ -24,6 +24,7 @@ namespace RMS.UI
                 services.AddTransient<IExcelReader, ExcelReader>(); 
                 services.AddTransient<IDocumentVerification, DocumentVerification>();
                 services.AddTransient<IVisListHandler, VisListHandler>();
+                services.AddTransient<IUploadingHandler, UploadingHandler>();
                 services.AddTransient<ITransformData, TransformData>();
                 services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
                 //services.AddSingleton(new DbConfig { Name = @"Data Source=D:\RMS.db" });

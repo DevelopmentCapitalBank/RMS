@@ -10,9 +10,11 @@ namespace RMS.UI.Services
     public class TransformData : ITransformData
     {
         private readonly IVisListHandler visListHandler;
-        public TransformData(IVisListHandler visListHandler)
+        private readonly IUploadingHandler uploadingHandler;
+        public TransformData(IVisListHandler visListHandler, IUploadingHandler uploadingHandler)
         {
             this.visListHandler = visListHandler;
+            this.uploadingHandler = uploadingHandler;
         }
 
         public async Task<string> Transform(TypeDocument type, DbContext context, DataTable dataTable, DateTime date)
@@ -94,7 +96,17 @@ namespace RMS.UI.Services
 
         private async Task<string> TransformConversionsAsync(DbContext context, DataTable dataTable, DateTime date)
         {
-            throw new NotImplementedException();
+            int countRow = await context.Operations.GetCountAsync(date);
+            if (countRow == 0)
+            {
+                var newOperations = uploadingHandler.GetConversions(dataTable, date);
+                _ = await context.Conversions.CreateListOfEntitiesAsync(newOperations).ConfigureAwait(false);
+                return string.Empty;
+            }
+            else
+            {
+                return "Данные за этот период уже есть в базе данных!";
+            }
         }
     }
 }

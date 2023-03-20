@@ -13,7 +13,7 @@ namespace RMS.DATA.Repositories
             "VALUES(@DateOperation, @TypeOfTransaction, @ReceivesAmount, @ReceivedCurrency, @GivesAmount, @GivesCurrency, @RateCurrencyOfCrediting, @RateCurrencyOfDebiting, @ReceivesToAccount, @GivesFromAccount);";
         private static readonly string Delete = "DELETE FROM [Conversion] WHERE DateOperation BETWEEN @d1 AND @d2;";
         private static readonly string Read = "SELECT * FROM [Conversion] WHERE DateOperation BETWEEN @v1 AND @v2 ORDER BY DateOperation DESC;";
-        private static readonly string Count = "SELECT COUNT(*) AS COUNT FROM [Conversion] WHERE DateOperation=@d;";
+        private static readonly string Count = "SELECT COUNT(*) AS COUNT FROM [Conversion] WHERE DateOperation BETWEEN @d1 AND @d2;";
         #endregion
         public async Task<IEnumerable<Conversion>> CreateListOfEntitiesAsync(IEnumerable<Conversion> list, IDbConnection connection)
         {
@@ -52,7 +52,8 @@ namespace RMS.DATA.Repositories
         public async Task<int> GetCountAsync(DateTime value, IDbConnection connection)
         {
             var parameters = new DynamicParameters();
-            parameters.Add("d", value);
+            parameters.Add("d1", value);
+            parameters.Add("d2", new DateTime(value.Year, value.Month + 1, 1).AddDays(-1));
             return await connection.QueryFirstOrDefaultAsync<int>(Count, parameters).ConfigureAwait(false);
         }
 

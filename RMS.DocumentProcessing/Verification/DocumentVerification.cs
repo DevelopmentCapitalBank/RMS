@@ -41,7 +41,7 @@ namespace RMS.DocumentProcessing.Verification
             if (string.Compare(dataTable.Columns[6].ColumnName, "Вал") != 0) return false;
             if (string.Compare(dataTable.Columns[7].ColumnName, "Дата зачисления") != 0) return false;
             if (string.Compare(dataTable.Columns[8].ColumnName, "Банк отдает сумму") != 0) return false;
-            if (string.Compare(dataTable.Columns[9].ColumnName, "Вал") != 0) return false;
+            if (string.Compare(dataTable.Columns[9].ColumnName, "Вал1") != 0) return false;
             if (string.Compare(dataTable.Columns[10].ColumnName, "Дата списания") != 0) return false;
             if (string.Compare(dataTable.Columns[11].ColumnName, "Курс остатка") != 0) return false;
             if (string.Compare(dataTable.Columns[12].ColumnName, "Док") != 0) return false;
