@@ -24,6 +24,9 @@
             <DataTemplate DataType="{x:Type vm:AccountViewModel}">
                 <v:AccountView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:MaskViewModel}">
+                <v:MaskView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type vm:ImportViewModel}">
                 <v:ImportView />
             </DataTemplate>

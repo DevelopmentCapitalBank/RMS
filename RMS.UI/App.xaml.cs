@@ -33,6 +33,7 @@ namespace RMS.UI
                 services.AddTransient<GroupViewModel>();
                 services.AddTransient<CompanyViewModel>();
                 services.AddTransient<AccountViewModel>();
+                services.AddTransient<MaskViewModel>();
                 services.AddTransient<ImportViewModel>();
                 services.AddTransient<ExportViewModel>();
                 services.AddTransient<SettingsViewModel>();
@@ -53,9 +54,10 @@ namespace RMS.UI
             mainViewModel.PageViewModels[1] = AppHost.Services.GetRequiredService<GroupViewModel>();
             mainViewModel.PageViewModels[2] = AppHost.Services.GetRequiredService<CompanyViewModel>();
             mainViewModel.PageViewModels[3] = AppHost.Services.GetRequiredService<AccountViewModel>();
-            mainViewModel.PageViewModels[4] = AppHost.Services.GetRequiredService<ImportViewModel>();
-            mainViewModel.PageViewModels[5] = AppHost.Services.GetRequiredService<ExportViewModel>();
-            mainViewModel.PageViewModels[6] = AppHost.Services.GetRequiredService<SettingsViewModel>();
+            mainViewModel.PageViewModels[4] = AppHost.Services.GetRequiredService<MaskViewModel>();
+            mainViewModel.PageViewModels[5] = AppHost.Services.GetRequiredService<ImportViewModel>();
+            mainViewModel.PageViewModels[6] = AppHost.Services.GetRequiredService<ExportViewModel>();
+            mainViewModel.PageViewModels[7] = AppHost.Services.GetRequiredService<SettingsViewModel>();
             mainViewModel.CurrentPageViewModel = mainViewModel.PageViewModels[0];
 
             startupForm!.DataContext = mainViewModel;

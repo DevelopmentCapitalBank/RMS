@@ -68,6 +68,18 @@
                             FontWeight="Bold"
                             Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </ListViewItem>
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Маски для анализа данных"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="Маски"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                    </ListViewItem>
                     <ListViewItem 
                         Height="60"
                         Padding="0"
