@@ -335,8 +335,8 @@ namespace RMS.UI.Services.Tests
             dt.Columns.Add(new DataColumn("ИНН", Type.GetType("System.String")));
             dt.Columns.Add(new DataColumn("Комментарий", Type.GetType("System.String")));
 
-            dt.Rows.Add(new object[] { "1", "4080381010000298898", "1", "2", "3", "4", "JS", "ND", "", "Jack", "00-2", "11/11/2023", "...", "11/12/2023 11:23:35", "444", "Comm" });
-            dt.Rows.Add(new object[] { "1", "4080381010000254398", "1", "2", "3", "4", "JS", "ND", "", "Jack", "00-3", null, "...", "...", "555", "Comm" });
+            dt.Rows.Add(new object[] { "1", "4080381010000298898", "1", "2", "3", "4", "JS", "ND", "", "Jack", "00-2", "11.11.2023", "...", "11.12.2023 11:23:35", "444", "Comm" });
+            dt.Rows.Add(new object[] { "1", "4080381010000254398", "1", "2", "3", "4", "JS", "ND", "", "Jack", DBNull.Value, DBNull.Value, "...", "...", "444", "Comm" });
 
             var offices = new List<Office> { new Office { Name = "00-2", OfficeId = 4 } };
 
@@ -345,13 +345,13 @@ namespace RMS.UI.Services.Tests
 
             Assert.AreEqual(2, actual.Count);
 
-            Assert.AreEqual(1, actual[0].CompanyId);
+            Assert.AreEqual(4, actual[0].OfficeId);
             Assert.AreEqual("4080381010000298898", actual[0].AccountNumber);
             Assert.AreEqual(new DateTime(2023, 11, 11), actual[0].DateOpen);
             Assert.IsNull(actual[0].DateClose);
             Assert.AreEqual(new DateTime(2023, 12, 11, 11, 23, 35), actual[0].DateTimeLastOperation);
 
-            Assert.AreEqual(1, actual[1].CompanyId);
+            Assert.AreEqual(1, actual[1].OfficeId);
             Assert.AreEqual("4080381010000254398", actual[1].AccountNumber);
             Assert.IsNull(actual[1].DateOpen);
             Assert.IsNull(actual[1].DateClose);
@@ -527,6 +527,499 @@ namespace RMS.UI.Services.Tests
                 "Компания: 1, неоднозначные данные по привлечению.\n" +
                 "Компания: 1, неоднозначные данные по рекомендации.\n" +
                 "Компания: 2, неоднозначные данные по группе.\n", actual);
+        }
+
+        [TestMethod]
+        public void GetNewItemsCompany__return_empty()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, Inn = "1", ManagerId = 3, Name = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, Inn = "11", ManagerId = 3, Name = "Test1" }
+            };
+            var oldItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, Inn = "1", ManagerId = 3, Name = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, Inn = "11", ManagerId = 3, Name = "Test1" }
+            };
+            var actual = (List<Company>)handler.GetNewItems(currentItems, oldItems);
+
+            Assert.AreEqual(0, actual.Count);
+        }
+        [TestMethod]
+        public void GetNewItemsCompany__return_1item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, Inn = "1", ManagerId = 3, Name = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, Inn = "11", ManagerId = 3, Name = "Test1" }
+            };
+            var oldItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, Inn = "1", ManagerId = 3, Name = "Test" },
+                new Company { CompanyId = 3, GroupId = 3, Inn = "111", ManagerId = 3, Name = "Test122" }
+            };
+            var actual = (List<Company>)handler.GetNewItems(currentItems, oldItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(2, actual[0].CompanyId);
+        }
+
+        [TestMethod]
+        public void GetNewItemsAccount_return_empty()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account { AccountId = 1, AccountNumber = "40817810980001239", CompanyId = 2, OfficeId = 3 },
+                new Account { AccountId = 2, AccountNumber = "40817810980001238", CompanyId = 2, OfficeId = 2 }
+            };
+            var oldtItems = new List<Account> {
+                new Account { AccountId = 1, AccountNumber = "40817810980001239", CompanyId = 2, OfficeId = 3 },
+                new Account { AccountId = 2, AccountNumber = "40817810980001238", CompanyId = 2, OfficeId = 2 }
+            };
+
+            var actual = (List<Account>)handler.GetNewItems(currentItems,oldtItems);
+
+            Assert.AreEqual(0, actual.Count);
+        }
+        [TestMethod]
+        public void GetNewItemsAccount_return_1item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account { AccountId = 1, AccountNumber = "40817810980001239", CompanyId = 2, OfficeId = 3 },
+                new Account { AccountId = 3, AccountNumber = "40817810980001237", CompanyId = 2, OfficeId = 1 }
+            };
+            var oldtItems = new List<Account> {
+                new Account { AccountId = 1, AccountNumber = "40817810980001239", CompanyId = 2, OfficeId = 3 },
+                new Account { AccountId = 2, AccountNumber = "40817810980001238", CompanyId = 2, OfficeId = 2 }
+            };
+
+            var actual = (List<Account>)handler.GetNewItems(currentItems, oldtItems);
+
+            Assert.AreEqual("40817810980001237", actual[0].AccountNumber);
+        }
+
+        [TestMethod]
+        public void GetItemsToUpdateCompany_return_empty()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test1" }
+            };
+            var oldItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test1" }
+            };
+            var actual = (List<Company>)handler.GetItemsToUpdate(currentItems, oldItems);
+
+            Assert.AreEqual(0, actual.Count);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateCompany__GroupId__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test1" }
+            };
+            var oldItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 5, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test1" }
+            };
+            var actual = (List<Company>)handler.GetItemsToUpdate(currentItems, oldItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(2, actual[0].GroupId);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateCompany__ManagerId__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 7, IsAttraction = false, Comment = "Test1" }
+            };
+            var oldItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test1" }
+            };
+            var actual = (List<Company>)handler.GetItemsToUpdate(currentItems, oldItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(7, actual[0].ManagerId);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateCompany__IsAttraction__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = true, Comment = "Test1" }
+            };
+            var oldItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test1" }
+            };
+            var actual = (List<Company>)handler.GetItemsToUpdate(currentItems, oldItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.IsTrue(actual[0].IsAttraction);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateCompany__Comment__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test1" }
+            };
+            var oldItems = new List<Company> {
+                new Company { CompanyId = 1, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test" },
+                new Company { CompanyId = 2, GroupId = 2, ManagerId = 3, IsAttraction = false, Comment = "Test1" }
+            };
+            var actual = (List<Company>)handler.GetItemsToUpdate(currentItems, oldItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("", actual[0].Comment);
+        }
+        
+        [TestMethod]
+        public void GetItemsToUpdateAccount_return_empty()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account {
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2, 
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1), 
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account { AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+            var oldtItems = new List<Account> {
+                new Account {
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account {
+                    AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+
+            var actual = (List<Account>)handler.GetItemsToUpdate(currentItems, oldtItems);
+
+            Assert.AreEqual(0, actual.Count);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateAccount__CompanyId__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account {
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 5,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account { AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+            var oldtItems = new List<Account> {
+                new Account {
+                    AccountId = 3,
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account {
+                    AccountId = 1,
+                    AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+
+            var actual = (List<Account>)handler.GetItemsToUpdate(currentItems, oldtItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("40817810980001239", actual[0].AccountNumber);
+            Assert.AreEqual(5, actual[0].CompanyId);
+            Assert.AreEqual(3, actual[0].AccountId);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateAccount__OfficeId__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account {
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 1,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account { AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+            var oldtItems = new List<Account> {
+                new Account {
+                    AccountId = 3,
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account {
+                    AccountId = 1,
+                    AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+
+            var actual = (List<Account>)handler.GetItemsToUpdate(currentItems, oldtItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("40817810980001239", actual[0].AccountNumber);
+            Assert.AreEqual(1, actual[0].OfficeId);
+            Assert.AreEqual(3, actual[0].AccountId);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateAccount__DateOpen__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account {
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account { AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 2, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+            var oldtItems = new List<Account> {
+                new Account {
+                    AccountId = 3,
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account {
+                    AccountId = 1,
+                    AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+
+            var actual = (List<Account>)handler.GetItemsToUpdate(currentItems, oldtItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("40817810980001231", actual[0].AccountNumber);
+            Assert.AreEqual(new DateTime(2022, 2, 1), actual[0].DateOpen);
+            Assert.AreEqual(1, actual[0].AccountId);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateAccount__DateOpen_null__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account {
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account { AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = null,
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+            var oldtItems = new List<Account> {
+                new Account {
+                    AccountId = 3,
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account {
+                    AccountId = 1,
+                    AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+
+            var actual = (List<Account>)handler.GetItemsToUpdate(currentItems, oldtItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("40817810980001231", actual[0].AccountNumber);
+            Assert.IsNull(actual[0].DateOpen);
+            Assert.AreEqual(1, actual[0].AccountId);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateAccount__DateClose__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account {
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account { AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 13),
+                    DateTimeLastOperation = null
+                }
+            };
+            var oldtItems = new List<Account> {
+                new Account {
+                    AccountId = 3,
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account {
+                    AccountId = 1,
+                    AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+
+            var actual = (List<Account>)handler.GetItemsToUpdate(currentItems, oldtItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("40817810980001231", actual[0].AccountNumber);
+            Assert.AreEqual(new DateTime(2022, 2, 13), actual[0].DateClose);
+            Assert.AreEqual(1, actual[0].AccountId);
+        }
+        [TestMethod]
+        public void GetItemsToUpdateAccount__DateTimeLastOperation__return_item()
+        {
+            VisListHandler handler = new();
+            var currentItems = new List<Account> {
+                new Account {
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = new DateTime(2022, 2, 3, 22, 11, 23)
+                },
+                new Account { AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+            var oldtItems = new List<Account> {
+                new Account {
+                    AccountId = 3,
+                    AccountNumber = "40817810980001239",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                },
+                new Account {
+                    AccountId = 1,
+                    AccountNumber = "40817810980001231",
+                    CompanyId = 2,
+                    OfficeId = 3,
+                    DateOpen = new DateTime(2022, 1, 1),
+                    DateClose = new DateTime(2022, 2, 3),
+                    DateTimeLastOperation = null
+                }
+            };
+
+            var actual = (List<Account>)handler.GetItemsToUpdate(currentItems, oldtItems);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("40817810980001239", actual[0].AccountNumber);
+            Assert.AreEqual(new DateTime(2022, 2, 3, 22, 11, 23), actual[0].DateTimeLastOperation);
+            Assert.AreEqual(3, actual[0].AccountId);
         }
     }
 }

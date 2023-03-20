@@ -47,7 +47,6 @@ namespace RMS.UI.Services
             string d = handler.CheckIntegrityOfCompanyData(dataTable);
             if (string.IsNullOrEmpty(d))
             {
-                DateTime dold = DateTime.Now;
                 var groups = await context.Groups.ReadAllAsync().ConfigureAwait(false);
                 var newGroups = handler.GetNewItems(new DataView(dataTable).ToTable(true, "Группа"), groups);
                 newGroups = await context.Groups.CreateListOfEntitiesAsync(newGroups).ConfigureAwait(false);
@@ -67,18 +66,15 @@ namespace RMS.UI.Services
                 var currentCompanies = handler.GetItems(dataTable, allGroups, allManagers);
                 var newCompanies = handler.GetNewItems(currentCompanies, companies);
                 _ = await context.Companies.CreateListOfEntitiesAsync(newCompanies).ConfigureAwait(false);
-                var companiesToUpdate = handler.GetItemsToUpdate(currentCompanies);
+                var companiesToUpdate = handler.GetItemsToUpdate(currentCompanies, companies);
                 await context.Companies.UpdateListOfEntitiesAsync(companiesToUpdate).ConfigureAwait(false);
 
                 var accounts = await context.Accounts.ReadAllAsync().ConfigureAwait(false);
                 var currentAccounts = handler.GetItems(dataTable, allOffices);
                 var newAccounts = handler.GetNewItems(currentAccounts, accounts);
                 _ = await context.Accounts.CreateListOfEntitiesAsync(newAccounts).ConfigureAwait(false);
-                var accountsToUpdate = handler.GetItemsToUpdate(currentAccounts);
+                var accountsToUpdate = handler.GetItemsToUpdate(currentAccounts, accounts);
                 await context.Accounts.UpdateListOfEntitiesAsync(accountsToUpdate).ConfigureAwait(false);
-
-                TimeSpan sp = DateTime.Now - dold;
-                Debug.Print("millesec-" + sp.TotalMilliseconds.ToString() + " | sec-" + sp.TotalSeconds.ToString());
             }
             return d;
         }

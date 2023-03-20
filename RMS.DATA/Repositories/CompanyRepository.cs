@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Diagnostics;
 using Dapper;
 using RMS.DATA.BaseRepositories;
 using RMS.DATA.Entities;
@@ -53,6 +54,7 @@ namespace RMS.DATA.Repositories
                 foreach (var c in list)
                 {
                     var parameters = new DynamicParameters();
+                    //Debug.Print(c.CompanyId.ToString());
                     parameters.Add("CompanyId", c.CompanyId);
                     parameters.Add("ManagerId", c.ManagerId);
                     parameters.Add("GroupId", c.GroupId);

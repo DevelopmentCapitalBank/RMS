@@ -16,8 +16,8 @@ namespace RMS.UI.Services
         IEnumerable<Account> GetItems(DataTable dt, IEnumerable<Office> offices);
         IEnumerable<Company> GetNewItems(IEnumerable<Company> currentItems, IEnumerable<Company> oldItems);
         IEnumerable<Account> GetNewItems(IEnumerable<Account> currentItems, IEnumerable<Account> oldItems);
-        IEnumerable<Company> GetItemsToUpdate(IEnumerable<Company> oldItems);
-        IEnumerable<Account> GetItemsToUpdate(IEnumerable<Account> oldItems);
+        IEnumerable<Company> GetItemsToUpdate(IEnumerable<Company> currentItems, IEnumerable<Company> oldItems);
+        IEnumerable<Account> GetItemsToUpdate(IEnumerable<Account> currentItems, IEnumerable<Account> oldItems);
         string CheckIntegrityOfCompanyData(DataTable dt);
     }
 }

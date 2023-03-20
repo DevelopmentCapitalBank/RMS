@@ -86,8 +86,7 @@ namespace RMS.DATA
                 sql.Append("                                DEFAULT(1),                                             ");
                 sql.Append("    IsAttraction BOOLEAN        NOT NULL                                                ");
                 sql.Append("                                DEFAULT(0),                                             ");
-                sql.Append("    Inn          CHARACTER(12)  NOT NULL                                                ");
-                sql.Append("                                UNIQUE,                                                 ");
+                sql.Append("    Inn          CHARACTER(12)  NOT NULL,                                               ");
                 sql.Append("    Comment      VARCHAR(255)                                                           ");
                 sql.Append(" );                                                                                     ");
 

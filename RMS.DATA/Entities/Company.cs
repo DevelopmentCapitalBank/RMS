@@ -15,5 +15,18 @@
         {
             return Name;
         }
+        public override bool Equals(object? obj)
+        {
+            if(obj is Company c)
+            {
+                return c.CompanyId == CompanyId &&
+                    c.ManagerId == ManagerId &&
+                    c.GroupId == GroupId &&
+                    c.IsAttraction == IsAttraction &&
+                    string.Equals(c.Comment, Comment);
+            }
+            return false;
+        }
+        public override int GetHashCode() => CompanyId.GetHashCode();
     }
 }

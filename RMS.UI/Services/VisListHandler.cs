@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -139,17 +138,25 @@ namespace RMS.UI.Services
                 if (!fields.ContainsKey(accountNumber))
                 {
                     var office = offices.FirstOrDefault(g => string.Equals(g.Name, r.ItemArray[10].ToString().Trim()));
-                    var strDateOpen = r.ItemArray[11].ToString().Trim();
-                    var strDateClose = r.ItemArray[12].ToString().Trim();
-                    var strDateTimeLastOperation = r.ItemArray[13].ToString().Trim();
+                    var strDateOpen = r.ItemArray[11] == DBNull.Value ? null : r.ItemArray[11].ToString().Trim();
+                    var strDateClose = r.ItemArray[12] == DBNull.Value ? null : r.ItemArray[12].ToString().Trim();
+                    if (strDateClose != null && string.Equals(strDateClose, "..."))
+                    {
+                        strDateClose = null;
+                    }
+                    var strDateTimeLastOperation = r.ItemArray[13] == DBNull.Value ? null : r.ItemArray[13].ToString().Trim();
+                    if (strDateTimeLastOperation != null && string.Equals(strDateTimeLastOperation, "..."))
+                    {
+                        strDateTimeLastOperation = null;
+                    }
 
                     fields.Add(accountNumber, new Account {
                         CompanyId = int.Parse(r.ItemArray[0].ToString().Trim()),
                         OfficeId = office == null ? 1 : office.OfficeId,
                         AccountNumber = accountNumber,
                         DateOpen = strDateOpen == null ? null : Convert.ToDateTime(strDateOpen),
-                        DateClose = string.Equals(strDateClose, "...") ? null : Convert.ToDateTime(strDateClose),
-                        DateTimeLastOperation = string.Equals(strDateTimeLastOperation, "...") ? null : Convert.ToDateTime(strDateTimeLastOperation)
+                        DateClose = strDateClose == null ? null : Convert.ToDateTime(strDateClose),
+                        DateTimeLastOperation = strDateTimeLastOperation == null ? null : Convert.ToDateTime(strDateTimeLastOperation)
                     });
                 }
             }
@@ -159,22 +166,73 @@ namespace RMS.UI.Services
 
         public IEnumerable<Company> GetNewItems(IEnumerable<Company> currentItems, IEnumerable<Company> oldItems)
         {
-            throw new System.NotImplementedException();
+            List<Company> newItems = new();
+
+            foreach(var company in currentItems)
+            {
+                var c = oldItems.FirstOrDefault(com => com.CompanyId == company.CompanyId);
+                if (c == null)
+                {
+                    newItems.Add(company);
+                }
+            }
+
+            return newItems;
         }
 
         public IEnumerable<Account> GetNewItems(IEnumerable<Account> currentItems, IEnumerable<Account> oldItems)
         {
-            throw new System.NotImplementedException();
+            List<Account> newItems = new();
+
+            foreach (var acc in currentItems)
+            {
+                var a = oldItems.FirstOrDefault(ac => string.Equals(ac.AccountNumber,acc.AccountNumber));
+                if (a == null)
+                {
+                    newItems.Add(acc);
+                }
+            }
+
+            return newItems;
         }
 
-        public IEnumerable<Company> GetItemsToUpdate(IEnumerable<Company> oldItems)
+        public IEnumerable<Company> GetItemsToUpdate(IEnumerable<Company> currentItems, IEnumerable<Company> oldItems)
         {
-            throw new System.NotImplementedException();
+            List<Company> companies = new();
+
+            foreach (var c in oldItems)
+            {
+                var cmp = currentItems.FirstOrDefault(cm => cm.CompanyId == c.CompanyId);
+                if (cmp != null)
+                {
+                    if (!cmp.Equals(c))
+                    {
+                        companies.Add(cmp);
+                    }
+                }
+            }
+
+            return companies;
         }
 
-        public IEnumerable<Account> GetItemsToUpdate(IEnumerable<Account> oldItems)
+        public IEnumerable<Account> GetItemsToUpdate(IEnumerable<Account> currentItems, IEnumerable<Account> oldItems)
         {
-            throw new System.NotImplementedException();
+            List<Account> accounts = new();
+
+            foreach (var a in oldItems)
+            {
+                var acc = currentItems.FirstOrDefault(ac => string.Equals(ac.AccountNumber, a.AccountNumber));
+                if (acc != null)
+                {
+                    if (!acc.Equals(a))
+                    {
+                        acc.AccountId = a.AccountId;
+                        accounts.Add(acc);
+                    }
+                }
+            }
+
+            return accounts;
         }
     }
 }

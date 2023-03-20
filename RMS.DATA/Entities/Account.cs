@@ -13,5 +13,20 @@
         {
             return AccountNumber;
         }
+        public override bool Equals(object? obj)
+        {
+            if (obj is Account a)
+            {
+                return string.Equals(a.AccountNumber, AccountNumber) &&
+                    a.CompanyId == CompanyId &&
+                    a.OfficeId == OfficeId &&
+                    a.DateOpen == DateOpen &&
+                    a.DateClose == DateClose &&
+                    a.DateTimeLastOperation == DateTimeLastOperation;
+            }
+
+            return false;
+        }
+        public override int GetHashCode() => AccountNumber.GetHashCode();
     }
 }
