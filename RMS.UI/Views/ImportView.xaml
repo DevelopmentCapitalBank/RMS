@@ -44,24 +44,37 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <ComboBox
+                <StackPanel
                     Margin="5"
                     Grid.Row="0"
                     Grid.Column="0"
-                    MinWidth="250"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource MaterialDesignFilledComboBox}"
-                    materialDesign:HintAssist.Hint="Выгрузка\Файл"
-                    ItemsSource="{Binding TypesOfUnloading}"
-                    SelectedValuePath="Key" 
-                    DisplayMemberPath="Value"
-                    SelectedValue="{Binding TypeKey}">
-                    <ComboBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ComboBox.ItemsPanel>
-                </ComboBox>
+                    Orientation="Horizontal">
+                    <ComboBox
+                        MinWidth="250"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource MaterialDesignFilledComboBox}"
+                        materialDesign:HintAssist.Hint="Выгрузка\Файл"
+                        ItemsSource="{Binding TypesOfUnloading}"
+                        SelectedValuePath="Key" 
+                        DisplayMemberPath="Value"
+                        SelectedValue="{Binding TypeKey}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                    <DatePicker
+                        Width="150" 
+                        Margin="10 0 0 0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        ToolTip="Укажите первое число месяца для отчета."
+                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                        SelectedDate="{Binding DateReport, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        materialDesign:HintAssist.Hint="Дата отчета">
+                    </DatePicker>
+                </StackPanel>
                 <TextBox
                     Margin="5"
                     Grid.Row="1"

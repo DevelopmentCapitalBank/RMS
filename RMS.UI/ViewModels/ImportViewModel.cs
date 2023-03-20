@@ -50,6 +50,7 @@ namespace RMS.UI.ViewModels
         private string output = "";
         private ICommand? importData;
         private ICommand? searchFile;
+        private DateTime dateReport = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
         #endregion
 
         #region Properties
@@ -122,6 +123,19 @@ namespace RMS.UI.ViewModels
                 }
                 output = value;
                 OnPropertyChanged(nameof(Output));
+            }
+        }
+        public DateTime DateReport
+        {
+            get => dateReport;
+            set
+            {
+                if (dateReport == value)
+                {
+                    return;
+                }
+                dateReport = value;
+                OnPropertyChanged(nameof(DateReport));
             }
         }
         #endregion
