@@ -149,12 +149,16 @@ namespace RMS.UI.ViewModels
                 string result = await transform.Transform(TypeDocument.VisList, context, dt, DateReport);
                 if (!string.IsNullOrEmpty(result))
                 {
-                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n" + Output;
                 }
                 else
                 {
                     Output = "Данные визлиста успешно обновлены.\n" + Output;
                 }
+            }
+            else
+            {
+                Output = "Документ не распознан как визлист.\n" + Output;
             }
         }
         private async Task ImportTurnovers(DataTable dt)
@@ -165,12 +169,16 @@ namespace RMS.UI.ViewModels
                 string result = await transform.Transform(TypeDocument.Turnovers, context, dt, DateReport);
                 if (!string.IsNullOrEmpty(result))
                 {
-                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n" + Output;
                 }
                 else
                 {
                     Output = "Данные по оборотам успешно обновлены.\n" + Output;
                 }
+            }
+            else
+            {
+                Output = "Документ не распознан как файл по оборотам.\n" + Output;
             }
         }
         private async Task ImportDeposits(DataTable dt)
@@ -181,12 +189,16 @@ namespace RMS.UI.ViewModels
                 string result = await transform.Transform(TypeDocument.Deposits, context, dt, DateReport);
                 if (!string.IsNullOrEmpty(result))
                 {
-                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n" + Output;
                 }
                 else
                 {
                     Output = "Данные по депозитам успешно обновлены.\n" + Output;
                 }
+            }
+            else
+            {
+                Output = "Документ не распознан как файл по оборотам(депозит).\n" + Output;
             }
         }
         private async Task ImportOperations(DataTable dt)
@@ -197,12 +209,16 @@ namespace RMS.UI.ViewModels
                 string result = await transform.Transform(TypeDocument.Operation, context, dt, DateReport);
                 if (!string.IsNullOrEmpty(result))
                 {
-                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n" + Output;
                 }
                 else
                 {
                     Output = "Данные по платежным операциям успешно обновлены.\n" + Output;
                 }
+            }
+            else
+            {
+                Output = "Документ не распознан как файл по платежным операциям.\n" + Output;
             }
         }
         private async Task ImportConversions(DataTable dt)
@@ -213,12 +229,16 @@ namespace RMS.UI.ViewModels
                 string result = await transform.Transform(TypeDocument.Conversion, context, dt, DateReport);
                 if (!string.IsNullOrEmpty(result))
                 {
-                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n" + Output;
                 }
                 else
                 {
                     Output = "Данные по конверсии ДБО успешно обновлены.\n" + Output;
                 }
+            }
+            else
+            {
+                Output = "Документ не распознан как файл по конверсии ДБО.\n" + Output;
             }
         }
         #endregion
