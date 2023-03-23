@@ -96,7 +96,7 @@ namespace RMS.UI.Services
 
         private async Task<string> TransformConversionsAsync(DbContext context, DataTable dataTable, DateTime date)
         {
-            int countRow = await context.Operations.GetCountAsync(date);
+            int countRow = await context.Conversions.GetCountAsync(date);
             if (countRow == 0)
             {
                 var newOperations = uploadingHandler.GetConversions(dataTable, date);
@@ -105,7 +105,7 @@ namespace RMS.UI.Services
             }
             else
             {
-                return "Данные за этот период уже есть в базе данных!";
+                return "Данные конверсии ДБО за этот период уже есть в базе данных!\n";
             }
         }
     }

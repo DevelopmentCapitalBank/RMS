@@ -151,7 +151,10 @@ namespace RMS.UI.ViewModels
                 {
                     Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
                 }
-                Output = "Данные визлиста успешно обновлены.\n" + Output;
+                else
+                {
+                    Output = "Данные визлиста успешно обновлены.\n" + Output;
+                }
             }
         }
         private async Task ImportTurnovers(DataTable dt)
@@ -186,8 +189,15 @@ namespace RMS.UI.ViewModels
             bool isVerified = verification.IsVerified(TypeDocument.Conversion, dt);
             if (isVerified)
             {
-                await transform.Transform(TypeDocument.Conversion, context, dt, DateReport);
-                Output = "Данные по конверсии ДБО успешно обновлены.\n" + Output;
+                string result = await transform.Transform(TypeDocument.Conversion, context, dt, DateReport);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                }
+                else
+                {
+                    Output = "Данные по конверсии ДБО успешно обновлены.\n" + Output;
+                }
             }
         }
         #endregion
