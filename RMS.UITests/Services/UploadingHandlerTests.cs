@@ -84,5 +84,157 @@ namespace RMS.UI.Services.Tests
             Assert.AreEqual("40702810400010010973", actual[0].ReceivesToAccount);
             Assert.AreEqual("40702978300010010973", actual[0].GivesFromAccount);
         }
+
+        [TestMethod()]
+        public void GetOperations__return_empty()
+        {
+            var dt = new DataTable();
+            dt.Columns.Add(new DataColumn("Дата", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Документ", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Номер", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Сумма", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Сумма эквивалента", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Вал", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет Дебет", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет Кредит", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Состояние", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Дата проводки", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Назначение платежа", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("БИК Банка корресп.", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Дата создания", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Счет плательщика", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет получателя", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Плательщик", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Получатель", Type.GetType("System.String")));
+
+            UploadingHandler handler = new();
+
+            var actual = (List<Operation>)handler.GetOperations(dt, new DateTime(2022, 1, 1));
+
+            Assert.AreEqual(0, actual.Count);
+        }
+        [TestMethod()]
+        public void GetOperations__condition_not_suitable__return_empty()
+        {
+            var dt = new DataTable();
+            dt.Columns.Add(new DataColumn("Дата", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Документ", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Номер", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Сумма", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Сумма эквивалента", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Вал", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет Дебет", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет Кредит", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Состояние", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Дата проводки", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Назначение платежа", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("БИК Банка корресп.", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Дата создания", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Счет плательщика", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет получателя", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Плательщик", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Получатель", Type.GetType("System.String")));
+
+            dt.Rows.Add(new object[] { new DateTime(2022, 2, 28), "Банк.ор.", "25661", 500.00, DBNull.Value, 
+                "RUB", "40802810300010004750", "45814810300010001249", "Оплачен", new DateTime(2023, 2, 13), 
+                "Комиссия за ведение счета согласно договора РКО N 750 - р за период с '01/02/2022' по '28/02/2022'.НДС не облагается", DBNull.Value,
+                new DateTime(2022, 2, 28), "40802810300010004750", "45814810300010001249", "Какулин Дмитрий Александрович Индивидуальный предприниматель" , "АО Банк \"Развитие-Столица\"" });
+
+            UploadingHandler handler = new();
+
+            var actual = (List<Operation>)handler.GetOperations(dt, new DateTime(2022, 1, 1));
+
+            Assert.AreEqual(0, actual.Count);
+        }
+        [TestMethod()]
+        public void GetOperations__return_item()
+        {
+            var dt = new DataTable();
+            dt.Columns.Add(new DataColumn("Дата", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Документ", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Номер", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Сумма", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Сумма эквивалента", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Вал", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет Дебет", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет Кредит", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Состояние", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Дата проводки", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Назначение платежа", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("БИК Банка корресп.", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Дата создания", Type.GetType("System.DateTime")));
+            dt.Columns.Add(new DataColumn("Счет плательщика", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Счет получателя", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Плательщик", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Получатель", Type.GetType("System.String")));
+
+            dt.Rows.Add(new object[] { new DateTime(2022, 2, 28), "Банк.ор.", "25661", 500.00, DBNull.Value,
+                "RUB", "40802810300010004750", "45814810300010000259", "Проведен", new DateTime(2023, 2, 13),
+                "Комиссия за ведение счета согласно договора РКО N 750-р за период с '01/03/2022' по '31/03/2022'. НДС не облагается", DBNull.Value,
+                new DateTime(2022, 2, 28), "40802810300010004750", "45814810300010000259", "Какулин Дмитрий Александрович Индивидуальный предприниматель" , "АО Банк \"Развитие-Столица\"" });
+
+            UploadingHandler handler = new();
+
+            var actual = (List<Operation>)handler.GetOperations(dt, new DateTime(2022, 1, 1));
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(500M, actual[0].Amount, 0.0001M);
+            Assert.AreEqual(0M, actual[0].AmountEquivalent, 0.0001M);
+            Assert.AreEqual(new DateTime(2023, 2, 13), actual[0].DateOperation);
+            Assert.AreEqual("Комиссия за ведение счета согласно договора РКО N 750-р за период с '01/03/2022' по '31/03/2022'. НДС не облагается", actual[0].Purpose);
+            Assert.AreEqual("40802810300010004750", actual[0].Payer);
+            Assert.AreEqual("45814810300010000259", actual[0].Recipient);
+        }
+
+        [TestMethod()]
+        public void GetRemaings__return_empty()
+        {
+            var dt = new DataTable();
+            dt.Columns.Add(new DataColumn("№ счета", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Валюта", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Клиент", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Входящее сальдо", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Оборот Дебет", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Оборот Кредит", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Исходящее сальдо", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Средний остаток", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Средний остаток НП", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Подразделение", Type.GetType("System.String")));
+
+            UploadingHandler handler = new();
+
+            var actual = (List<Remains>)handler.GetRemains(dt, new DateTime(2022, 1, 1));
+
+            Assert.AreEqual(0, actual.Count);
+        }
+        [TestMethod()]
+        public void GetRemains__return_empty()
+        {
+            var dt = new DataTable();
+            dt.Columns.Add(new DataColumn("№ счета", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Валюта", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Клиент", Type.GetType("System.String")));
+            dt.Columns.Add(new DataColumn("Входящее сальдо", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Оборот Дебет", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Оборот Кредит", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Исходящее сальдо", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Средний остаток", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Средний остаток НП", Type.GetType("System.Double")));
+            dt.Columns.Add(new DataColumn("Подразделение", Type.GetType("System.String")));
+
+            dt.Rows.Add(new object[] { "40702810400010010973", "RUB", "\"МегаМет\"ООО",
+                15000.31, 12030.22, 125001.23, 14289.19, 10020.43, 10020.43, "000-1" });
+
+            UploadingHandler handler = new();
+
+            var actual = (List<Remains>)handler.GetRemains(dt, new DateTime(2022, 1, 1));
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(new DateTime(2022, 1, 1), actual[0].DateOfUnloading);
+            Assert.AreEqual("40702810400010010973", actual[0].Account);
+            Assert.AreEqual(12030.22M, actual[0].Debit, 0.0001M);
+            Assert.AreEqual(125001.23M, actual[0].Credit, 0.0001M);
+            Assert.AreEqual(10020.43M, actual[0].AverageBalance, 0.0001M);
+        }
     }
 }

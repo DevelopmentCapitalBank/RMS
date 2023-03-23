@@ -67,7 +67,7 @@ namespace RMS.DocumentProcessing.Verification
             if (string.Compare(dataTable.Columns[8].ColumnName, "Состояние") != 0) return false;
             if (string.Compare(dataTable.Columns[9].ColumnName, "Дата проводки") != 0) return false;
             if (string.Compare(dataTable.Columns[10].ColumnName, "Назначение платежа") != 0) return false;
-            if (string.Compare(dataTable.Columns[11].ColumnName, "БИК Банка корресп.") != 0) return false;
+            if (string.Compare(dataTable.Columns[11].ColumnName, "БИК Банка корресп#") != 0) return false;
             if (string.Compare(dataTable.Columns[12].ColumnName, "Дата создания") != 0) return false;
             if (string.Compare(dataTable.Columns[13].ColumnName, "Счет плательщика") != 0) return false;
             if (string.Compare(dataTable.Columns[14].ColumnName, "Счет получателя") != 0) return false;

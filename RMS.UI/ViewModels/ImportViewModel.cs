@@ -162,8 +162,15 @@ namespace RMS.UI.ViewModels
             bool isVerified = verification.IsVerified(TypeDocument.Turnovers, dt);
             if (isVerified)
             {
-                await transform.Transform(TypeDocument.Turnovers, context, dt, DateReport);
-                Output = "Данные по оборотам успешно обновлены.\n" + Output;
+                string result = await transform.Transform(TypeDocument.Turnovers, context, dt, DateReport);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                }
+                else
+                {
+                    Output = "Данные по оборотам успешно обновлены.\n" + Output;
+                }
             }
         }
         private async Task ImportDeposits(DataTable dt)
@@ -171,8 +178,15 @@ namespace RMS.UI.ViewModels
             bool isVerified = verification.IsVerified(TypeDocument.Deposits, dt);
             if (isVerified)
             {
-                await transform.Transform(TypeDocument.Deposits, context, dt, DateReport);
-                Output = "Данные по депозитам успешно обновлены.\n" + Output;
+                string result = await transform.Transform(TypeDocument.Deposits, context, dt, DateReport);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                }
+                else
+                {
+                    Output = "Данные по депозитам успешно обновлены.\n" + Output;
+                }
             }
         }
         private async Task ImportOperations(DataTable dt)
@@ -180,8 +194,15 @@ namespace RMS.UI.ViewModels
             bool isVerified = verification.IsVerified(TypeDocument.Operation, dt);
             if (isVerified)
             {
-                await transform.Transform(TypeDocument.Operation, context, dt, DateReport);
-                Output = "Данные по платежным операциям успешно обновлены.\n" + Output;
+                string result = await transform.Transform(TypeDocument.Operation, context, dt, DateReport);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    Output = result + "ИСПРАВЬТЕ ОШИБКИ И ПОПРОБУЙТЕ ЕЩЕ РАЗ.\n";
+                }
+                else
+                {
+                    Output = "Данные по платежным операциям успешно обновлены.\n" + Output;
+                }
             }
         }
         private async Task ImportConversions(DataTable dt)

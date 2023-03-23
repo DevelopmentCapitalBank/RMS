@@ -81,17 +81,47 @@ namespace RMS.UI.Services
 
         private async Task<string> TransformTurnoversAsync(DbContext context, DataTable dataTable, DateTime date)
         {
-            throw new NotImplementedException();
+            int countRow = await context.Remains.GetCountAsync(date);
+            if (countRow == 0)
+            {
+                var newRemains = uploadingHandler.GetRemains(dataTable, date);
+                _ = await context.Remains.CreateListOfEntitiesAsync(newRemains).ConfigureAwait(false);
+                return string.Empty;
+            }
+            else
+            {
+                return "Данные по оборотам за этот период уже есть в базе данных!\n";
+            }
         }
 
         private async Task<string> TransformDepositsAsync(DbContext context, DataTable dataTable, DateTime date)
         {
-            throw new NotImplementedException();
+            int countRow = await context.RemainsDeposit.GetCountAsync(date);
+            if (countRow == 0)
+            {
+                var newRemains = uploadingHandler.GetRemains(dataTable, date);
+                _ = await context.RemainsDeposit.CreateListOfEntitiesAsync(newRemains).ConfigureAwait(false);
+                return string.Empty;
+            }
+            else
+            {
+                return "Данные по оборотам (депозит) за этот период уже есть в базе данных!\n";
+            }
         }
 
         private async Task<string> TransformOperationsAsync(DbContext context, DataTable dataTable, DateTime date)
         {
-            throw new NotImplementedException();
+            int countRow = await context.Operations.GetCountAsync(date);
+            if (countRow == 0)
+            {
+                var newOperations = uploadingHandler.GetOperations(dataTable, date);
+                _ = await context.Operations.CreateListOfEntitiesAsync(newOperations).ConfigureAwait(false);
+                return string.Empty;
+            }
+            else
+            {
+                return "Данные платежных операций за этот период уже есть в базе данных!\n";
+            }
         }
 
         private async Task<string> TransformConversionsAsync(DbContext context, DataTable dataTable, DateTime date)
@@ -99,8 +129,8 @@ namespace RMS.UI.Services
             int countRow = await context.Conversions.GetCountAsync(date);
             if (countRow == 0)
             {
-                var newOperations = uploadingHandler.GetConversions(dataTable, date);
-                _ = await context.Conversions.CreateListOfEntitiesAsync(newOperations).ConfigureAwait(false);
+                var newConversions = uploadingHandler.GetConversions(dataTable, date);
+                _ = await context.Conversions.CreateListOfEntitiesAsync(newConversions).ConfigureAwait(false);
                 return string.Empty;
             }
             else
