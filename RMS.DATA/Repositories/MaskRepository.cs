@@ -8,10 +8,10 @@ namespace RMS.DATA.Repositories
     internal class MaskRepository : IRepositoryStandart<Mask>
     {
         #region SQL
-        private static readonly string Update = "UPDATE [Mask] SET MaskTypeId=@MaskTypeId, Content=@Content WHERE MaskId=@MaskId;";
-        private static readonly string Insert = "INSERT INTO [Mask] (MaskTypeId, Content) VALUES (@MaskTypeId, @Content);";
+        private static readonly string Update = "UPDATE [Mask] SET MaskTypeId=@MaskTypeId, Content=@Content, SequenceNumber=@SequenceNumber WHERE MaskId=@MaskId;";
+        private static readonly string Insert = "INSERT INTO [Mask] (MaskTypeId, Content, SequenceNumber) VALUES (@MaskTypeId, @Content, @SequenceNumber);";
         private static readonly string Delete = "DELETE FROM [Mask] WHERE MaskId=@MaskId;";
-        private static readonly string Select = "SELECT MaskId, MaskTypeId, Content FROM [Mask];";
+        private static readonly string Select = "SELECT MaskId, MaskTypeId, Content, SequenceNumber FROM [Mask];";
         private static readonly string SqlIdentity = "SELECT last_insert_rowid()";
         #endregion
 
@@ -21,6 +21,7 @@ namespace RMS.DATA.Repositories
             var parameters = new DynamicParameters();
             parameters.Add("MaskTypeId", entity.MaskTypeId);
             parameters.Add("Content", entity.Content);
+            parameters.Add("SequenceNumber", entity.SequenceNumber);
             await connection.ExecuteAsync(Insert, parameters).ConfigureAwait(false);
 
             int? MaskId = await connection.QueryFirstOrDefaultAsync<int>(SqlIdentity).ConfigureAwait(false);
@@ -68,6 +69,7 @@ namespace RMS.DATA.Repositories
             parameters.Add("MaskTypeId", entity.MaskTypeId);
             parameters.Add("Content", entity.Content);
             parameters.Add("MaskId", entity.MaskId);
+            parameters.Add("SequenceNumber", entity.SequenceNumber);
             await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
         }
 
@@ -82,6 +84,7 @@ namespace RMS.DATA.Repositories
                     parameters.Add("MaskTypeId", entity.MaskTypeId);
                     parameters.Add("Content", entity.Content);
                     parameters.Add("MaskId", entity.MaskId);
+                    parameters.Add("SequenceNumber", entity.SequenceNumber);
                     await connection.ExecuteAsync(Update, parameters).ConfigureAwait(false);
                 }
                 transaction.Commit();

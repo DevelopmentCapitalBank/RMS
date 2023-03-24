@@ -7,6 +7,7 @@
     {
         public int MaskId { get; set; } = 0;
         public int MaskTypeId { get; set; } = 0;
+        public int SequenceNumber { get; set; } = 0;
         public string Content { get; set; } = string.Empty;
     }
 }

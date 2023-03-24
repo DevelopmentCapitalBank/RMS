@@ -203,6 +203,7 @@ namespace RMS.DATA
                 sql.Append("                                    REFERENCES [MaskType](MaskTypeId) ON DELETE CASCADE ");
                 sql.Append("                                                                      ON UPDATE CASCADE,");
                 sql.Append("    Content          VARCHAR(100)   NOT NULL,                                           ");
+                sql.Append("    SequenceNumber   INTEGER        NOT NULL,                                           ");
                 sql.Append("    PRIMARY KEY(MaskId AUTOINCREMENT)                                                   ");
                 sql.Append(" );                                                                                     ");
 
