@@ -11,7 +11,7 @@ namespace DebugConsole
             Console.WriteLine("End.");
         }
 
-        public static async void TestDb()
+        public static void TestDb()
         {
             DbConfig dbConfig = new();
             dbConfig.Name = @"Data Source=H:\Perkin\md.db;";
@@ -19,7 +19,7 @@ namespace DebugConsole
             DbContext context = new(dbConfig);
             try
             {
-                await context.Setup();
+                context.Setup();
             }
             catch (Exception ex)
             {
