@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Input;
 using RMS.DATA;
 using RMS.UI.Commands;
 using RMS.UI.DialogBoxes;
@@ -23,6 +24,7 @@ namespace RMS.UI.ViewModels
         private readonly DbContext context;
         private readonly IDialogService dialogService;
         private readonly ICurrencyRateParser parser;
+        private ICommand? getCourse;
         #endregion
 
         #region Properties
@@ -32,7 +34,15 @@ namespace RMS.UI.ViewModels
         #endregion
 
         #region Commands
-
+        public ICommand GetCourse
+        {
+            get
+            {
+                return getCourse ??= new RelayCommand(async x => {
+                    _ = await parser.GetCourseAsync(DateTime.Now, new DateTime());
+                });
+            }
+        }
         #endregion
 
         #region Methods
