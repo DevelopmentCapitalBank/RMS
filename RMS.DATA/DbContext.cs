@@ -46,7 +46,7 @@ namespace RMS.DATA
         public IServiceStandart<MaskType> MaskTypes { get; private set; }
         public IServiceExtended<Mask, int, string> Masks { get; private set; }
 
-        public async Task Setup()
+        public void Setup()
         {
             try
             {
@@ -138,6 +138,112 @@ namespace RMS.DATA
                 sql.Append("    Description      TEXT           NOT NULL                                            ");
                 sql.Append(" );                                                                                     ");
 
+                sql.Append(" INSERT OR REPLACE INTO [Currency] (Iso, Code, Description)                             ");
+                sql.Append("    VALUES('810', 'RUB', 'Российский рубль'),                                           ");
+                sql.Append("                    ('978', 'EUR', 'Евро'),                                             ");
+                sql.Append("                    ('840', 'USD', 'Доллар США'),                                       ");
+                sql.Append("                    ('784', 'AED', 'ДИРХАМ'),                                           ");
+                sql.Append("                    ('008', 'ALL', 'Албанский лек'),                                    ");
+                sql.Append("                    ('051', 'AMD', 'АРМЯНСКИЙ ДРАМ'),                                   ");
+                sql.Append("                    ('532', 'ANG', 'Нидерландский антильский гульден'),                 ");
+                sql.Append("                    ('032', 'ARS', 'АРГЕНТИНСКОЕ ПЕСО'),                                ");
+                sql.Append("                    ('036', 'AUD', 'Австралийский доллар'),                             ");
+                sql.Append("                    ('944', 'AZN', 'Азербайджанский манат'),                            ");
+                sql.Append("                    ('100', 'BGL', 'Лев'),                                              ");
+                sql.Append("                    ('975', 'BGN', 'БОЛГАРСКИЙ ЛЕВ'),                                   ");
+                sql.Append("                    ('048', 'BHD', 'БАХРЕЙНСКИЙ ДИНАР'),                                ");
+                sql.Append("                    ('986', 'BRL', 'БРАЗИЛЬСКИЙ РЕАЛ'),                                 ");
+                sql.Append("                    ('933', 'BYN', 'БЕЛОРУССКИЙ РУБЛЬ'),                                ");
+                sql.Append("                    ('974', 'BYR', 'Белорусский рубль'),                                ");
+                sql.Append("                    ('124', 'CAD', 'Канадский доллар'),                                 ");
+                sql.Append("                    ('976', 'CDF', 'КОНГОЛЕЗСКИЙ ФРАНК'),                               ");
+                sql.Append("                    ('756', 'CHF', 'Швейцарский франк'),                                ");
+                sql.Append("                    ('152', 'CLP', 'ЧИЛИЙСКОЕ ПЕСО'),                                   ");
+                sql.Append("                    ('156', 'CNY', 'Китайский юань'),                                   ");
+                sql.Append("                    ('188', 'CRC', 'Костариканский колон'),                             ");
+                sql.Append("                    ('203', 'CZK', 'Чешская крона'),                                    ");
+                sql.Append("                    ('208', 'DKK', 'Датская крона'),                                    ");
+                sql.Append("                    ('214', 'DOP', 'ДОМИНИКАНСКОЕ ПЕСО'),                               ");
+                sql.Append("                    ('012', 'DZD', 'Алжирский динар'),                                  ");
+                sql.Append("                    ('818', 'EGP', 'ЕГИПЕТСКИЙ ФУНТ'),                                  ");
+                sql.Append("                    ('826', 'GBP', 'Фунт стерлингов'),                                  ");
+                sql.Append("                    ('268', 'GEK', 'Грузинский купон'),                                 ");
+                sql.Append("                    ('981', 'GEL', 'Грузинские лари'),                                  ");
+                sql.Append("                    ('936', 'GHS', 'ГАНСКИЙ СЕДИ'),                                     ");
+                sql.Append("                    ('300', 'GRD', 'Драхма'),                                           ");
+                sql.Append("                    ('328', 'GYD', 'Гайанский доллар'),                                 ");
+                sql.Append("                    ('344', 'HKD', 'Гонконгский доллар'),                               ");
+                sql.Append("                    ('191', 'HRK', 'Куна'),                                             ");
+                sql.Append("                    ('348', 'HUF', 'Форинт'),                                           ");
+                sql.Append("                    ('360', 'IDR', 'Рупия'),                                            ");
+                sql.Append("                    ('376', 'ILS', 'НОВЫЙ ИЗРАИЛЬСКИЙ ШЕКЕЛЬ'),                         ");
+                sql.Append("                    ('356', 'INR', 'Индийская рупия'),                                  ");
+                sql.Append("                    ('364', 'IRR', 'Иранский риал'),                                    ");
+                sql.Append("                    ('352', 'ISK', 'ИСЛАНДСКАЯ КРОНА'),                                 ");
+                sql.Append("                    ('392', 'JPY', 'Иена'),                                             ");
+                sql.Append("                    ('417', 'KGS', 'Сом (киргизский)'),                                 ");
+                sql.Append("                    ('408', 'KPW', 'Северо - корейская'),                               ");
+                sql.Append("                    ('410', 'KRW', 'Вона'),                                             ");
+                sql.Append("                    ('414', 'KWD', 'Кувейтский динар'),                                 ");
+                sql.Append("                    ('398', 'KZT', 'ТЕНГЕ'),                                            ");
+                sql.Append("                    ('144', 'LKR', 'ШРИ-ЛАНКИЙСКАЯ РУПИЯ'),                             ");
+                sql.Append("                    ('426', 'LSL', 'Лоти'),                                             ");
+                sql.Append("                    ('440', 'LTL', 'Литовский лит'),                                    ");
+                sql.Append("                    ('428', 'LVL', 'Латвийский лат'),                                   ");
+                sql.Append("                    ('504', 'MAD', 'Марокканский дирхам'),                              ");
+                sql.Append("                    ('498', 'MDL', 'Молдавский лей'),                                   ");
+                sql.Append("                    ('104', 'MMK', 'КЬЯТ'),                                             ");
+                sql.Append("                    ('446', 'MOP', 'ПАТАКА'),                                           ");
+                sql.Append("                    ('480', 'MUR', 'Маврикийская рупия'),                               ");
+                sql.Append("                    ('462', 'MVR', 'МАЛЬДИВСКАЯ РУФИЯ'),                                ");
+                sql.Append("                    ('484', 'MXN', 'МЕКСИКАНСКОЕ ПЕСО'),                                ");
+                sql.Append("                    ('458', 'MYR', 'МАЛАЙЗИЙСКИЙ РИНГГИТ'),                             ");
+                sql.Append("                    ('516', 'NAD', 'Доллар Намибии'),                                   ");
+                sql.Append("                    ('566', 'NGN', 'НАЙРА'),                                            ");
+                sql.Append("                    ('558', 'NIO', 'Золотая кордоба'),                                  ");
+                sql.Append("                    ('578', 'NOK', 'Норвежская крона'),                                 ");
+                sql.Append("                    ('524', 'NPR', 'Непальская рупия'),                                 ");
+                sql.Append("                    ('554', 'NZD', 'Новозеландский доллар'),                            ");
+                sql.Append("                    ('512', 'OMR', 'Оманский риал'),                                    ");
+                sql.Append("                    ('604', 'PEN', 'НОВЫЙ СОЛЬ'),                                       ");
+                sql.Append("                    ('598', 'PGK', 'Кина'),                                             ");
+                sql.Append("                    ('586', 'PKR', 'ПАКИСТАНСКАЯ РУПИЯ'),                               ");
+                sql.Append("                    ('985', 'PLN', 'ЗЛОТЫЙ'),                                           ");
+                sql.Append("                    ('634', 'QAR', 'КАТАРСКИЙ РИАЛ'),                                   ");
+                sql.Append("                    ('946', 'RON', 'РУМЫНСКИЙ ЛЕЙ'),                                    ");
+                sql.Append("                    ('941', 'RSD', 'СЕРБСКИЙ ДИНАР'),                                   ");
+                sql.Append("                    ('690', 'SCR', 'Сейшельская рупия'),                                ");
+                sql.Append("                    ('736', 'SDD', 'Суданский динар'),                                  ");
+                sql.Append("                    ('752', 'SEK', 'Шведская крона'),                                   ");
+                sql.Append("                    ('702', 'SGD', 'Сингапурский доллар'),                              ");
+                sql.Append("                    ('705', 'SIT', 'Толар'),                                            ");
+                sql.Append("                    ('703', 'SKK', 'Словацкая крона'),                                  ");
+                sql.Append("                    ('760', 'SYP', 'Сирийский фунт'),                                   ");
+                sql.Append("                    ('764', 'THB', 'Бат'),                                              ");
+                sql.Append("                    ('972', 'TJS', 'СОМОНИ'),                                           ");
+                sql.Append("                    ('795', 'TMM', 'Манат'),                                            ");
+                sql.Append("                    ('934', 'TMT', 'НОВЫЙ ТУРКМЕНСКИЙ МАНАТ'),                          ");
+                sql.Append("                    ('788', 'TND', 'Тунисский динар'),                                  ");
+                sql.Append("                    ('626', 'TPE', 'Тиморское эскудо'),                                 ");
+                sql.Append("                    ('949', 'TRY', 'ТУРЕЦКАЯ ЛИРА'),                                    ");
+                sql.Append("                    ('834', 'TZS', 'ТАНЗАНИЙСКИЙ ШИЛЛИНГ'),                             ");
+                sql.Append("                    ('980', 'UAH', 'Украинская гривна'),                                ");
+                sql.Append("                    ('800', 'UGX', 'УГАНДИЙСКИЙ ШИЛЛИНГ'),                              ");
+                sql.Append("                    ('860', 'UZS', 'Узбекский сум'),                                    ");
+                sql.Append("                    ('704', 'VND', 'Донг'),                                             ");
+                sql.Append("                    ('950', 'XAF', 'Франк КФА ВЕАС'),                                   ");
+                sql.Append("                    ('959', 'XAU', 'Золото в гр.'),                                     ");
+                sql.Append("                    ('960', 'XDR', 'СДР (специальные права заимствования)'),            ");
+                sql.Append("                    ('710', 'ZAR', 'Рэнд'),                                             ");
+                sql.Append("                    ('276', 'DEM', 'Немецкая марка Германия'),                          ");
+                sql.Append("                    ('056', 'BEF', 'франк Бельгии'),                                    ");
+                sql.Append("                    ('246', 'FIM', 'ФИНЛЯНДСКАЯ МАРКА'),                                ");
+                sql.Append("                    ('250', 'FRF', 'ФРАНЦУЗСКИЕ ФРАНКИ'),                               ");
+                sql.Append("                    ('380', 'ITL', 'ИТАЛЬЯНСКИЕ ЛИРЫ'),                                 ");
+                sql.Append("                    ('040', 'ATS', 'АВСТРИЙСКИЕ ШИЛЛИНГИ'),                             ");
+                sql.Append("                    ('528', 'NLG', 'НИДЕРЛАНДСКИЕ ГУЛЬДЕНЫ'),                           ");
+                sql.Append("                    ('724', 'ESP', 'ИСПАНСКИЕ ПЕСЕТЫ');                                 ");
+
                 sql.Append(" CREATE TABLE IF NOT EXISTS [DateOp] (                                                  ");
                 sql.Append("    DateId           INTEGER        NOT NULL,                                           ");
                 sql.Append("    DateOperation    DATE           NOT NULL,                                           ");
@@ -223,7 +329,7 @@ namespace RMS.DATA
                 sql.Append(" INNER JOIN [Manager] as m ON c.ManagerId = m.ManagerId;                                ");
 
                 using var connection = new SqliteConnection(dbConfig.Name);
-                await connection.ExecuteAsync(sql.ToString()).ConfigureAwait(false);
+                connection.Execute(sql.ToString());
             }
             catch (Exception ex)
             {

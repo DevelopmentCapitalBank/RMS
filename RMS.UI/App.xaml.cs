@@ -46,7 +46,7 @@ namespace RMS.UI
             await AppHost!.StartAsync();
 
             var dbContext = AppHost.Services.GetRequiredService<DbContext>();
-            await dbContext.Setup();
+            dbContext.Setup();
 
             var startupForm = AppHost.Services.GetRequiredService<MainWindow>();
 
