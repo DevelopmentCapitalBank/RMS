@@ -41,7 +41,6 @@ namespace RMS.UI.ViewModels
         private ICommand? cancelInsertMaskType;
         private ICommand? removeMaskType;
         private ICommand? saveMaskType;
-        private ICommand? showMasks;
         private ICommand? showPopupCreateMask;
         private ICommand? insertMask;
         private ICommand? cancelInsertMask;
@@ -69,11 +68,12 @@ namespace RMS.UI.ViewModels
             get => selectedMaskType;
             set
             {
-                if (selectedMaskType == value)
+                if (selectedMaskType == value || value == null)
                 {
                     return;
                 }
                 selectedMaskType = value;
+                LoadMasks(selectedMaskType.MaskTypeId);
                 OnPropertyChanged(nameof(SelectedMaskType));
             }
         }
@@ -163,7 +163,8 @@ namespace RMS.UI.ViewModels
             get
             {
                 return showPopupCreateMaskType ??= new RelayCommand(x => {
-                    //
+                    IsShowCreateMaskType = true;
+                    NewMaskType = new();
                 });
             }
         }
@@ -174,22 +175,23 @@ namespace RMS.UI.ViewModels
             {
                 if (insertMaskType == null)
                 {
-                    insertMaskType = new RelayCommand(ExecuteInsertMaskType, CanExecuteInsertMaskType);
+                    insertMaskType = new RelayCommand(ExecuteInsertMaskType, CanExecute);
                 }
                 return insertMaskType;
             }
         }
-        public void ExecuteInsertMaskType(object parameter)
+        public async void ExecuteInsertMaskType(object parameter)
         {
-            //TO DO
-        }
-        public bool CanExecuteInsertMaskType(object parameter)
-        {
-            if (parameter == null)
+            try
             {
-                return false;
+                var mskt = await context.MaskTypes.CreateAsync(NewMaskType).ConfigureAwait(false);
+                MaskTypes.Add(mskt);
+                IsShowCreateMaskType = false;
             }
-            return true;
+            catch (Exception ex)
+            {
+                dialogService.ShowMsg($"Ошибка создания вида масок.\n{ ex.Message }");
+            }
         }
 
         public ICommand CancelInsertMaskType
@@ -197,7 +199,8 @@ namespace RMS.UI.ViewModels
             get
             {
                 return cancelInsertMaskType ??= new RelayCommand(x => {
-                    //
+                    IsShowCreateMaskType = false;
+                    NewMaskType = null;
                 });
             }
         }
@@ -208,22 +211,29 @@ namespace RMS.UI.ViewModels
             {
                 if (removeMaskType == null)
                 {
-                    removeMaskType = new RelayCommand(ExecuteRemoveMaskType, CanExecuteRemoveMaskType);
+                    removeMaskType = new RelayCommand(ExecuteRemoveMaskType, CanExecute);
                 }
                 return removeMaskType;
             }
         }
-        public void ExecuteRemoveMaskType(object parameter)
+        public async void ExecuteRemoveMaskType(object parameter)
         {
-            //TO DO
-        }
-        public bool CanExecuteRemoveMaskType(object parameter)
-        {
-            if (parameter == null)
+            try
             {
-                return false;
+                bool isDelete = await dialogService.ShowMsgYesNo("Удалить выбранный вид масок безвозвратно?").ConfigureAwait(false);
+                if (isDelete)
+                {
+                    await context.MaskTypes.DeleteAsync(SelectedMaskType).ConfigureAwait(false);
+                    if (MaskTypes != null)
+                    {
+                        MaskTypes.Remove(SelectedMaskType);
+                    }
+                }
             }
-            return true;
+            catch (Exception ex)
+            {
+                dialogService?.ShowMsg($"Ошибка удаления вида масок.\n{ ex.Message }");
+            }
         }
 
         public ICommand SaveMaskType
@@ -237,9 +247,16 @@ namespace RMS.UI.ViewModels
                 return saveMaskType;
             }
         }
-        public void ExecuteSaveMaskType(object parameter)
+        public async void ExecuteSaveMaskType(object parameter)
         {
-            //TO DO
+            try
+            {
+                await context.MaskTypes.UpdateAsync(SelectedMaskType).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                dialogService.ShowMsg($"Ошибка сохранения изменений в виде масок.\n { ex.Message }");
+            }
         }
         public bool CanExecuteSaveMaskType(object parameter)
         {
@@ -247,29 +264,9 @@ namespace RMS.UI.ViewModels
             {
                 return false;
             }
-            return true;
-        }
-
-        public ICommand ShowMasks
-        {
-            get
+            if (parameter is MaskType m)
             {
-                if (showMasks == null)
-                {
-                    showMasks = new RelayCommand(ExecuteShowMasks, CanExecuteShowMasks);
-                }
-                return showMasks;
-            }
-        }
-        public void ExecuteShowMasks(object parameter)
-        {
-            //TO DO
-        }
-        public bool CanExecuteShowMasks(object parameter)
-        {
-            if (parameter == null)
-            {
-                return false;
+                return !string.IsNullOrEmpty(m.Name);
             }
             return true;
         }
@@ -280,22 +277,17 @@ namespace RMS.UI.ViewModels
             {
                 if (showPopupCreateMask == null)
                 {
-                    showPopupCreateMask = new RelayCommand(ExecuteShowPopupCreateMask, CanExecuteShowPopupCreateMask);
+                    showPopupCreateMask = new RelayCommand(ExecuteShowPopupCreateMask, CanExecute);
                 }
                 return showPopupCreateMask;
             }
         }
         public void ExecuteShowPopupCreateMask(object parameter)
         {
-            //TO DO
-        }
-        public bool CanExecuteShowPopupCreateMask(object parameter)
-        {
-            if (parameter == null)
-            {
-                return false;
-            }
-            return true;
+            IsShowCreateMask = true;
+            NewMask = new Mask {
+                MaskTypeId = SelectedMaskType.MaskTypeId
+            };
         }
 
         public ICommand InsertMask
@@ -309,15 +301,31 @@ namespace RMS.UI.ViewModels
                 return insertMask;
             }
         }
-        public void ExecuteInsertMask(object parameter)
+        public async void ExecuteInsertMask(object parameter)
         {
-            //TO DO
+            try
+            {
+                var nm = await context.Masks.CreateAsync(NewMask).ConfigureAwait(false);
+                if (Masks != null)
+                {
+                    Masks.Add(nm);
+                }
+                IsShowCreateMask = false;
+            }
+            catch (Exception ex)
+            {
+                dialogService.ShowMsg($"Ошибка создания маски!\n{ ex.Message }");
+            }
         }
         public bool CanExecuteInsertMask(object parameter)
         {
             if (parameter == null)
             {
                 return false;
+            }
+            if (parameter is Mask ms)
+            {
+                return !string.IsNullOrEmpty(ms.Content) && ms.SequenceNumber > 0;
             }
             return true;
         }
@@ -327,7 +335,8 @@ namespace RMS.UI.ViewModels
             get
             {
                 return cancelInsertMask ??= new RelayCommand(x => {
-                    //
+                    IsShowCreateMask = false;
+                    NewMask = null;
                 });
             }
         }
@@ -338,22 +347,25 @@ namespace RMS.UI.ViewModels
             {
                 if (removeMask == null)
                 {
-                    removeMask = new RelayCommand(ExecuteRemoveMask, CanExecuteRemoveMask);
+                    removeMask = new RelayCommand(ExecuteRemoveMask, CanExecute);
                 }
                 return removeMask;
             }
         }
-        public void ExecuteRemoveMask(object parameter)
+        public async void ExecuteRemoveMask(object parameter)
         {
-            //TO DO
-        }
-        public bool CanExecuteRemoveMask(object parameter)
-        {
-            if (parameter == null)
+            try
             {
-                return false;
+                await context.Masks.DeleteAsync(SelectedMask).ConfigureAwait(false);
+                if (Masks != null)
+                {
+                    Masks.Remove(SelectedMask);
+                }
             }
-            return true;
+            catch (Exception ex)
+            {
+                dialogService.ShowMsg($"Ошибка удаления маски!\n { ex.Message }");
+            }
         }
         #endregion
 
@@ -369,6 +381,22 @@ namespace RMS.UI.ViewModels
             {
                 dialogService.ShowMsg($"Ошибка чтения списка всех групп!\n{ex.Message}");
             }
+        }
+        private async void LoadMasks(int MaskTypeId)
+        {
+            try
+            {
+                var ms = await context.Masks.ReadListByIdAsync(MaskTypeId).ConfigureAwait(false);
+                Masks = new ObservableCollection<Mask>(ms);
+            }
+            catch (Exception ex)
+            {
+                dialogService.ShowMsg($"Ошибка чтения масок!\n{ex.Message}");
+            }
+        }
+        public bool CanExecute(object parameter)
+        {
+            return parameter != null;
         }
         #endregion
     }

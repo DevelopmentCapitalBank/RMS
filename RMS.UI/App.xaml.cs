@@ -26,7 +26,7 @@ namespace RMS.UI
                 services.AddTransient<IVisListHandler, VisListHandler>();
                 services.AddTransient<IUploadingHandler, UploadingHandler>();
                 services.AddTransient<ITransformData, TransformData>();
-                services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\kd\RMS.db" });
+                services.AddSingleton(new DbConfig { Name = @"Data Source=\\WSRV1\POLE\ukoJ\RMS.db" });
                 //services.AddSingleton(new DbConfig { Name = @"Data Source=D:\RMS.db" });
                 services.AddSingleton<DbContext>();
 

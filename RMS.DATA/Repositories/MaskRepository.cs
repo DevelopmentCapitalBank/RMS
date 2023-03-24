@@ -5,13 +5,16 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Repositories
 {
-    internal class MaskRepository : IRepositoryStandart<Mask>
+    internal class MaskRepository : IRepositoryExtended<Mask, int, string>
     {
         #region SQL
         private static readonly string Update = "UPDATE [Mask] SET MaskTypeId=@MaskTypeId, Content=@Content, SequenceNumber=@SequenceNumber WHERE MaskId=@MaskId;";
         private static readonly string Insert = "INSERT INTO [Mask] (MaskTypeId, Content, SequenceNumber) VALUES (@MaskTypeId, @Content, @SequenceNumber);";
         private static readonly string Delete = "DELETE FROM [Mask] WHERE MaskId=@MaskId;";
-        private static readonly string Select = "SELECT MaskId, MaskTypeId, Content, SequenceNumber FROM [Mask];";
+        private static readonly string Select = "SELECT * FROM [Mask];";
+        private static readonly string SelectByContent = "SELECT * FROM [Mask] WHERE Content LIKE @f;";
+        private static readonly string SelectByMaskId = "SELECT * FROM [Mask] WHERE MaskId=@MaskId;";
+        private static readonly string SelectByMaskTypeId = "SELECT * FROM [Mask] WHERE MaskTypeId=@MaskTypeId;";
         private static readonly string SqlIdentity = "SELECT last_insert_rowid()";
         #endregion
 
@@ -58,9 +61,28 @@ namespace RMS.DATA.Repositories
             await connection.ExecuteAsync(Delete, parameters).ConfigureAwait(false);
         }
 
+        public async Task<IEnumerable<Mask>> FindAsync(string f, IDbConnection connection)
+        {
+            return await connection.QueryAsync<Mask>(SelectByContent, new { f }).ConfigureAwait(false);
+        }
+
         public async Task<IEnumerable<Mask>> ReadAllAsync(IDbConnection connection)
         {
             return await connection.QueryAsync<Mask>(Select).ConfigureAwait(false);
+        }
+
+        public async Task<Mask> ReadByIdAsync(int id, IDbConnection connection)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("MaskId", id);
+            return await connection.QueryFirstOrDefaultAsync<Mask>(SelectByMaskId, parameters).ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Mask>> ReadListByIdAsync(int id, IDbConnection connection)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("MaskTypeId", id);
+            return await connection.QueryAsync<Mask>(SelectByMaskTypeId, parameters).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(Mask entity, IDbConnection connection)

@@ -173,15 +173,6 @@
                         Margin="10">
                         <materialDesign:PackIcon Kind="ContentSave"  Height="22" Width="22" />
                     </Button>
-                    <Button
-                        Grid.Column="1"
-                        Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
-                        Command="{Binding ShowMasks}" 
-                        CommandParameter="{Binding SelectedMaskType}" 
-                        ToolTip="Загруить маски данного вида"
-                        Margin="10">
-                        <materialDesign:PackIcon Kind="Text"  Height="22" Width="22" />
-                    </Button>
                 </Grid>
             </Grid>
             <DataGrid   
@@ -230,7 +221,7 @@
                             Grid.Column="0"
                             Margin="10"
                             Command="{Binding ShowPopupCreateMask}"
-                            CommandParameter="{Binding SelectedMask}"
+                            CommandParameter="{Binding SelectedMaskType}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                             ToolTip="Создать новую маску">
                             <materialDesign:PackIcon

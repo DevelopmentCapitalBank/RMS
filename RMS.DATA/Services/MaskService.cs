@@ -5,12 +5,12 @@ using RMS.DATA.Entities;
 
 namespace RMS.DATA.Services
 {
-    internal class MaskService : IServiceStandart<Mask>
+    internal class MaskService : IServiceExtended<Mask, int, string>
     {
         private readonly DbConfig dbConfig;
-        private readonly IRepositoryStandart<Mask> repo;
+        private readonly IRepositoryExtended<Mask, int, string> repo;
 
-        public MaskService(DbConfig dbConfig, IRepositoryStandart<Mask> repo)
+        public MaskService(DbConfig dbConfig, IRepositoryExtended<Mask, int, string> repo)
         {
             this.dbConfig = dbConfig;
             this.repo = repo;
@@ -34,10 +34,29 @@ namespace RMS.DATA.Services
             await repo.DeleteAsync(entity, connection);
         }
 
+        public async Task<IEnumerable<Mask>> FindAsync(string f)
+        {
+            using var connection = new SqliteConnection(dbConfig.Name);
+            return await repo.FindAsync(f, connection).ConfigureAwait(false);
+        }
+
         public async Task<IEnumerable<Mask>> ReadAllAsync()
         {
             using var connection = new SqliteConnection(dbConfig.Name);
             return await repo.ReadAllAsync(connection).ConfigureAwait(false);
+        }
+
+        public async Task<Mask> ReadByIdAsync(int id)
+        {
+            using var connection = new SqliteConnection(dbConfig.Name);
+            var account = await repo.ReadByIdAsync(id, connection).ConfigureAwait(false);
+            return account;
+        }
+
+        public async Task<IEnumerable<Mask>> ReadListByIdAsync(int id)
+        {
+            using var connection = new SqliteConnection(dbConfig.Name);
+            return await repo.ReadListByIdAsync(id, connection).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(Mask entity)

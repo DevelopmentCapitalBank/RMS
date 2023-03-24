@@ -44,7 +44,7 @@ namespace RMS.DATA
         public IServiceUnload<Operation, DateTime, DateTime> Operations { get; private set; }
         public IServiceUnload<Conversion, DateTime, DateTime> Conversions { get; private set; }
         public IServiceStandart<MaskType> MaskTypes { get; private set; }
-        public IServiceStandart<Mask> Masks { get; private set; }
+        public IServiceExtended<Mask, int, string> Masks { get; private set; }
 
         public async Task Setup()
         {
