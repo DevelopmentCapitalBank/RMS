@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -14,9 +15,10 @@ namespace RMS.UI.Services
             {
                 string CourseEUR = "";
                 string CourseUSD = "";
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 var xdoc = new XmlDocument();
-                await Task.Run(() => xdoc.Load("http://www.cbr.ru/scripts/XML_daily.asp?date_req=" + from.ToString("dd/MM/yyyy")));// +
-                    //"&date_req2=" + to.ToString("dd/MM/yyyy"))).ConfigureAwait(false);
+                await Task.Run(() => xdoc.Load("http://www.cbr.ru/scripts/XML_daily.asp?date_req1=" + from.ToString("dd/MM/yyyy") +
+                    "&date_req2=" + to.ToString("dd/MM/yyyy"))).ConfigureAwait(false);
                 foreach (XmlNode node in xdoc.SelectNodes("//Valute"))
                 {
                     switch (node.SelectSingleNode("CharCode").InnerText)
