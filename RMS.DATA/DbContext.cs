@@ -27,6 +27,8 @@ namespace RMS.DATA
             RemainsDeposit = new RemainsService(dbConfig, new RemainsDepositRepository());
             Operations = new OperationService(dbConfig, new OperationRepository());
             Conversions = new ConversionService(dbConfig, new ConversionRepository());
+            MaskTypes = new MaskTypeService(dbConfig, new MaskTypeRepository());
+            Masks = new MaskService(dbConfig, new MaskRepository());
         }
 
         public IServiceStandart<Group> Groups { get; private set; }
@@ -41,7 +43,8 @@ namespace RMS.DATA
         public IServiceUnload<Remains, DateTime, DateTime> RemainsDeposit { get; private set; }
         public IServiceUnload<Operation, DateTime, DateTime> Operations { get; private set; }
         public IServiceUnload<Conversion, DateTime, DateTime> Conversions { get; private set; }
-
+        public IServiceStandart<MaskType> MaskTypes { get; private set; }
+        public IServiceStandart<Mask> Masks { get; private set; }
 
         public async Task Setup()
         {
