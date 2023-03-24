@@ -224,10 +224,9 @@ namespace RMS.UI.ViewModels
                 if (isDelete)
                 {
                     await context.MaskTypes.DeleteAsync(SelectedMaskType).ConfigureAwait(false);
-                    if (MaskTypes != null)
-                    {
-                        MaskTypes.Remove(SelectedMaskType);
-                    }
+                    SelectedMaskType = new();
+                    SelectedMask = null;
+                    OnLoad();
                 }
             }
             catch (Exception ex)
@@ -277,7 +276,7 @@ namespace RMS.UI.ViewModels
             {
                 if (showPopupCreateMask == null)
                 {
-                    showPopupCreateMask = new RelayCommand(ExecuteShowPopupCreateMask, CanExecute);
+                    showPopupCreateMask = new RelayCommand(ExecuteShowPopupCreateMask, CanExecuteShowPopupCreateMask);
                 }
                 return showPopupCreateMask;
             }
@@ -288,6 +287,20 @@ namespace RMS.UI.ViewModels
             NewMask = new Mask {
                 MaskTypeId = SelectedMaskType.MaskTypeId
             };
+        }
+        public bool CanExecuteShowPopupCreateMask(object parameter)
+        {
+            if (parameter == null)
+            { 
+                return false;
+            }
+
+            if (parameter is MaskType m)
+            {
+                return m.MaskTypeId > 0;
+            }
+
+            return true;
         }
 
         public ICommand InsertMask
@@ -356,10 +369,11 @@ namespace RMS.UI.ViewModels
         {
             try
             {
-                await context.Masks.DeleteAsync(SelectedMask).ConfigureAwait(false);
-                if (Masks != null)
+                bool isDelete = await dialogService.ShowMsgYesNo("Удалить выбранную маску безвозвратно?").ConfigureAwait(false);
+                if (isDelete)
                 {
-                    Masks.Remove(SelectedMask);
+                    await context.Masks.DeleteAsync(SelectedMask).ConfigureAwait(false);
+                    LoadMasks(SelectedMaskType.MaskTypeId);
                 }
             }
             catch (Exception ex)
