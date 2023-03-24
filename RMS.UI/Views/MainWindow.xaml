@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="RMS" MinHeight="600" MinWidth="1000">
+        Title="RMS" MinHeight="640" MinWidth="1000">
     <materialDesign:DialogHost  
         CloseOnClickAway="False"
         Identifier="RootDialog" >
         <DockPanel>
             <Grid
                 DockPanel.Dock="Left"
-                Width="110" 
+                Width="130" 
                 HorizontalAlignment="Left">
                 <ListView 
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -101,6 +101,30 @@
                         <TextBlock 
                             Margin="10"
                             Text="Экспорт"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                    </ListViewItem>
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="Курсы валют"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="Курсы валют"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                    </ListViewItem>
+                    <ListViewItem
+                        Height="60"
+                        Padding="0"
+                        ToolTip="SQL запросы к базе данных"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" >
+                        <TextBlock 
+                            Margin="10"
+                            Text="SQL"
                             FontWeight="Bold"
                             Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </ListViewItem>

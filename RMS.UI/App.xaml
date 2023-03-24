@@ -33,6 +33,12 @@
             <DataTemplate DataType="{x:Type vm:ExportViewModel}">
                 <v:ExportView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ExchangeRatesViewModel}">
+                <v:ExchangeRatesView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:SqlViewModel}">
+                <v:SqlView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
                 <v:SettingsView />
             </DataTemplate>

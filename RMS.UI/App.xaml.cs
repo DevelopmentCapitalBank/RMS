@@ -21,6 +21,7 @@ namespace RMS.UI
                 services.AddSingleton<MainWindow>();
 
                 services.AddTransient<IDialogService, DialogService>();
+                services.AddTransient<ICurrencyRateParser, CurrencyRateParser>();
                 services.AddTransient<IExcelReader, ExcelReader>(); 
                 services.AddTransient<IDocumentVerification, DocumentVerification>();
                 services.AddTransient<IVisListHandler, VisListHandler>();
@@ -37,6 +38,8 @@ namespace RMS.UI
                 services.AddTransient<MaskViewModel>();
                 services.AddTransient<ImportViewModel>();
                 services.AddTransient<ExportViewModel>();
+                services.AddTransient<ExchangeRatesViewModel>();
+                services.AddTransient<SqlViewModel>();
                 services.AddTransient<SettingsViewModel>();
             }).Build();
         }
@@ -58,7 +61,9 @@ namespace RMS.UI
             mainViewModel.PageViewModels[4] = AppHost.Services.GetRequiredService<MaskViewModel>();
             mainViewModel.PageViewModels[5] = AppHost.Services.GetRequiredService<ImportViewModel>();
             mainViewModel.PageViewModels[6] = AppHost.Services.GetRequiredService<ExportViewModel>();
-            mainViewModel.PageViewModels[7] = AppHost.Services.GetRequiredService<SettingsViewModel>();
+            mainViewModel.PageViewModels[7] = AppHost.Services.GetRequiredService<ExchangeRatesViewModel>();
+            mainViewModel.PageViewModels[8] = AppHost.Services.GetRequiredService<SqlViewModel>();
+            mainViewModel.PageViewModels[9] = AppHost.Services.GetRequiredService<SettingsViewModel>();
             mainViewModel.CurrentPageViewModel = mainViewModel.PageViewModels[0];
 
             startupForm!.DataContext = mainViewModel;
